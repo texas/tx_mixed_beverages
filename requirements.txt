@@ -1,0 +1,16 @@
+Django==1.8b2
+
+dj-database-url==0.3.0
+psycopg2==2.6
+project-runpy==0.3.1
+django-extensions==1.5.2
+
+
+# Heroku
+whitenoise==1.0.6
+waitress==0.8.9
+
+
+# Dev requirements
+factory-boy==2.4.1
+mock==1.0.1
