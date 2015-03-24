@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 
     'mixed_beverages.apps.receipts',
 
@@ -87,7 +88,7 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'root': {
-        'level': os.environ.get('LOGGING_LEVEL', 'WARNING'),
+        'level': os.environ.get('LOGGING_LEVEL', 'ERROR'),
         'handlers': ['console'],
     },
     'filters': {

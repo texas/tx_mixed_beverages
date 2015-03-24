@@ -23,5 +23,12 @@ test:
 
 
 resetdb:
-	$(MANAGE) reset_db --noinput
+	-phd dropdb
+	phd createdb
 	$(MANAGE) migrate --noinput
+
+
+slurp: $(wildcard data/*.CSV)
+	$(foreach file, $(wildcard data/*.CSV), \
+		./mixed_beverages/apps/receipts/scripts/slurp.py $(file);)
+	echo "done"

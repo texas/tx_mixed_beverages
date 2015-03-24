@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+
+@admin.register(models.Receipt)
+class ReceiptAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date', 'tax', 'city', 'zip')
+    search_fields = ('name', )
