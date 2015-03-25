@@ -10,6 +10,9 @@ class Business(models.Model):
     """
     name = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name_plural = 'businesses'
+
     def __unicode__(self):
         return self.name
 

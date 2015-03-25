@@ -12,5 +12,6 @@ waitress==0.8.9
 
 
 # Dev requirements
+progressbar==2.3
 factory-boy==2.4.1
 mock==1.0.1

@@ -1,6 +1,9 @@
 import csv
 import os
 
+from django.db.models import Count
+from progressbar import ProgressBar
+
 from .models import Receipt, Business, Location
 
 
@@ -34,5 +37,11 @@ def slurp(path):
 
 
 def post_process():
-    for receipt in Receipt.objects.filter():
-        pass
+    # assign names
+    names = (Receipt.objects.filter(business=None).values('name')
+        .order_by('name').annotate(Count('name')))
+    progress = ProgressBar()
+    for x in progress(names):
+        name = x['name']
+        business, __ = Business.objects.get_or_create(name=name)
+        Receipt.objects.filter(business=None).update(business=business)
