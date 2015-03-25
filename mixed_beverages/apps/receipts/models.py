@@ -14,9 +14,19 @@ class Business(models.Model):
         return self.name
 
 
-class Receipt(geo_models.Model):
+class Location(geo_models.Model):
+    coordinate = geo_models.PointField(null=True, blank=True)
+
+    # MANAGERS #
+    objects = geo_models.GeoManager()
+
+    def __unicode__(self):
+        return unicode(self.coordinate)
+
+
+class Receipt(models.Model):
     """
-    A business's tax receipt for a month
+    A location's tax receipt for a month
 
     Column_Order|Column_Description|Data_Type|Size
     Col01|TABC Permit Number|Number|8
@@ -31,7 +41,7 @@ class Receipt(geo_models.Model):
 
     Location fields maybe should get split out, but will make importing slower.
     """
-    permit = models.CharField(max_length=8)
+    tabc_permit = models.CharField(max_length=8)
     name = models.CharField(max_length=30)
     date = models.DateField(
         help_text='Use the 1st of the month for simplicity')
@@ -42,12 +52,12 @@ class Receipt(geo_models.Model):
     state = models.CharField(max_length=2)
     zip = models.CharField(max_length=5)
     county_code = models.PositiveSmallIntegerField()
-    coordinate = geo_models.PointField(null=True, blank=True)
 
-    business = models.ForeignKey(Business, null=True, blank=True)
-
-    # MANAGERS #
-    objects = geo_models.GeoManager()
+    # denormalized fields
+    business = models.ForeignKey(Business, related_name='receipts',
+        null=True, blank=True)
+    location = models.ForeignKey(Location, related_name='receipts',
+        null=True, blank=True)
 
     def __unicode__(self):
         return '{} {} {}'.format(
