@@ -36,8 +36,7 @@ def slurp(path):
         Receipt.objects.bulk_create(receipts)
 
 
-def post_process():
-    # assign names
+def group_by_name(show_progress=False):
     names = (Receipt.objects.filter(business=None).values('name')
         .order_by('name').annotate(Count('name')))
     progress = ProgressBar()
@@ -47,3 +46,41 @@ def post_process():
         name = x['name']
         business, __ = Business.objects.get_or_create(name=name)
         Receipt.objects.filter(business=None).update(business=business)
+
+
+def group_by_location(show_progress=False):
+    progress = ProgressBar() if show_progress else lambda x: x
+    receipts_without_location = (Receipt.objects.filter(location=None)
+        .order_by('address', 'city', 'state', 'zip'))
+    if not receipts_without_location:
+        return
+    last_reference = None
+    for x in progress(receipts_without_location):
+        reference = dict(
+            address=x.address,
+            city=x.city,
+            state=x.state,
+            zip=x.zip,
+        )
+        if reference == last_reference:
+            # the .update(...) and .order_by(...) makes this possible
+            continue
+        try:
+            # look for an existing `Location`
+            location = (Receipt.objects
+                .filter(**reference).exclude(location=None)[0].location)
+        except IndexError:
+            # create a new `Location`
+            location = Location.objects.create()
+        receipts_without_location.filter(**reference).update(location=location)
+        last_reference = reference
+
+
+def post_process():
+    group_by_name(show_progress=True)
+    group_by_location(show_progress=True)
+
+
+def geocode(wait=10):
+    # TODO
+    pass

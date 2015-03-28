@@ -24,7 +24,7 @@ class Location(geo_models.Model):
     objects = geo_models.GeoManager()
 
     def __unicode__(self):
-        return unicode(self.coordinate)
+        return unicode(self.coordinate or self.pk)
 
 
 class Receipt(models.Model):

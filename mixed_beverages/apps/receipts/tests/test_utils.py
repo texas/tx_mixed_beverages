@@ -1,6 +1,12 @@
 from django.test import TestCase
 
-from ..utils import row_to_receipt
+from ..factories import ReceiptFactory
+from ..models import Location
+from ..utils import row_to_receipt, group_by_location
+
+
+def refresh(instance):
+    return instance._meta.model.objects.get(pk=instance.pk)
 
 
 class RowToReceiptTests(TestCase):
@@ -9,3 +15,26 @@ class RowToReceiptTests(TestCase):
         row = test_row.replace('"', '').split(',')  # stupid csv logic
         receipt = row_to_receipt(row)
         self.assertEqual(receipt.name, 'ABI-HAUS')
+
+
+class PostProcessTests(TestCase):
+    def test_group_by_location(self):
+        # sanity check
+        self.assertFalse(Location.objects.all().exists())
+
+        r1 = ReceiptFactory()
+        r2 = ReceiptFactory(address=r1.address, city=r1.city, state=r1.state,
+            zip=r1.zip)
+        r3 = ReceiptFactory()
+
+        # between 1 and 1 + 3n queries
+        with self.assertNumQueries(7):
+            group_by_location()
+        r1 = refresh(r1)
+        r2 = refresh(r2)
+        r3 = refresh(r3)
+        self.assertTrue(r1.location)
+        self.assertTrue(r3.location)
+        self.assertEqual(r1.location, r2.location)
+        self.assertNotEqual(r3.location, r1.location)
+        self.assertEqual(Location.objects.count(), 2)
