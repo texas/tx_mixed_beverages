@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
 
     'mixed_beverages.apps.receipts',
+    'rest_framework',
 
     # support
     'django_extensions',
@@ -120,4 +121,10 @@ LOGGING = {
             'propagate': False,
         },
     },
+}
+
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [],
+    'PAGE_SIZE': 100,
 }

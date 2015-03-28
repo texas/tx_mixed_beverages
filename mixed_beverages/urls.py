@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
+from mixed_beverages.apps.receipts.api import router
+
 
 urlpatterns = patterns('',
-    # url(r'^$', 'mixed_beverages.views.home', name='home'),
-
+    url(r'^api/', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
 )
