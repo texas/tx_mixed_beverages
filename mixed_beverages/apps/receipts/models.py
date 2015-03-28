@@ -16,6 +16,10 @@ class Business(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def locations(self):
+        return Location.objects.filter(receipts__business=self)
+
 
 class Location(geo_models.Model):
     coordinate = geo_models.PointField(null=True, blank=True)

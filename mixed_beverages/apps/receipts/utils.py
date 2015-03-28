@@ -23,20 +23,26 @@ def row_to_receipt(row):
     )
 
 
-def slurp(path):
+def slurp(path, force=False):
     """Import a csv."""
     assert os.path.isfile(path)
+    # checked = False
     with open(path, 'rb') as f:
         reader = csv.reader(f)
         receipts = []
-        # TODO don't re-process csvs
-        # TODO figure out business
         for row in reader:
-            receipts.append(row_to_receipt(row))
+            receipt = row_to_receipt(row)
+            # TODO break if we've already imported this csv
+            # if not force and not checked:
+            #     if Receipt.objects.filter(date=receipt.date).exists():
+            #         break
+            #     checked = True
+            receipts.append(receipt)
         Receipt.objects.bulk_create(receipts)
 
 
 def group_by_name(show_progress=False):
+    progress = ProgressBar() if show_progress else lambda x: x
     names = (Receipt.objects.filter(business=None).values('name')
         .order_by('name').annotate(Count('name')))
     progress = ProgressBar()
@@ -45,10 +51,16 @@ def group_by_name(show_progress=False):
     for x in progress(names):
         name = x['name']
         business, __ = Business.objects.get_or_create(name=name)
-        Receipt.objects.filter(business=None).update(business=business)
+        (Receipt.objects
+            .filter(name=name, business=None).update(business=business))
 
 
 def group_by_location(show_progress=False):
+    """
+    Group businesses by location.
+
+    Optimized for making the initial import faster.
+    """
     progress = ProgressBar() if show_progress else lambda x: x
     receipts_without_location = (Receipt.objects.filter(location=None)
         .order_by('address', 'city', 'state', 'zip'))
@@ -77,8 +89,9 @@ def group_by_location(show_progress=False):
 
 
 def post_process():
-    group_by_name(show_progress=True)
-    group_by_location(show_progress=True)
+    show_progress = True  # TODO add a way to silence progress bar
+    group_by_name(show_progress=show_progress)
+    group_by_location(show_progress=show_progress)
 
 
 def geocode(wait=10):
