@@ -41,6 +41,8 @@ def post_process():
     names = (Receipt.objects.filter(business=None).values('name')
         .order_by('name').annotate(Count('name')))
     progress = ProgressBar()
+    if not names:
+        return
     for x in progress(names):
         name = x['name']
         business, __ = Business.objects.get_or_create(name=name)

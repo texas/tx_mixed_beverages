@@ -30,5 +30,10 @@ resetdb:
 
 slurp: $(wildcard data/*.CSV)
 	$(foreach file, $(wildcard data/*.CSV), \
-		./mixed_beverages/apps/receipts/scripts/slurp.py $(file);)
+		./mixed_beverages/scripts/slurp.py $(file);)
 	echo "done"
+
+process:
+	./mixed_beverages/scripts/post_process.py
+
+import: slurp process
