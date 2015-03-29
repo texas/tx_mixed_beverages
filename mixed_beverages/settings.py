@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
 
     'mixed_beverages.apps.receipts',
+    'mixed_beverages.apps.lazy_geo',
     'rest_framework',
 
     # support
