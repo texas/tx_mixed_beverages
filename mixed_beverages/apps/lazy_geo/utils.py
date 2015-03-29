@@ -4,6 +4,21 @@ from django.core.exceptions import ImproperlyConfigured
 import requests
 
 
+def get_remaining_credits():
+    # if you run out of credits, go to
+    # https://geoservices.tamu.edu/UserServices/Payments/
+    api_key = os.environ.get('TAMU_API_KEY')
+    assert api_key
+    url = ('https://geoservices.tamu.edu/UserServices/Payments/Balance/'
+    'AccountBalanceWebServiceHttp.aspx?'
+    'version=1.0&apikey={}&format=csv'.format(api_key))
+    response = requests.get(url)
+    assert response.ok
+    key, credits = response.text.split(',')
+    assert key == api_key
+    return int(credits)
+
+
 class GeocodeException(Exception):
     pass
 

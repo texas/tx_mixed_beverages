@@ -91,6 +91,7 @@ class Location(geo_models.Model):
         )
         self.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
         self.save()
+        logger.debug(data)
         logger.info('{}'.format(self))
 
 
@@ -156,4 +157,5 @@ class Receipt(models.Model):
         )
         location.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
         location.save()
+        logger.debug(data)
         logger.info('{}'.format(location))
