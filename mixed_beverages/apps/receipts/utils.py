@@ -68,6 +68,7 @@ def group_by_location(show_progress=False):
         return
     last_reference = None
     for x in progress(receipts_without_location):
+        # TODO is grouping by `tabc_permit` the same thing?
         reference = dict(
             address=x.address,
             city=x.city,
