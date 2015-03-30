@@ -22,8 +22,6 @@ SECRET_KEY = env.get('SECRET_KEY', 'Rotom')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.get('DEBUG', False)
 
-TEMPLATE_DEBUG = DEBUG
-
 ALLOWED_HOSTS = ['*']  # TODO
 
 
@@ -78,6 +76,22 @@ USE_I18N = False
 USE_L10N = False
 
 USE_TZ = True
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+            ],
+            'debug': DEBUG,
+        },
+    },
+]
 
 
 # Static files (CSS, JavaScript, Images)
