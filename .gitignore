@@ -10,7 +10,13 @@ data/
 .agignore
 
 
+# Compiled
+mixed_beverages/static/*.js
+mixed_beverages/static/*.css
+
+
 # Randomly generated files
+*.map
 *.pyc
 .DS_Store
 
