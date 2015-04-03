@@ -6,6 +6,7 @@ project-runpy==0.3.1
 django-extensions==1.5.2
 djangorestframework==3.1.1
 requests==2.6.0
+django-geojson==2.6.0
 
 
 # Heroku
