@@ -18,12 +18,12 @@ module.exports = (grunt) ->
           dest: 'mixed_beverages/static/app.css'
     jshint:
       all: [
-        'mixed_beverages/static/js_src/**/*.js'
+        'mixed_beverages/static_src/js/**/*.js'
       ]
     browserify:
       app:
         files:
-          'mixed_beverages/static/app.js': 'mixed_beverages/static_src/app.js'
+          'mixed_beverages/static/app.js': 'mixed_beverages/static_src/js/app.js'
     uglify:
       app:
         files:
