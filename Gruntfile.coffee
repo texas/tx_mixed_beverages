@@ -47,7 +47,7 @@ module.exports = (grunt) ->
           spawn: false
       scripts:
         files: ['mixed_beverages/static_src/**/*.js']
-        tasks: ['browserify', 'uglify']
+        tasks: ['browserify']
         options:
           spawn: false
 

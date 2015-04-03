@@ -23,10 +23,34 @@ class BusinessViewSet(viewsets.ModelViewSet):
     serializer_class = BusinessSerializer
 
 
-class LocationSerializer(serializers.HyperlinkedModelSerializer):
+class ReceiptInlineSerializer(serializers.ModelSerializer):
+    """
+    Just get the data neccessary for charting tax over time.
+
+    Include TABC permit # in case the location has changed.
+    """
+    class Meta:
+        model = models.Receipt
+        fields = ('tax', 'date', 'tabc_permit')
+        ordering = ('date', )
+
+
+class LatestReceiptSerializer(serializers.ModelSerializer):
+    """
+    Just get the latest receipt so we know the name of this `Location`.
+    """
+    class Meta:
+        model = models.Receipt
+        exclude = ('location', )
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    receipts = ReceiptInlineSerializer(many=True, read_only=True)
+    latest = LatestReceiptSerializer(source='get_latest', read_only=True)
+
     class Meta:
         model = models.Location
-        fields = ('id', 'receipts')
+        fields = ('id', 'receipts', 'latest')
 
 
 class LocationViewSet(viewsets.ModelViewSet):

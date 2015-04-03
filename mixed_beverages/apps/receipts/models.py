@@ -71,6 +71,14 @@ class Location(geo_models.Model):
     def __unicode__(self):
         return unicode(self.coordinate or self.pk)
 
+    #
+
+    def get_latest(self):
+        try:
+            return self.receipts.order_by('-date')[0]
+        except IndexError:
+            return None
+
     # CUSTOM METHODS #
 
     def geocode(self, force=False):
@@ -136,6 +144,9 @@ class Receipt(models.Model):
             self.date,
             self.tax,
         )
+
+    class Meta:
+        ordering = ('-date', )
 
     # CUSTOM METHODS #
 
