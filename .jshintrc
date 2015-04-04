@@ -1,0 +1,7 @@
+{
+  "browser": true,
+  "devel": true,
+  "node": true,
+  "quotmark": false,
+  "strict": false
+}
