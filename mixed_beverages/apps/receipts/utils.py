@@ -89,10 +89,21 @@ def group_by_location(show_progress=False):
         last_reference = reference
 
 
+def set_latest(show_progress=False):
+    progress = ProgressBar() if show_progress else lambda x: x
+    queryset = Location.objects.all()
+    for x in progress(queryset):
+        old_latest = x.latest_receipt
+        x.latest_receipt = x.get_latest()
+        if old_latest != x.latest_receipt:
+            x.save(update_fields=('latest_receipt', ))
+
+
 def post_process():
     show_progress = True  # TODO add a way to silence progress bar
     group_by_name(show_progress=show_progress)
     group_by_location(show_progress=show_progress)
+    set_latest(show_progress=show_progress)
 
 
 def geocode(wait=10):

@@ -65,6 +65,9 @@ class Location(geo_models.Model):
     coordinate_quality = models.CharField(max_length=2,
         choices=QUALITY_CHOICES, null=True, blank=True)
 
+    latest_receipt = models.ForeignKey('Receipt', related_name='+',
+        null=True, blank=True)
+
     # MANAGERS #
     objects = geo_models.GeoManager()
 
