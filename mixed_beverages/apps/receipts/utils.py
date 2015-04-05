@@ -106,8 +106,3 @@ def post_process():
     group_by_name(show_progress=show_progress)
     group_by_location(show_progress=show_progress)
     set_latest(show_progress=show_progress)
-
-
-def geocode(wait=10):
-    # TODO
-    pass

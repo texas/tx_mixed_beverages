@@ -75,7 +75,7 @@ class Location(geo_models.Model):
     def __unicode__(self):
         return unicode(self.coordinate or self.pk)
 
-    #
+    # CUSTOM METHODS #
 
     def get_latest(self):
         try:
@@ -83,14 +83,15 @@ class Location(geo_models.Model):
         except IndexError:
             return None
 
-    # CUSTOM METHODS #
-
     def geocode(self, force=False):
         logger = logging.getLogger('geocode')
         if self.coordinate and not force:
             logger.info('{} already geocoded'.format(self))
             return
-        receipt = self.receipts.all()[0]
+        receipt = self.get_latest()
+        if receipt is None:
+            logger.warning('Location {} has no address'.format(self.pk))
+            return
         data = geocode_address({
             'address': receipt.address,
             'city': receipt.city,

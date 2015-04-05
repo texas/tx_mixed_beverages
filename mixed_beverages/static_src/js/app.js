@@ -68,7 +68,6 @@ var pointToLayer = function (feature, latlng) {
 
 
 $.getJSON(URLS.geojson, function (data) {
-  window.zz = data;
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: 15,
     maxClusterRadius: 50
