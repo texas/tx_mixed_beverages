@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.postgres',
 
     'mixed_beverages.apps.receipts',
     'mixed_beverages.apps.lazy_geo',

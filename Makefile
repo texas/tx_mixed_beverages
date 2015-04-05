@@ -25,6 +25,7 @@ test:
 resetdb:
 	-phd dropdb
 	phd createdb
+	phd psql -c 'CREATE EXTENSION hstore; CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
 

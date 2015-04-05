@@ -89,10 +89,23 @@ def group_by_location(show_progress=False):
         last_reference = reference
 
 
+def set_latest(show_progress=False):
+    progress = ProgressBar() if show_progress else lambda x: x
+    queryset = Location.objects.all()
+    for x in progress(queryset):
+        latest_receipt = x.get_latest()
+        if latest_receipt:
+            x.data = {
+                'tax': unicode(latest_receipt.tax),  # hstore only stores text
+            }
+            x.save(update_fields=('data', ))
+
+
 def post_process():
     show_progress = True  # TODO add a way to silence progress bar
     group_by_name(show_progress=show_progress)
     group_by_location(show_progress=show_progress)
+    set_latest(show_progress=show_progress)
 
 
 def geocode(wait=10):

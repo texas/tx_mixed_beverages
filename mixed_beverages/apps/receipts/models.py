@@ -6,6 +6,7 @@ import logging
 from django.db import models
 from django.contrib.gis.db import models as geo_models
 from django.contrib.gis.geos import Point
+from django.contrib.postgres.fields import HStoreField
 
 from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
@@ -64,6 +65,9 @@ class Location(geo_models.Model):
     coordinate = geo_models.PointField(null=True, blank=True)
     coordinate_quality = models.CharField(max_length=2,
         choices=QUALITY_CHOICES, null=True, blank=True)
+
+    # denormalized data to help generate map data
+    data = HStoreField(null=True, blank=True)
 
     # MANAGERS #
     objects = geo_models.GeoManager()

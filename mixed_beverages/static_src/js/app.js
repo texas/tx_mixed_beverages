@@ -2,11 +2,16 @@
 var L = require('leaflet');
 require('leaflet.markercluster');
 var $ = require('jquery');
+var d3 = require('d3');
+var colorbrewer = require('colorbrewer');
+// window.d3 = d3;
+// window.colorbrewer = colorbrewer;
 
 // need to manually specify this
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
 
-var map = L.map('map').setView([31.505, -98.09], 8);
+// var map = L.map('map').setView([31.505, -98.09], 8);
+var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
 
 L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
   maxZoom: 18,
@@ -29,7 +34,7 @@ var showLocation = function (id, stuff) {
   // var self = this;
   var showInfo = function (data) {
     // self.bindPopup('test ' + data.latest.name).openPopup();
-    var popup = L.popup({offset: [0, -15]})
+    L.popup({offset: [0, -15]})
       .setLatLng(stuff.latlng)
       .setContent(contentize(data))
       .openOn(map);
@@ -46,13 +51,32 @@ var showLocation = function (id, stuff) {
   }
 };
 
+var taxColorScale = d3.scale.linear()
+  .clamp(true)
+  .domain([10000, 5000, 1000, 0])
+  .range(colorbrewer.Spectral[4]);
+var pointToLayer = function (feature, latlng) {
+  var tax = parseInt(feature.properties.data.tax, 10);  // actually a float, but we don't care about cents
+  return L.circleMarker(latlng, {
+    color: taxColorScale(tax),
+    fillOpacity: 0.8,
+    opacity: 1,
+    radius: 7,
+    weight: 1
+  });
+};
+
 
 $.getJSON(URLS.geojson, function (data) {
+  window.zz = data;
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: 15,
     maxClusterRadius: 50
   });
-  L.geoJson(data).addTo(markers);
+  L.geoJson(data, {
+    pointToLayer: pointToLayer
+    // style: markerStyle
+  }).addTo(markers);
   markers.addTo(map);
   markers.on('click', function (a) {
     // a.layer.feature.properties
