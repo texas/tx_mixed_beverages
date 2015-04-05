@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -10,5 +11,9 @@ urlpatterns = [
     url(r'^geo/', include('mixed_beverages.apps.lazy_geo.urls',
         namespace='lazy_geo')),
     url(r'^api/', include(router.urls)),
-    url(r'^admin/', include(admin.site.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^admin/', include(admin.site.urls)),
+    ]
