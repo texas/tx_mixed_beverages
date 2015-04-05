@@ -9,18 +9,15 @@ var thousands = require('./utils').thousands;
 //
 // @returns DOMNode
 var contentize = function (data) {
-  console.log(data);
   var $container = $('<div class="location"/>');
-  $container.append('<span>' + data.latest.name + '</span> ');
-  $container.append('<a target="admin" title="fix marker location" ' +
-    'class="location--ind q-' +
-    data.feature.properties.coordinate_quality + '" '+
-    'href="/admin/receipts/location/' + data.feature.id + '/">' +
-    '&nbsp</a>');
+  $container.append(`<span>${ data.latest.name }</span> `);
+  $container.append(`<a target="admin" title="fix marker location"
+    class="location--ind q-${ data.feature.properties.coordinate_quality  }"
+    href="/admin/receipts/location/${ data.feature.id }/">&nbsp</a>`);
   var $list = $('<dl class="dl-horizontal"/>').appendTo($container);
   $.each(data.receipts, function (idx, x) {
-    $list.append('<dt>' + x.date.replace(/\-\d+$/, '') + '</dt>');
-    $list.append('<dd>' + thousands(x.tax) + '</dd>');
+    $list.append(`<dt>${ x.date.replace(/\-\d+$/, '') }</dt>`);
+    $list.append(`<dd>${ thousands(x.tax) }</dd>`);
   });
   return $container[0];
 };
