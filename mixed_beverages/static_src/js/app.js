@@ -2,6 +2,7 @@
 var L = require('leaflet');
 require('leaflet.markercluster');
 var $ = require('jquery');
+var _ = require('lodash');
 var d3 = require('d3');
 var colorbrewer = require('colorbrewer');
 window.d3 = d3;  // DEBUG
@@ -48,7 +49,7 @@ var taxColorScale = d3.scale.linear()
   .domain([10000, 5000, 1000, 0])
   .range(colorbrewer.Spectral[4]);
 
-var thousands = d3.format(',');
+var thousands = d3.format('$,.0f');
 var Legend = L.Control.extend({
   options: {
     position: 'bottomleft'
@@ -58,7 +59,7 @@ var Legend = L.Control.extend({
     var $list = $('<dl>').appendTo($container);
     $.each(taxColorScale.domain(), function (idx, level) {
       $list.append('<dt><span style="background: ' + taxColorScale(level) + ';">&nbsp;</span></dt>');
-      $list.append('<dd>$' + thousands(level) + '</dd>');
+      $list.append('<dd>' + thousands(level) + '</dd>');
     });
     return $container[0];
   }
@@ -69,15 +70,27 @@ var Nav = L.Control.extend({
     position: 'topright'
   },
   onAdd: function (map) {
-    var $container = $('<div class="nav leaflet-bar"/>');
+    var $container = $('<div class="nav leaflet-bar status-loading"/>');
     $container.append('<div class="loading">Loading...</div>');
+    $container.append('<div class="info">' +
+      'Markers: <span class="markers"></span> ' +
+      'Value: <span class="value"></span> ' +
+      '</div>');
+    this.ui = {
+      markers: $container.find('span.markers'),
+      value: $container.find('span.value')
+    };
     map.nav = this;
     return $container[0];
   },
   // CUSTOM METHODS
   _loaded: function () {
     var $container = $(this.getContainer());
-    $container.find('div.loading').remove();
+    $container.removeClass('status-loading').addClass('status-loaded');
+  },
+  showStatsFor: function (data) {
+    this.ui.markers.text(data.markers.length);
+    this.ui.value.text(thousands(data.value));
   }
 });
 
@@ -118,9 +131,25 @@ var _getJSON = function (data) {
   markers.addTo(map);
   markers.on('click', function (a) {
     // a.layer.feature.properties
-    console.log('marker', a.layer.feature.properties, this);
+    console.log('marker', a.layer.feature.properties, this);  // DEBUG
     showLocation.call(this, a.layer.feature.id, a);
   });
+  var updateNav = function () {
+    var data = {
+      value: 0,
+      markers: []
+    };
+    var bounds = map.getBounds();
+    markers.eachLayer(function (marker) {
+      if (bounds.contains(marker.getLatLng())) {
+        data.markers.push(marker);
+        data.value += parseFloat(marker.feature.properties.data.tax);
+      }
+    });
+    map.nav.showStatsFor(data);
+  };
+  updateNav();  // initial hit
+  map.on('move', _.debounce(updateNav, 500));
 };
 
 // BEGIN

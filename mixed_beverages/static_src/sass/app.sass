@@ -18,6 +18,13 @@ body
 .nav
   background: white
   padding: 0.5em
+  .loading
+    display: none
+  &.status-loading
+    > .loading
+      display: block
+    > .info
+      display: none
 
 
 .legend
