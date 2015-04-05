@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from ..factories import ReceiptFactory
+from ..factories import LocationFactory, ReceiptFactory
 from ..models import Location
-from ..utils import row_to_receipt, group_by_location
+from ..utils import row_to_receipt, group_by_location, set_location_data
 
 
 def refresh(instance):
@@ -39,5 +39,52 @@ class PostProcessTests(TestCase):
         self.assertNotEqual(r3.location, r1.location)
         self.assertEqual(Location.objects.count(), 2)
 
+    def test_set_location_data_filters_old_data(self):
+        # setup
+        location = LocationFactory()
+        ReceiptFactory(location=location, date='1970-11-01', tax=1)
+
+        set_location_data()
+
+        location = Location.objects.get(pk=location.pk)
+        self.assertIsNone(location.data)
+
+    def test_set_location_data_deletes_old_data(self):
+        # setup
+        location = LocationFactory()
+        receipt = ReceiptFactory(location=location, date='2015-02-01', tax=1)
+
+        set_location_data()
+
+        receipt.date = '1970-01-01'
+        receipt.save()
+        set_location_data()
+
+        location = Location.objects.get(pk=location.pk)
+        self.assertEqual(location.data, {})  # not NULL like above
+
     def test_set_location_data_works(self):
-        pass
+        # setup
+        location = LocationFactory()
+        ReceiptFactory(location=location, date='2014-11-01', tax=1)
+        ReceiptFactory(location=location, date='2014-12-01', tax=2)
+        ReceiptFactory(location=location, date='2015-01-01', tax=3)
+        ReceiptFactory(location=location, date='2015-02-01', tax=4)
+        r5 = ReceiptFactory(location=location, date='2015-03-01', tax=5)
+
+        set_location_data()
+
+        location = Location.objects.get(pk=location.pk)
+        # tax is set to latest tax amount
+        self.assertEqual(float(location.data['tax']), r5.tax)
+        self.assertEqual(float(location.data['avg_tax']), 3.5)
+
+    def test_set_location_data_only_has_two_decimal_places(self):
+        # setup
+        location = LocationFactory()
+        ReceiptFactory(location=location, date='2015-01-01', tax=3.3333333333)
+
+        set_location_data()
+
+        location = Location.objects.get(pk=location.pk)
+        self.assertEqual(float(location.data['avg_tax']), 3.33)

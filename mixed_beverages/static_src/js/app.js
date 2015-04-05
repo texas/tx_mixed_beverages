@@ -56,7 +56,7 @@ var taxColorScale = d3.scale.linear()
   .domain([10000, 5000, 1000, 0])
   .range(colorbrewer.Spectral[4]);
 var pointToLayer = function (feature, latlng) {
-  var tax = parseInt(feature.properties.data.tax, 10);  // actually a float, but we don't care about cents
+  var tax = parseInt(feature.properties.data.avg_tax, 10);  // actually a float, but we don't care about cents
   return L.circleMarker(latlng, {
     color: taxColorScale(tax),
     fillOpacity: 0.8,
