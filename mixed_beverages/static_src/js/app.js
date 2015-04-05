@@ -39,7 +39,7 @@ var markerStyle = function (feature) {
 };
 
 var _getJSON = function (data) {
-  map.nav._loaded();
+  nav.isLoaded();
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50
@@ -64,7 +64,7 @@ var _getJSON = function (data) {
         data.value += parseFloat(marker.feature.properties.data.avg_tax || 0);
       }
     });
-    map.nav.showStatsFor(data);
+    nav.showStatsFor(data);
   };
   updateNav();  // initial hit
   map.on('move', _.debounce(updateNav, 500));
