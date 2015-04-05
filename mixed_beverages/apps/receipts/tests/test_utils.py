@@ -22,10 +22,10 @@ class PostProcessTests(TestCase):
         # sanity check
         self.assertFalse(Location.objects.all().exists())
 
-        r1 = ReceiptFactory()
+        r1 = ReceiptFactory(location=None)
         r2 = ReceiptFactory(address=r1.address, city=r1.city, state=r1.state,
-            zip=r1.zip)
-        r3 = ReceiptFactory()
+            zip=r1.zip, location=None)
+        r3 = ReceiptFactory(location=None)
 
         # between 1 and 1 + 3n queries
         with self.assertNumQueries(7):

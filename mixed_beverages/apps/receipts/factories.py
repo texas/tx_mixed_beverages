@@ -9,6 +9,11 @@ from factory.fuzzy import FuzzyDate, FuzzyDecimal, FuzzyText
 from . import models
 
 
+class LocationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.Location
+
+
 class ReceiptFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Receipt
@@ -22,3 +27,5 @@ class ReceiptFactory(factory.DjangoModelFactory):
     state = FuzzyText(length=2)
     zip = FuzzyText(length=5, chars=string.digits)
     county_code = 1337
+
+    location = factory.SubFactory(LocationFactory)
