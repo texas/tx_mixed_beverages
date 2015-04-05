@@ -54,13 +54,30 @@ var Legend = L.Control.extend({
     position: 'bottomleft'
   },
   onAdd: function (map) {
-    var $container = $('<div class="legend"/>');
+    var $container = $('<div class="legend leaflet-bar"/>');
     var $list = $('<dl>').appendTo($container);
     $.each(taxColorScale.domain(), function (idx, level) {
       $list.append('<dt><span style="background: ' + taxColorScale(level) + ';">&nbsp;</span></dt>');
       $list.append('<dd>$' + thousands(level) + '</dd>');
     });
     return $container[0];
+  }
+});
+
+var Nav = L.Control.extend({
+  options: {
+    position: 'topright'
+  },
+  onAdd: function (map) {
+    var $container = $('<div class="nav leaflet-bar"/>');
+    $container.append('<div class="loading">Loading...</div>');
+    map.nav = this;
+    return $container[0];
+  },
+  // CUSTOM METHODS
+  _loaded: function () {
+    var $container = $(this.getContainer());
+    $container.find('div.loading').remove();
   }
 });
 
@@ -89,6 +106,7 @@ var pointToLayer = function (feature, latlng) {
 };
 
 var _getJSON = function (data) {
+  map.nav._loaded();
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: 15,
     maxClusterRadius: 50
@@ -109,7 +127,8 @@ var _getJSON = function (data) {
 
 // var map = L.map('map').setView([31.505, -98.09], 8);
 var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
-map.addControl( new Legend());
+map.addControl(new Legend());
+map.addControl(new Nav());
 
 L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
   maxZoom: 18,
