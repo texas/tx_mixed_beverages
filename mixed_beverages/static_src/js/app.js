@@ -13,7 +13,12 @@ L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3
 
 
 var locationCache = {};
-var showLocation = function (id, stuff) {
+var showLocationPopup = function (marker) {
+  if (marker._popup) {
+    marker.openPopup();
+    return;
+  }
+  var id = marker.feature.id;
   var contentize = function (data) {
     var $container = $('<div/>');
     $container.append('<span>' + data.latest.name + '</span>');
@@ -24,23 +29,18 @@ var showLocation = function (id, stuff) {
     });
     return $container[0];
   };
-  // var self = this;
-  var showInfo = function (data) {
-    // self.bindPopup('test ' + data.latest.name).openPopup();
-    L.popup({offset: [-1, 0]})
-      .setLatLng(stuff.latlng)
-      .setContent(contentize(data))
-      .openOn(map);
+  var showPopup = function (data) {
+    marker.bindPopup(contentize(data)).openPopup();
   };
 
   var data = locationCache[id];
   if (!data) {
     $.getJSON(URLS.location + id + '/', function (data) {
       locationCache[id] = data;
-      showInfo(data);
+      showPopup(data);
     });
   } else {
-    showInfo(data);
+    showPopup(data);
   }
 };
 
@@ -65,6 +65,7 @@ var Legend = L.Control.extend({
   }
 });
 
+
 var Nav = L.Control.extend({
   options: {
     position: 'topright'
@@ -75,11 +76,18 @@ var Nav = L.Control.extend({
     $container.append('<div class="info">' +
       'Markers: <span class="markers"></span> ' +
       'Value: <span class="value"></span> ' +
+      'Top: <ul class="top"></ul> ' +
       '</div>');
     this.ui = {
       markers: $container.find('span.markers'),
-      value: $container.find('span.value')
+      value: $container.find('span.value'),
+      top: $container.find('ul.top')
     };
+    this.ui.top.on('click', 'li', function (evt) {
+      var marker = $(this).data('marker');
+      showLocationPopup(marker);
+      evt.stopPropagation();  // keep click from closing the popup
+    });
     map.nav = this;
     return $container[0];
   },
@@ -89,6 +97,16 @@ var Nav = L.Control.extend({
     $container.removeClass('status-loading').addClass('status-loaded');
   },
   showStatsFor: function (data) {
+    var sorted = _.sortBy(data.markers, function (x) {
+      return -parseFloat(x.feature.properties.data.avg_tax);
+    });
+    this.ui.top.empty();
+    var $li;
+    for (var i = 0; i < Math.min(sorted.length, 5); ++i) {
+      $li = $('<li>' + thousands(sorted[i].feature.properties.data.avg_tax) + '</li>');
+      $li.data('marker', sorted[i]);
+      this.ui.top.append($li);
+    }
     this.ui.markers.text(data.markers.length);
     this.ui.value.text(thousands(data.value));
   }
@@ -129,10 +147,9 @@ var _getJSON = function (data) {
     // style: markerStyle
   }).addTo(markers);
   markers.addTo(map);
-  markers.on('click', function (a) {
-    // a.layer.feature.properties
-    console.log('marker', a.layer.feature.properties, this);  // DEBUG
-    showLocation.call(this, a.layer.feature.id, a);
+  markers.on('click', function (evt) {
+    // console.log('marker', evt.layer, this);  // DEBUG
+    showLocationPopup(evt.layer);
   });
   var updateNav = function () {
     var data = {
@@ -143,7 +160,7 @@ var _getJSON = function (data) {
     markers.eachLayer(function (marker) {
       if (bounds.contains(marker.getLatLng())) {
         data.markers.push(marker);
-        data.value += parseFloat(marker.feature.properties.data.tax);
+        data.value += parseFloat(marker.feature.properties.data.avg_tax || 0);
       }
     });
     map.nav.showStatsFor(data);
