@@ -1,22 +1,21 @@
 /* global URLS: false */
-var L = require('leaflet');
-require('leaflet.markercluster');
-var $ = require('jquery');
-var _ = require('lodash');
-var d3 = require('d3');
+import L from 'leaflet';
+import 'leaflet.markercluster';
+import $ from 'jquery';
+import _ from 'lodash';
+import d3 from 'd3';
 window.d3 = d3;  // DEBUG
-// window.colorbrewer = colorbrewer;
 
-// need to manually specify this
-L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
-var DECLUSTER_ZOOM = 15;
+import { DECLUSTER_ZOOM } from './settings';
 
 import { showLocationPopup } from './marker_utils';
 import { thousands, taxColorScale } from './utils';
+import Nav from './ui/Nav';
+window.Nav = Nav;  // DEBUG
 
-var zoomToMarker = function (marker) {
-  map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
-};
+
+// need to manually specify this
+L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
 
 var Legend = L.Control.extend({
   options: {
@@ -33,56 +32,6 @@ var Legend = L.Control.extend({
   }
 });
 
-
-var Nav = L.Control.extend({
-  options: {
-    position: 'topright'
-  },
-  onAdd: function (map) {
-    var $container = $('<div class="nav leaflet-bar status-loading"/>');
-    $container.append('<div class="loading">Loading...</div>');
-    $container.append('<div class="info">' +
-      'Markers: <span class="markers"></span> ' +
-      'Value: <span class="value"></span> ' +
-      'Top: <ul class="top"></ul> ' +
-      '</div>');
-    this.ui = {
-      markers: $container.find('span.markers'),
-      value: $container.find('span.value'),
-      top: $container.find('ul.top')
-    };
-    this.ui.top.on('click', 'li', function (evt) {
-      var marker = $(this).data('marker');
-      if (map.getZoom() < DECLUSTER_ZOOM) {
-        zoomToMarker(marker);
-        // FIXME user then has to click again because the marker does not exist yet
-      }
-      showLocationPopup(marker);
-      evt.stopPropagation();  // keep click from closing the popup
-    });
-    map.nav = this;
-    return $container[0];
-  },
-  // CUSTOM METHODS
-  _loaded: function () {
-    var $container = $(this.getContainer());
-    $container.removeClass('status-loading').addClass('status-loaded');
-  },
-  showStatsFor: function (data) {
-    var sorted = _.sortBy(data.markers, function (x) {
-      return -parseFloat(x.feature.properties.data.avg_tax);
-    });
-    this.ui.top.empty();
-    var $li;
-    for (var i = 0; i < Math.min(sorted.length, 5); ++i) {
-      $li = $('<li>' + thousands(sorted[i].feature.properties.data.avg_tax) + '</li>');
-      $li.data('marker', sorted[i]);
-      this.ui.top.append($li);
-    }
-    this.ui.markers.text(data.markers.length);
-    this.ui.value.text(thousands(data.value));
-  }
-});
 
 var markerStyle = function (feature) {
   var style = {
@@ -142,7 +91,8 @@ var _getJSON = function (data) {
 // var map = L.map('map').setView([31.505, -98.09], 8);
 var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
 map.addControl(new Legend());
-map.addControl(new Nav());
+var nav = new Nav(map, showLocationPopup);
+map.addControl(nav.render());
 window.map = map;  // DEBUG
 
 L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
