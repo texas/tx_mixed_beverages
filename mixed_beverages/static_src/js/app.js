@@ -9,28 +9,13 @@ window.d3 = d3;  // DEBUG
 import { DECLUSTER_ZOOM } from './settings';
 
 import { showLocationPopup } from './marker_utils';
-import { thousands, taxColorScale } from './utils';
+import { taxColorScale } from './utils';
 import Nav from './ui/Nav';
-window.Nav = Nav;  // DEBUG
+import Legend from './ui/Legend';
 
 
 // need to manually specify this
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
-
-var Legend = L.Control.extend({
-  options: {
-    position: 'bottomleft'
-  },
-  onAdd: function (map) {
-    var $container = $('<div class="legend leaflet-bar"/>');
-    var $list = $('<dl>').appendTo($container);
-    $.each(taxColorScale.domain(), function (idx, level) {
-      $list.append('<dt><span style="background: ' + taxColorScale(level) + ';">&nbsp;</span></dt>');
-      $list.append('<dd>' + thousands(level) + '</dd>');
-    });
-    return $container[0];
-  }
-});
 
 
 var markerStyle = function (feature) {
@@ -90,8 +75,9 @@ var _getJSON = function (data) {
 
 // var map = L.map('map').setView([31.505, -98.09], 8);
 var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
-map.addControl(new Legend());
+var legend = new Legend();
 var nav = new Nav(map, showLocationPopup);
+map.addControl(legend.render());
 map.addControl(nav.render());
 window.map = map;  // DEBUG
 
