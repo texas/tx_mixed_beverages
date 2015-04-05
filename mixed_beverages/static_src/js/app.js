@@ -34,7 +34,7 @@ var showLocation = function (id, stuff) {
   // var self = this;
   var showInfo = function (data) {
     // self.bindPopup('test ' + data.latest.name).openPopup();
-    L.popup({offset: [0, -15]})
+    L.popup({offset: [-1, 0]})
       .setLatLng(stuff.latlng)
       .setContent(contentize(data))
       .openOn(map);
@@ -55,15 +55,28 @@ var taxColorScale = d3.scale.linear()
   .clamp(true)
   .domain([10000, 5000, 1000, 0])
   .range(colorbrewer.Spectral[4]);
-var pointToLayer = function (feature, latlng) {
-  var tax = parseInt(feature.properties.data.avg_tax, 10);  // actually a float, but we don't care about cents
-  return L.circleMarker(latlng, {
-    color: taxColorScale(tax),
+var markerStyle = function (feature) {
+  var style = {
     fillOpacity: 0.8,
     opacity: 1,
     radius: 7,
     weight: 1
-  });
+  };
+  var tax = parseInt(feature.properties.data.avg_tax, 10);  // actually a float, but we don't care about cents
+  if (isNaN(tax)) {
+    style.color = "#000";
+    style.dashArray = "5,5";  // TODO get this working
+    style.radius = 5;
+  } else if (tax === 0) {
+    style.color = taxColorScale(tax);
+    style.radius = 5;
+  } else {
+    style.color = taxColorScale(tax);
+  }
+  return style;
+};
+var pointToLayer = function (feature, latlng) {
+  return L.circleMarker(latlng, markerStyle(feature));
 };
 
 
@@ -79,7 +92,7 @@ $.getJSON(URLS.geojson, function (data) {
   markers.addTo(map);
   markers.on('click', function (a) {
     // a.layer.feature.properties
-    // console.log('marker', a, this);
+    console.log('marker', a.layer.feature.properties, this);
     showLocation.call(this, a.layer.feature.id, a);
   });
 });
