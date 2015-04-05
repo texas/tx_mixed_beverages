@@ -4,7 +4,7 @@ require('leaflet.markercluster');
 var $ = require('jquery');
 var d3 = require('d3');
 var colorbrewer = require('colorbrewer');
-// window.d3 = d3;
+window.d3 = d3;  // DEBUG
 // window.colorbrewer = colorbrewer;
 
 // need to manually specify this
@@ -43,11 +43,28 @@ var showLocation = function (id, stuff) {
   }
 };
 
+var taxColorScale = d3.scale.linear()
+  .clamp(true)
+  .domain([10000, 5000, 1000, 0])
+  .range(colorbrewer.Spectral[4]);
+
+var thousands = d3.format(',');
+var Legend = L.Control.extend({
+  options: {
+    position: 'bottomleft'
+  },
+  onAdd: function (map) {
+    var $container = $('<div class="legend"/>');
+    var $list = $('<dl>').appendTo($container);
+    $.each(taxColorScale.domain(), function (idx, level) {
+      $list.append('<dt><span style="background: ' + taxColorScale(level) + ';">&nbsp;</span></dt>');
+      $list.append('<dd>$' + thousands(level) + '</dd>');
+    });
+    return $container[0];
+  }
+});
+
 var markerStyle = function (feature) {
-  var taxColorScale = d3.scale.linear()
-    .clamp(true)
-    .domain([10000, 5000, 1000, 0])
-    .range(colorbrewer.Spectral[4]);
   var style = {
     fillOpacity: 0.8,
     opacity: 1,
@@ -92,6 +109,7 @@ var _getJSON = function (data) {
 
 // var map = L.map('map').setView([31.505, -98.09], 8);
 var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
+map.addControl( new Legend());
 
 L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
   maxZoom: 18,
