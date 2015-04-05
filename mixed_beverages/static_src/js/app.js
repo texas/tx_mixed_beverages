@@ -10,6 +10,7 @@ window.d3 = d3;  // DEBUG
 
 // need to manually specify this
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
+var DECLUSTER_ZOOM = 15;
 
 
 var locationCache = {};
@@ -30,6 +31,10 @@ var showLocationPopup = function (marker) {
     return $container[0];
   };
   var showPopup = function (data) {
+    if (!marker._map) {
+      console.warn('Marker has not been rendered yet', marker);
+      return;
+    }
     marker.bindPopup(contentize(data)).openPopup();
   };
 
@@ -42,6 +47,10 @@ var showLocationPopup = function (marker) {
   } else {
     showPopup(data);
   }
+};
+
+var zoomToMarker = function (marker) {
+  map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
 };
 
 var taxColorScale = d3.scale.linear()
@@ -85,6 +94,10 @@ var Nav = L.Control.extend({
     };
     this.ui.top.on('click', 'li', function (evt) {
       var marker = $(this).data('marker');
+      if (map.getZoom() < DECLUSTER_ZOOM) {
+        zoomToMarker(marker);
+        // FIXME user then has to click again because the marker does not exist yet
+      }
       showLocationPopup(marker);
       evt.stopPropagation();  // keep click from closing the popup
     });
@@ -139,7 +152,7 @@ var pointToLayer = function (feature, latlng) {
 var _getJSON = function (data) {
   map.nav._loaded();
   var markers = new L.MarkerClusterGroup({
-    disableClusteringAtZoom: 15,
+    disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50
   });
   L.geoJson(data, {
@@ -172,9 +185,10 @@ var _getJSON = function (data) {
 // BEGIN
 
 // var map = L.map('map').setView([31.505, -98.09], 8);
-var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
+var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
 map.addControl(new Legend());
 map.addControl(new Nav());
+window.map = map;  // DEBUG
 
 L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
   maxZoom: 18,
