@@ -24,16 +24,17 @@ export default class {
       onAdd: function (map) {
         var $container = $('<div class="nav leaflet-bar status-loading"/>');
         $container.append('<div class="loading">Loading...</div>');
-        $container.append('<div class="info">' +
-          'Markers: <span class="markers"></span> ' +
-          'Value: <span class="value"></span> ' +
-          'Top: <ul class="top"></ul> ' +
-          '</div>');
+        $container.append(`<div class="info">
+          Markers: <span class="markers"></span>
+          Value: <span class="value"></span>
+          Top: <ol class="top-locations"></ol>
+          </div>`);
         this.ui = {
           markers: $container.find('span.markers'),
           value: $container.find('span.value'),
-          top: $container.find('ul.top')
+          top: $container.find('ol.top-locations')
         };
+        console.log(this.ui.top)
         this.ui.top.on('click', 'li', function (evt) {
           var marker = $(this).data('marker');
           if (map.getZoom() < DECLUSTER_ZOOM) {
@@ -58,7 +59,12 @@ export default class {
         this.ui.top.empty();
         var $li;
         for (var i = 0; i < Math.min(sorted.length, 5); ++i) {
-          $li = $('<li>' + thousands(sorted[i].feature.properties.data.avg_tax) + '</li>');
+          let markerData = sorted[i].feature.properties.data;
+          $li = $(
+            `<li>
+              <span class="name">${ markerData.name }</span>
+              <span class="tax">${ thousands(markerData.avg_tax) }</span>
+            </li>`);
           $li.data('marker', sorted[i]);
           this.ui.top.append($li);
         }

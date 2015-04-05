@@ -7,7 +7,6 @@ import d3 from 'd3';
 window.d3 = d3;  // DEBUG
 
 import { DECLUSTER_ZOOM } from './settings';
-
 import { showLocationPopup } from './marker_utils';
 import { taxColorScale } from './utils';
 import Nav from './ui/Nav';
