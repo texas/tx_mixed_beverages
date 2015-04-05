@@ -31,6 +31,7 @@ class Business(models.Model):
 class Location(geo_models.Model):
     # http://geoservices.tamu.edu/Services/Geocode/About/#NAACCRGISCoordinateQualityCodes
     QUALITY_CHOICES = (
+        ('me', 'User Inputted'),
         ('00', 'AddressPoint'),
         # 'Coordinates derived from local government-maintained address '
         # 'points, which are based on property parcel locations, not '

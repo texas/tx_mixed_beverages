@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 from . import models
 
@@ -20,7 +21,14 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.geo_models.PointField: {
+            'widget': forms.TextInput(attrs={'size': 80}),
+        }
+    }
     inlines = [ReceiptInline, ]
+    list_filter = ('coordinate_quality', )
+    save_on_top = True
 
 
 @admin.register(models.Receipt)
