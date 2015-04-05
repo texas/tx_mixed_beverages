@@ -1,7 +1,7 @@
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.core.serializers import serialize
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.views.generic import DetailView
 from mixed_beverages.apps.receipts import models
-from djgeojson.views import GeoJSONLayerView
 
 from .utils import GeocodeException
 
@@ -27,8 +27,9 @@ class AddressGeocode(DetailView):
         })
 
 
-class MarkerList(GeoJSONLayerView):
-    queryset = models.Location.objects.exclude(coordinate=None)
-    geometry_field = 'coordinate'
-    precision = 6
-    properties = ('coordinate_quality', )
+def marker_list(request):
+    queryset = (models.Location.objects.exclude(coordinate=None))
+    data = serialize('geojson', queryset,
+        geometry_field='coordinate',
+        fields=('coordinate_quality', 'data'))
+    return HttpResponse(data, content_type='application/json')

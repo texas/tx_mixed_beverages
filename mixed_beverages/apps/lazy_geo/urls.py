@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^data.geojson$', views.MarkerList.as_view(), name='geo'),
+    url(r'^data.geojson$', views.marker_list, name='geo'),
 ]
