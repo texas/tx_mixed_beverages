@@ -110,9 +110,10 @@ def set_location_data(show_progress=False):
             continue
         latest_receipt = latest_receipts[0]
         avg_tax = sum(x.tax for x in latest_receipts) / len(latest_receipts)
+        # remember that hstore only stores text
         x.data = {
-            'tax': unicode(latest_receipt.tax),  # hstore only stores text
-            'avg_tax': unicode(avg_tax),
+            'name': unicode(latest_receipt.name),
+            'avg_tax': '{:.2f}'.format(avg_tax),
         }
         x.save(update_fields=('data', ))
 

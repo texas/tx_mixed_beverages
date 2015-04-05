@@ -70,13 +70,11 @@ class PostProcessTests(TestCase):
         ReceiptFactory(location=location, date='2014-12-01', tax=2)
         ReceiptFactory(location=location, date='2015-01-01', tax=3)
         ReceiptFactory(location=location, date='2015-02-01', tax=4)
-        r5 = ReceiptFactory(location=location, date='2015-03-01', tax=5)
+        ReceiptFactory(location=location, date='2015-03-01', tax=5)
 
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        # tax is set to latest tax amount
-        self.assertEqual(float(location.data['tax']), r5.tax)
         self.assertEqual(float(location.data['avg_tax']), 3.5)
 
     def test_set_location_data_only_has_two_decimal_places(self):
