@@ -12,42 +12,8 @@ window.d3 = d3;  // DEBUG
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
 var DECLUSTER_ZOOM = 15;
 
-
-var locationCache = {};
-var showLocationPopup = function (marker) {
-  if (marker._popup) {
-    marker.openPopup();
-    return;
-  }
-  var id = marker.feature.id;
-  var contentize = function (data) {
-    var $container = $('<div/>');
-    $container.append('<span>' + data.latest.name + '</span>');
-    var $list = $('<dl class="dl-horizontal"/>').appendTo($container);
-    $.each(data.receipts, function (idx, x) {
-      $list.append('<dt>' + x.date.replace(/\-\d+$/, '') + '</dt>');
-      $list.append('<dd>$' + x.tax + '</dd>');
-    });
-    return $container[0];
-  };
-  var showPopup = function (data) {
-    if (!marker._map) {
-      console.warn('Marker has not been rendered yet', marker);
-      return;
-    }
-    marker.bindPopup(contentize(data)).openPopup();
-  };
-
-  var data = locationCache[id];
-  if (!data) {
-    $.getJSON(URLS.location + id + '/', function (data) {
-      locationCache[id] = data;
-      showPopup(data);
-    });
-  } else {
-    showPopup(data);
-  }
-};
+var marker_utils = require('./marker_utils');
+var showLocationPopup = marker_utils.showLocationPopup;
 
 var zoomToMarker = function (marker) {
   map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
