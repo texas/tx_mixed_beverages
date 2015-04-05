@@ -93,10 +93,12 @@ def set_latest(show_progress=False):
     progress = ProgressBar() if show_progress else lambda x: x
     queryset = Location.objects.all()
     for x in progress(queryset):
-        old_latest = x.latest_receipt
-        x.latest_receipt = x.get_latest()
-        if old_latest != x.latest_receipt:
-            x.save(update_fields=('latest_receipt', ))
+        latest_receipt = x.get_latest()
+        if latest_receipt:
+            x.data = {
+                'tax': unicode(latest_receipt.tax),  # hstore only stores text
+            }
+            x.save(update_fields=('data', ))
 
 
 def post_process():
