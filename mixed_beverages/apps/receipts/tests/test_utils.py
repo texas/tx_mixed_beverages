@@ -18,7 +18,7 @@ class RowToReceiptTests(TestCase):
 
 
 class PostProcessTests(TestCase):
-    def test_group_by_location(self):
+    def test_group_by_location_works(self):
         # sanity check
         self.assertFalse(Location.objects.all().exists())
 
@@ -38,3 +38,6 @@ class PostProcessTests(TestCase):
         self.assertEqual(r1.location, r2.location)
         self.assertNotEqual(r3.location, r1.location)
         self.assertEqual(Location.objects.count(), 2)
+
+    def test_set_location_data_works(self):
+        pass
