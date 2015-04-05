@@ -9,6 +9,7 @@
     "url": "git://github.com/texas/tx_mixed_beverages.git"
   },
   "devDependencies": {
+    "babelify": "^6.0.1",
     "colorbrewer": "0.0.2",
     "d3": "^3.5.5",
     "grunt": "^0.4.5",

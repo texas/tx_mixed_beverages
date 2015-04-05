@@ -4,7 +4,6 @@ require('leaflet.markercluster');
 var $ = require('jquery');
 var _ = require('lodash');
 var d3 = require('d3');
-var colorbrewer = require('colorbrewer');
 window.d3 = d3;  // DEBUG
 // window.colorbrewer = colorbrewer;
 
@@ -12,19 +11,12 @@ window.d3 = d3;  // DEBUG
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
 var DECLUSTER_ZOOM = 15;
 
-var marker_utils = require('./marker_utils');
-var showLocationPopup = marker_utils.showLocationPopup;  // TODO splat
-var utils = require('./utils');
-var thousands = utils.thousands;  // TODO splat
+import { showLocationPopup } from './marker_utils';
+import { thousands, taxColorScale } from './utils';
 
 var zoomToMarker = function (marker) {
   map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
 };
-
-var taxColorScale = d3.scale.linear()
-  .clamp(true)
-  .domain([10000, 5000, 1000, 0])
-  .range(colorbrewer.Spectral[4]);
 
 var Legend = L.Control.extend({
   options: {
@@ -112,9 +104,6 @@ var markerStyle = function (feature) {
   }
   return style;
 };
-var pointToLayer = function (feature, latlng) {
-  return L.circleMarker(latlng, markerStyle(feature));
-};
 
 var _getJSON = function (data) {
   map.nav._loaded();
@@ -123,8 +112,7 @@ var _getJSON = function (data) {
     maxClusterRadius: 50
   });
   L.geoJson(data, {
-    pointToLayer: pointToLayer
-    // style: markerStyle
+    pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature))
   }).addTo(markers);
   markers.addTo(map);
   markers.on('click', function (evt) {

@@ -21,6 +21,8 @@ module.exports = (grunt) ->
         'mixed_beverages/static_src/js/**/*.js'
       ]
     browserify:
+      options:
+        transform: ['babelify']
       app:
         files:
           'mixed_beverages/static/app.js': 'mixed_beverages/static_src/js/app.js'

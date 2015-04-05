@@ -26,7 +26,7 @@ var contentize = function (data) {
 };
 
 
-module.exports.showLocationPopup = function (marker) {
+export function showLocationPopup(marker) {
   if (marker._popup) {
     marker.openPopup();
     return;
@@ -50,4 +50,4 @@ module.exports.showLocationPopup = function (marker) {
   } else {
     showPopup(data);
   }
-};
+}
