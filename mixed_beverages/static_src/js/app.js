@@ -10,14 +10,6 @@ var colorbrewer = require('colorbrewer');
 // need to manually specify this
 L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images';
 
-// var map = L.map('map').setView([31.505, -98.09], 8);
-var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
-
-L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
-  maxZoom: 18,
-  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-}).addTo(map);
-
 
 var locationCache = {};
 var showLocation = function (id, stuff) {
@@ -51,11 +43,11 @@ var showLocation = function (id, stuff) {
   }
 };
 
-var taxColorScale = d3.scale.linear()
-  .clamp(true)
-  .domain([10000, 5000, 1000, 0])
-  .range(colorbrewer.Spectral[4]);
 var markerStyle = function (feature) {
+  var taxColorScale = d3.scale.linear()
+    .clamp(true)
+    .domain([10000, 5000, 1000, 0])
+    .range(colorbrewer.Spectral[4]);
   var style = {
     fillOpacity: 0.8,
     opacity: 1,
@@ -79,8 +71,7 @@ var pointToLayer = function (feature, latlng) {
   return L.circleMarker(latlng, markerStyle(feature));
 };
 
-
-$.getJSON(URLS.geojson, function (data) {
+var _getJSON = function (data) {
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: 15,
     maxClusterRadius: 50
@@ -95,4 +86,17 @@ $.getJSON(URLS.geojson, function (data) {
     console.log('marker', a.layer.feature.properties, this);
     showLocation.call(this, a.layer.feature.id, a);
   });
-});
+};
+
+// BEGIN
+
+// var map = L.map('map').setView([31.505, -98.09], 8);
+var map = L.map('map').setView([30.27045435, -97.7414384914151], 15);  // DEBUG
+
+L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
+  maxZoom: 18,
+  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+}).addTo(map);
+
+
+$.getJSON(URLS.geojson, _getJSON);
