@@ -2,7 +2,7 @@ import L from 'leaflet';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { DECLUSTER_ZOOM } from '../settings';
+import { DECLUSTER_ZOOM, N_RESULTS } from '../settings';
 import { thousands } from '../utils';
 import { showLocationPopup } from '../marker_utils';
 
@@ -21,6 +21,7 @@ export default class {
       options: {
         position: 'topright'
       },
+
       onAdd: function (map) {
         var $container = $('<div class="nav leaflet-bar status-loading"/>');
         $container.append('<div class="loading">Loading...</div>');
@@ -34,7 +35,6 @@ export default class {
           value: $container.find('span.value'),
           top: $container.find('ol.top-locations')
         };
-        console.log(this.ui.top)
         this.ui.top.on('click', 'li', function (evt) {
           var marker = $(this).data('marker');
           if (map.getZoom() < DECLUSTER_ZOOM) {
@@ -47,18 +47,21 @@ export default class {
         map.nav = this;
         return $container[0];
       },
+
       // CUSTOM METHODS
+
       _loaded: function () {
         var $container = $(this.getContainer());
         $container.removeClass('status-loading').addClass('status-loaded');
       },
+
       showStatsFor: function (data) {
         var sorted = _.sortBy(data.markers, function (x) {
           return -parseFloat(x.feature.properties.data.avg_tax);
         });
         this.ui.top.empty();
         var $li;
-        for (var i = 0; i < Math.min(sorted.length, 5); ++i) {
+        for (var i = 0; i < Math.min(sorted.length, N_RESULTS); ++i) {
           let markerData = sorted[i].feature.properties.data;
           $li = $(
             `<li>
