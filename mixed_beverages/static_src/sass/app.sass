@@ -13,6 +13,7 @@ body
     float: left
   dd
     margin-left: 60px + 8px
+    text-align: right
 
 
 .nav
@@ -41,3 +42,22 @@ body
   dd
     font-weight: bold
     margin-left: 1.5em
+
+
+.location
+  // color code the quality of the geocoding
+  .q-00, .q-01, .q-02, .q-03
+    background: green
+  .q-09, .q-10
+    background: gold
+  .q-11
+    background: red
+  .q-98, .q-99
+    background: black
+
+.location--ind
+  border-radius: 1em
+  display: inline-block
+  height: 0.7em
+  text-decoration: none
+  width: 0.7em

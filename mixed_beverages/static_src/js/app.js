@@ -13,7 +13,9 @@ L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3
 var DECLUSTER_ZOOM = 15;
 
 var marker_utils = require('./marker_utils');
-var showLocationPopup = marker_utils.showLocationPopup;
+var showLocationPopup = marker_utils.showLocationPopup;  // TODO splat
+var utils = require('./utils');
+var thousands = utils.thousands;  // TODO splat
 
 var zoomToMarker = function (marker) {
   map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
@@ -24,7 +26,6 @@ var taxColorScale = d3.scale.linear()
   .domain([10000, 5000, 1000, 0])
   .range(colorbrewer.Spectral[4]);
 
-var thousands = d3.format('$,.0f');
 var Legend = L.Control.extend({
   options: {
     position: 'bottomleft'
