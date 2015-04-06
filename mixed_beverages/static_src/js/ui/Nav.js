@@ -18,10 +18,14 @@ export default class {
     var $container = $('<div class="nav leaflet-bar status-loading"/>');
     $container.append('<div class="loading">Loading...</div>');
     $container.append(`<div class="info">
-      <input type="search" class="search">
-      Markers: <span class="markers"></span>
-      Value: <span class="value"></span>
-      Top: <ol class="top-locations"></ol>
+        <div>
+          Markers: <span class="markers"></span>
+          Value: <span class="value"></span>
+        </div>
+        <div>
+          <input type="search" class="search" placeholder="Search...">
+          Top: <ol class="top-locations"></ol>
+        </div>
       </div>`);
     this.ui = {
       container: $container,

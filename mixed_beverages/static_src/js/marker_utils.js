@@ -5,15 +5,29 @@ var locationCache = {};
 var thousands = require('./utils').thousands;
 
 
+var quality_descriptions = {
+  'me': 'User Inputted',
+  '00': 'AddressPoint',
+  '01': 'GPS',
+  '02': 'Parcel',
+  '03': 'StreetSegmentInterpolation',
+  '09': 'AddressZipCentroid',
+  '10': 'POBoxZIPCentroid',
+  '11': 'CityCentroid',
+  '98': 'Unknown',
+  '99': 'Unmatchable'
+};
+
 // Render data
 //
 // @returns DOMNode
 var contentize = function (data) {
+  var quality = data.feature.properties.coordinate_quality;
   var $container = $('<div class="location"/>');
   $container.append(`<span>${ data.latest.name }</span> `);
-  $container.append(`<a target="admin" title="fix marker location"
-    class="location--ind q-${ data.feature.properties.coordinate_quality  }"
-    href="/admin/receipts/location/${ data.feature.id }/">&nbsp</a>`);
+  $container.append(`<a target="admin" title="${ quality }: ${ quality_descriptions[quality] }"
+    class="location--ind q-${ quality  }"
+    href="${ URLS.location_admin }${ data.feature.id }/">&nbsp</a>`);
   var $list = $('<dl class="dl-horizontal"/>').appendTo($container);
   $.each(data.receipts, function (idx, x) {
     $list.append(`<dt>${ x.date.replace(/\-\d+$/, '') }</dt>`);
