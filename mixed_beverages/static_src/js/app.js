@@ -71,19 +71,20 @@ var _getJSON = function (data) {
 };
 
 // BEGIN
+if (document.getElementById('map')) {
+  // var map = L.map('map').setView([31.505, -98.09], 8);
+  var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
+  var legend = new Legend();
+  var nav = new Nav(map, showLocationPopup);
+  map.addControl(legend.render());
+  map.addControl(nav.render());
+  window.map = map;  // DEBUG
 
-// var map = L.map('map').setView([31.505, -98.09], 8);
-var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
-var legend = new Legend();
-var nav = new Nav(map, showLocationPopup);
-map.addControl(legend.render());
-map.addControl(nav.render());
-window.map = map;  // DEBUG
-
-L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
-  maxZoom: 18,
-  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-}).addTo(map);
+  L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
+    maxZoom: 18,
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+  }).addTo(map);
 
 
-$.getJSON(URLS.geojson, _getJSON);
+  $.getJSON(URLS.geojson, _getJSON);
+}
