@@ -46,3 +46,10 @@ dump_geo:
 	$(MANAGE) dump_geo > geo_data.blob
 load_geo:
 	$(MANAGE) load_geo geo_data.blob
+
+
+docker/build:
+	docker build -t crccheck/mixed_beverages .
+
+docker/run:
+	docker run --rm -p 8080:8080 crccheck/mixed_beverages
