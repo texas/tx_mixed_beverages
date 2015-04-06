@@ -99,6 +99,7 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -147,3 +148,9 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [],
     'PAGE_SIZE': 100,
 }
+
+
+# Heroku
+
+GEOS_LIBRARY_PATH = env.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = env.get('GDAL_LIBRARY_PATH')

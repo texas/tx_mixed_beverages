@@ -16,5 +16,5 @@ waitress==0.8.9
 
 # Dev requirements
 progressbar==2.3  # TODO investigate clint's progress bar
-factory-boy==2.4.1
+factory-boy==2.5.1
 mock==1.0.1
