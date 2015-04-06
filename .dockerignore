@@ -1,0 +1,4 @@
+*.blob
+*.git
+*.sql
+node_modules/
