@@ -3,6 +3,7 @@ var colorbrewer = require('colorbrewer');
 
 
 export const thousands = d3.format('$,.0f');
+export const distance = d3.format(',.1f');
 
 export const taxColorScale = d3.scale.linear()
   .clamp(true)

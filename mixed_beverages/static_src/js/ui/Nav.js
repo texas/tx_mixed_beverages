@@ -3,7 +3,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 
 import { DECLUSTER_ZOOM, N_RESULTS } from '../settings';
-import { thousands } from '../utils';
+import { thousands, distance } from '../utils';
 import { showLocationPopup } from '../marker_utils';
 
 
@@ -77,11 +77,13 @@ export default class {
   showMarkers(markers) {
     this.control.ui.top.empty();
     var $li;
+    var center = this.map.getCenter();
     for (var i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
       let markerData = markers[i].feature.properties.data;
       $li = $(
         `<li>
           <span class="name">${ markerData.name }</span>
+          <span class="distance">(${ distance(center.distanceTo(markers[i].getLatLng()) / 1000) } km)</span>
           <span class="tax">${ thousands(markerData.avg_tax) }</span>
         </li>`);
       $li.data('marker', markers[i]);
