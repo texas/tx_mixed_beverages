@@ -9,6 +9,6 @@ ONE_WEEK = ONE_DAY * 7
 
 urlpatterns = [
     url(r'^data.geojson$',
-        cache_control(max_age=ONE_WEEK)(views.MarkerList.as_view()),
+        cache_control(max_age=ONE_WEEK, public=True)(views.MarkerList.as_view()),
         name='geo'),
 ]
