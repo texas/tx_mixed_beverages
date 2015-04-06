@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   # python
   python2.7 python-dev python-pip \
   # postgis
-  libpq-dev libgeos-dev \
+  libpq-dev libgeos-dev gdal-bin \
   # node
   nodejs nodejs-legacy npm \
   > /dev/null
