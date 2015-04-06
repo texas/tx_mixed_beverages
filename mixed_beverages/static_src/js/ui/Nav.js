@@ -18,17 +18,38 @@ export default class {
     var $container = $('<div class="nav leaflet-bar status-loading"/>');
     $container.append('<div class="loading">Loading...</div>');
     $container.append(`<div class="info">
+      <input type="search" class="search">
       Markers: <span class="markers"></span>
       Value: <span class="value"></span>
       Top: <ol class="top-locations"></ol>
       </div>`);
     this.ui = {
       container: $container,
+      search: $container.find('input'),
       markers: $container.find('span.markers'),
       value: $container.find('span.value'),
       top: $container.find('ol.top-locations')
     };
     map.nav = this;
+
+
+    // Event handlers
+    var _keyup = (evt) => {
+      var needle = this.ui.search.val().toUpperCase();
+      var searchIndex = this.nav.searchIndex;
+      var matches = [];
+      for (var i = 0; i < searchIndex.length; ++i) {
+        if (searchIndex[i][0].indexOf(needle) !== -1) {
+          matches.push(searchIndex[i][1]);
+        }
+        if (matches.length > N_RESULTS) {
+          break;
+        }
+      }
+      this.nav.showMarkers(matches);
+    };
+
+    this.ui.search.on('keyup', _.debounce(_keyup, 200));
 
     this.ui.top.on('click', 'li', function (evt) {
       var marker = $(this).data('marker');
@@ -45,29 +66,46 @@ export default class {
 
   // Public methods
 
-  showStatsFor(data) {
-    var sorted = _.sortBy(data.markers, function (x) {
-      return -parseFloat(x.feature.properties.data.avg_tax);
-    });
+  showMarkers(markers) {
     this.control.ui.top.empty();
     var $li;
-    for (var i = 0; i < Math.min(sorted.length, N_RESULTS); ++i) {
-      let markerData = sorted[i].feature.properties.data;
+    for (var i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
+      let markerData = markers[i].feature.properties.data;
       $li = $(
         `<li>
           <span class="name">${ markerData.name }</span>
           <span class="tax">${ thousands(markerData.avg_tax) }</span>
         </li>`);
-      $li.data('marker', sorted[i]);
+      $li.data('marker', markers[i]);
       this.control.ui.top.append($li);
     }
+  }
+
+  showStatsFor(data) {
+    var sorted = _.sortBy(data.markers, function (x) {
+      return -parseFloat(x.feature.properties.data.avg_tax);
+    });
+    this.showMarkers(sorted);
     this.control.ui.markers.text(data.markers.length);
     this.control.ui.value.text(thousands(data.value));
   }
 
-  isLoaded() {
+  _isLoaded() {
     var $container = this.control.ui.container;
     $container.removeClass('status-loading').addClass('status-loaded');
+  }
+
+  // build search index
+  saveMarkers(markers) {
+    this.markers = markers;
+    this.searchIndex = [];
+    markers.eachLayer((marker) => {
+      var name = marker.feature.properties.data.name;
+      if (name) {
+        this.searchIndex.push([name, marker]);
+      }
+    });
+    this._isLoaded();
   }
 
   render() {
@@ -75,7 +113,9 @@ export default class {
       options: {
         position: 'topright'
       },
-      onAdd: this.onAdd
+      onAdd: this.onAdd,
+      // HACK
+      nav: this
     });
     this.control = new NavControl();
     return this.control;

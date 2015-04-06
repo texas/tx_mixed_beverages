@@ -39,7 +39,6 @@ var markerStyle = function (feature) {
 };
 
 var _getJSON = function (data) {
-  nav.isLoaded();
   var markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50
@@ -47,6 +46,7 @@ var _getJSON = function (data) {
   L.geoJson(data, {
     pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature))
   }).addTo(markers);
+  nav.saveMarkers(markers);
   markers.addTo(map);
   markers.on('click', function (evt) {
     // console.log('marker', evt.layer, this);  // DEBUG
