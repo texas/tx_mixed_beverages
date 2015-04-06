@@ -35,21 +35,29 @@ export default class {
 
     // Event handlers
     var _keyup = (evt) => {
-      var needle = this.ui.search.val().toUpperCase();
-      var searchIndex = this.nav.searchIndex;
       var matches = [];
-      for (var i = 0; i < searchIndex.length; ++i) {
-        if (searchIndex[i][0].indexOf(needle) !== -1) {
-          matches.push(searchIndex[i][1]);
-        }
-        if (matches.length > N_RESULTS) {
-          break;
+      if (evt.which === 27) {
+        this.ui.search.val('');
+        return;
+      }
+      var needle = this.ui.search.val().toUpperCase();
+      if (needle.length > 2) {
+        var searchIndex = this.nav.searchIndex;
+        for (var i = 0; i < searchIndex.length; ++i) {
+          if (searchIndex[i][0].indexOf(needle) !== -1) {
+            matches.push(searchIndex[i][1]);
+          }
+          if (matches.length > N_RESULTS) {
+            break;
+          }
         }
       }
       this.nav.showMarkers(matches);
     };
 
     this.ui.search.on('keyup', _.debounce(_keyup, 200));
+    // don't build the search index until someone starts typing
+    this.ui.search.one('keyup', this.nav.buildSearchIndex.bind(this.nav));
 
     this.ui.top.on('click', 'li', function (evt) {
       var marker = $(this).data('marker');
@@ -95,17 +103,23 @@ export default class {
     $container.removeClass('status-loading').addClass('status-loaded');
   }
 
-  // build search index
+  // prep search index
   saveMarkers(markers) {
     this.markers = markers;
     this.searchIndex = [];
-    markers.eachLayer((marker) => {
+    this._isLoaded();
+  }
+
+  buildSearchIndex() {
+    if (this.searchIndex.length) {
+      return;
+    }
+    this.markers.eachLayer((marker) => {
       var name = marker.feature.properties.data.name;
       if (name) {
         this.searchIndex.push([name, marker]);
       }
     });
-    this._isLoaded();
   }
 
   render() {
