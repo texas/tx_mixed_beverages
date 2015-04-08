@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{% static 'app.css' %}">
   {% block extra_style %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
   {# TODO use .min in prod #}
   <script src="{% static 'app.js' %}"></script>

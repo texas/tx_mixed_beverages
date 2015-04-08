@@ -71,7 +71,7 @@ var _getJSON = function (data) {
 };
 
 // BEGIN
-if (document.getElementById('map')) {
+if (document.body.className.indexOf('bigmap') !== -1) {
   // var map = L.map('map').setView([31.505, -98.09], 8);
   var map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
   var legend = new Legend();

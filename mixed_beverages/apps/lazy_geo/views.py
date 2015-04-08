@@ -32,3 +32,8 @@ class MarkerList(GeoJSONLayerView):
     geometry_field = 'coordinate'
     precision = 6
     properties = ('coordinate_quality', 'data',)
+
+
+class FixDetail(DetailView):
+    model = models.Receipt
+    template_name = 'lazy_geo/fixit.html'
