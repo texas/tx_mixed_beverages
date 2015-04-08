@@ -1,5 +1,5 @@
-var d3 = require('d3');
-var colorbrewer = require('colorbrewer');
+import d3 from 'd3';
+import colorbrewer from 'colorbrewer';
 
 
 export const thousands = d3.format('$,.0f');

@@ -37,7 +37,7 @@ var contentize = function (data) {
 };
 
 
-export function showLocationPopup(marker) {
+export default function showLocationPopup(marker) {
   if (marker._popup) {
     marker.openPopup();
     return;
