@@ -1,11 +1,11 @@
 /* global data */
 import L from 'leaflet';
 import $ from 'jquery';
+import {extractLatLng} from './utils';
 
 var map;
 var original;
 var corrected;
-var ui = {};
 
 
 function _dragend(e) {
@@ -31,6 +31,19 @@ function addReferencePoint() {
 }
 
 
+function _onKeyup(e) {
+  if (e.which === 27) {
+    this.value = '';
+    return;
+  }
+  var data = extractLatLng(this.value);
+  if (data && data.lat) {
+    corrected.setLatLng([data.lat, data.lng]);
+    _dragend({target: corrected});
+  }
+}
+
+
 function _onAdd(map) {
   var $container = $(`<div class="nav leaflet-bar">
     <p class="help">Drag pin to set a new location for</p>
@@ -38,7 +51,7 @@ function _onAdd(map) {
     <div class="address">${ data.address }</div>
     <input placeholder="Paste blob here."/>
     </div>`);
-  ui.input = $container.find('input');
+  $container.find('input').on('keyup', _onKeyup);
   return $container[0];
 }
 
