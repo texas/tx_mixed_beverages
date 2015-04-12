@@ -1,6 +1,7 @@
 /* global URLS: false */
 import L from 'leaflet';
 import 'leaflet.markercluster';
+import 'leaflet-hash';
 import $ from 'jquery';
 import _ from 'lodash';
 import d3 from 'd3';
@@ -79,6 +80,7 @@ export function render() {
   map.addControl(legend.render());
   map.addControl(nav.render());
   window.map = map;  // DEBUG
+  new L.hash(map);
 
   L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
     maxZoom: 18,
