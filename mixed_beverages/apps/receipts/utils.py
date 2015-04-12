@@ -104,10 +104,13 @@ def set_location_data(show_progress=False):
         latest_receipts = list(x.receipts.filter(date__gt=cutoff_date)
                                .order_by('-date')[:4])
         if not latest_receipts:
-            if x.data:
-                # clear old data
-                x.data = {}
-                x.save(update_fields=('data', ))
+            # clear old data, could be more efficient but meh. I could do the
+            # cutoff date logic in python so I always get a queryset.
+            x.data = {
+                'name': unicode(x.get_latest().name),
+                'avg_tax': '0',
+            }
+            x.save(update_fields=('data', ))
             continue
         latest_receipt = latest_receipts[0]
         avg_tax = sum(x.tax for x in latest_receipts) / len(latest_receipts)
