@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^data.geojson$',
         cache_control(max_age=ONE_WEEK, public=True)(views.MarkerList.as_view()),
         name='geo'),
+    url(r'^fix/(?P<pk>\d+)/$', views.FixDetail.as_view(), name='fixit'),
 ]

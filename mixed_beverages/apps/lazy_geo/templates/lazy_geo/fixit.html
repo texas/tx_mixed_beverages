@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block body_class %}fixit{% endblock %}
+
+
+{% block content %}{{ block.super }}
+  <form id="fixit-form" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="suggest new location"/>
+    <input type="hidden" id="fixit-form-lat" name="lat" required=required/>
+    <input type="hidden" id="fixit-form-lng" name="lng" required=required/>
+  </form>
+  <script role="data">
+    var data = {
+      id: {{ object.pk }},
+      lat: {{ object.coordinate.y }},
+      lng: {{ object.coordinate.x }},
+      address: "{{ object.address|escapejs }}",
+      data: {{ view.data_as_json|safe }}
+    };
+  </script>
+{% endblock %}

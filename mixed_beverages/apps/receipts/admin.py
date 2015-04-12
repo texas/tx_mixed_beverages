@@ -1,5 +1,6 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
+from django.contrib.gis.db.models.fields import PointField
 
 from . import models
 
@@ -22,7 +23,7 @@ class BusinessAdmin(admin.ModelAdmin):
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.geo_models.PointField: {
+        PointField: {
             'widget': forms.TextInput(attrs={'size': 80}),
         }
     }

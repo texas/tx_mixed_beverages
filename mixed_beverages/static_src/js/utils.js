@@ -1,5 +1,5 @@
-var d3 = require('d3');
-var colorbrewer = require('colorbrewer');
+import d3 from 'd3';
+import colorbrewer from 'colorbrewer';
 
 
 export const thousands = d3.format('$,.0f');
@@ -9,3 +9,19 @@ export const taxColorScale = d3.scale.linear()
   .clamp(true)
   .domain([10000, 5000, 1000, 0])
   .range(colorbrewer.Spectral[4]);
+
+
+export function extractLatLng(s) {
+ var bits = s.match(/([-\d.]+),([-\d.]+)(,(\d+)z)?/);
+ if (!bits) {
+  return;
+ }
+ var data = {
+  lat: bits[1],
+  lng: bits[2]
+ };
+ if (bits.length === 5) {
+  data.zoom = bits[4];
+ }
+ return data;
+}

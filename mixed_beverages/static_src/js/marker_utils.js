@@ -24,10 +24,11 @@ var quality_descriptions = {
 var contentize = function (data) {
   var quality = data.feature.properties.coordinate_quality;
   var $container = $('<div class="location"/>');
+  var url = URLS.location_fix.replace('0', data.feature.id);
   $container.append(`<span>${ data.latest.name }</span> `);
   $container.append(`<a target="admin" title="${ quality }: ${ quality_descriptions[quality] }"
-    class="location--ind q-${ quality  }"
-    href="${ URLS.location_admin }${ data.feature.id }/">&nbsp</a>`);
+    class="location--ind q-${ quality }"
+    href="${ url }">&nbsp</a>`);
   var $list = $('<dl class="dl-horizontal"/>').appendTo($container);
   $.each(data.receipts, function (idx, x) {
     $list.append(`<dt>${ x.date.replace(/\-\d+$/, '') }</dt>`);
