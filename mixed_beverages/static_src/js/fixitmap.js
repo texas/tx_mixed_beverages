@@ -13,11 +13,12 @@ function _dragend(e) {
   document.getElementById('fixit-form-lng').value = latlng.lng;
 }
 
+
 function addReferencePoint() {
   original = L.marker([data.lat, data.lng], {
     opacity: 0.5
   }).addTo(map)
-    .bindPopup(data.data.name).openPopup();
+    .bindPopup(`<div><div>${ data.data.name }</div><div class="address">${ data.address }</div></div>`).openPopup();
 
   corrected = L.marker([data.lat, data.lng], {
     draggable: true,

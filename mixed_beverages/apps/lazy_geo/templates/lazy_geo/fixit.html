@@ -16,6 +16,7 @@
       id: {{ object.pk }},
       lat: {{ object.coordinate.y }},
       lng: {{ object.coordinate.x }},
+      address: "{{ object.address|escapejs }}",
       data: {{ view.data_as_json|safe }}
     };
   </script>
