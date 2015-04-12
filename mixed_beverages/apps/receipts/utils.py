@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import csv
 import datetime
 import os
@@ -31,17 +33,16 @@ def row_to_receipt(row):
 def slurp(path, force=False):
     """Import a csv."""
     assert os.path.isfile(path)
-    # checked = False
+    source = os.path.basename(path)
+    if Receipt.objects.filter(source=source).exists():
+        print('already imported {}'.format(source))
+        return
     with open(path, 'rb') as f:
         reader = csv.reader(f)
         receipts = []
         for row in reader:
             receipt = row_to_receipt(row)
-            # TODO break if we've already imported this csv
-            # if not force and not checked:
-            #     if Receipt.objects.filter(date=receipt.date).exists():
-            #         break
-            #     checked = True
+            receipt.source = source
             receipts.append(receipt)
         Receipt.objects.bulk_create(receipts)
 

@@ -9,6 +9,7 @@ data/
 .env
 .agignore
 *.blob
+*.dump
 *.sql
 env-*
 

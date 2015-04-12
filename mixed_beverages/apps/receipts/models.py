@@ -106,6 +106,9 @@ class Receipt(models.Model):
     zip = models.CharField(max_length=5)
     county_code = models.PositiveSmallIntegerField()
 
+    # bookkeeping
+    source = models.CharField(max_length=255, null=True, blank=True)
+
     # denormalized fields
     business = models.ForeignKey(Business, related_name='receipts',
         null=True, blank=True)
