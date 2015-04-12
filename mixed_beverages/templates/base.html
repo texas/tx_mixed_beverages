@@ -12,7 +12,18 @@
   {% block extra_style %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
-  {% block content %}{% endblock %}
+  {% block content %}
+    <div id="map" class="map"></div>
+    {# url routes #}
+    <script>
+      var URLS = {
+        geojson: "{% url 'lazy_geo:geo' %}",
+        location: "/api/location/",
+        location_admin: "/admin/receipts/location/",
+        location_fix: "{% url 'lazy_geo:fixit' 0 %}"
+      };
+    </script>
+  {% endblock %}
   {# TODO use .min in prod #}
   <script src="{% static 'app.js' %}"></script>
   {% block extra_script %}{% endblock %}

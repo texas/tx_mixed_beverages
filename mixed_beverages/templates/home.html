@@ -2,16 +2,3 @@
 
 
 {% block body_class %}bigmap{% endblock %}
-
-
-{% block content %}
-  <div id="map" class="map"></div>
-  {# url routes #}
-  <script>
-    var URLS = {
-      geojson: "{% url 'lazy_geo:geo' %}",
-      location: "/api/location/",
-      location_admin: "/admin/receipts/location/"
-    };
-  </script>
-{% endblock %}
