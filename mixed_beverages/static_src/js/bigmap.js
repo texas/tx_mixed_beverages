@@ -2,6 +2,7 @@
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-hash';
+import './ui/Control.GeoZoom';
 import $ from 'jquery';
 import _ from 'lodash';
 import d3 from 'd3';
@@ -74,9 +75,14 @@ var _getJSON = function (data) {
 
 export function render() {
   // map = L.map('map').setView([31.505, -98.09], 8);
-  map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
+  map = L.map('map', {
+    center: [30.27045435, -97.7414384914151],
+    zoom: DECLUSTER_ZOOM,
+    zoomControl: false
+  });
   var legend = new Legend();
   nav = new Nav(map, showLocationPopup);
+  map.addControl(new L.Control.GeoZoom());
   map.addControl(legend.render());
   map.addControl(nav.render());
   window.map = map;  // DEBUG
