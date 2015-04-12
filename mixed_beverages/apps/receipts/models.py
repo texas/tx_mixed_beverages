@@ -35,6 +35,15 @@ class Location(BaseLocation):
     def __unicode__(self):
         return unicode(self.coordinate or self.pk)
 
+    # CUSTOM PROPERTIES #
+    @property
+    def address(self):
+        """Get a human readable address."""
+        latest = self.get_latest()
+        if not latest:
+            return ''
+        return '{0.address}\n{0.city}, {0.state} {0.zip}'.format(latest)
+
     # CUSTOM METHODS #
 
     def get_latest(self):

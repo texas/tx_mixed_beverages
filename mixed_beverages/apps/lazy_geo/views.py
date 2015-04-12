@@ -43,7 +43,10 @@ class FixDetail(DetailView):
     template_name = 'lazy_geo/fixit.html'
 
     def data_as_json(self):
+        data = {}
+        data['address'] = self.object.address
         if self.object.data:
+            data.update(self.object.data)
             return json.dumps(self.object.data)
         return '{}'
 
