@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import models
-from django.contrib.gis.db import models as geo_models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import HStoreField
 

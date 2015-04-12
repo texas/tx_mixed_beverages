@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 
 
 class BaseLocation(models.Model):
@@ -60,6 +61,26 @@ class BaseLocation(models.Model):
         pass
 
 
+class CorrectionManager(models.GeoManager):
+    def create_from_request(self, obj, request):
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+        if lat and lng:
+            return self.create(
+                fro=obj.coordinate,
+                to=Point(
+                    x=float(lng),
+                    y=float(lat),
+                ),
+                submitter=request.user,
+                approved=False,
+                obj=obj,
+            )
+        else:
+            # TODO better exception
+            raise Exception('bad input data')
+
+
 class Correction(models.Model):
     """
     A user submitted coordinate correction.
@@ -80,7 +101,7 @@ class Correction(models.Model):
     obj_coordinate_quality_field = 'coordinate_quality'
 
     # MANAGERS #
-    objects = models.GeoManager()
+    objects = CorrectionManager()
 
     def approve(self, approver):
         setattr(self.obj, self.obj_coordinate_field, self.to)
