@@ -1,9 +1,11 @@
 /* global data */
 import L from 'leaflet';
+import $ from 'jquery';
 
 var map;
 var original;
 var corrected;
+var ui = {};
 
 
 function _dragend(e) {
@@ -17,8 +19,7 @@ function _dragend(e) {
 function addReferencePoint() {
   original = L.marker([data.lat, data.lng], {
     opacity: 0.5
-  }).addTo(map)
-    .bindPopup(`<div><div>${ data.data.name }</div><div class="address">${ data.address }</div></div>`).openPopup();
+  }).addTo(map);
 
   corrected = L.marker([data.lat, data.lng], {
     draggable: true,
@@ -27,6 +28,28 @@ function addReferencePoint() {
     .on('dragend', _dragend)
     .bindPopup(document.getElementById('fixit-form'))
     .addTo(map);
+}
+
+
+function _onAdd(map) {
+  var $container = $(`<div class="nav leaflet-bar">
+    <p class="help">Drag pin to set a new location for</p>
+    <div>${ data.data.name }</div>
+    <div class="address">${ data.address }</div>
+    <input placeholder="Paste blob here."/>
+    </div>`);
+  ui.input = $container.find('input');
+  return $container[0];
+}
+
+
+function addNav() {
+  var NavControl = L.Control.extend({
+    position: 'topright',
+    onAdd: _onAdd
+  });
+  var nav = new NavControl();
+  nav.addTo(map);
 }
 
 
@@ -42,4 +65,5 @@ export function render() {
                   <a href="/about/">About</a> this site.`
   }).addTo(map);
   addReferencePoint();
+  addNav();
 }
