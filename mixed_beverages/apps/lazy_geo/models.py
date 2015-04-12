@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+from django.core.exceptions import SuspiciousOperation
 
 
 class BaseLocation(models.Model):
@@ -65,6 +66,8 @@ class CorrectionManager(models.GeoManager):
     def create_from_request(self, obj, request):
         lat = request.POST.get('lat')
         lng = request.POST.get('lng')
+        if request.user.is_anonymous():
+            raise SuspiciousOperation('must be logged in')
         if lat and lng:
             return self.create(
                 fro=obj.coordinate,
@@ -78,7 +81,7 @@ class CorrectionManager(models.GeoManager):
             )
         else:
             # TODO better exception
-            raise Exception('bad input data')
+            raise TypeError('missing lat or lng')
 
 
 class Correction(models.Model):
@@ -103,8 +106,12 @@ class Correction(models.Model):
     # MANAGERS #
     objects = CorrectionManager()
 
+    def __unicode__(self):
+        return 'by {0.submitter}'.format(self)
+
     def approve(self, approver):
         setattr(self.obj, self.obj_coordinate_field, self.to)
         setattr(self.obj, self.obj_coordinate_quality_field, 'me')
         self.approved_by = approver
+        self.approved = True
         self.obj.save()

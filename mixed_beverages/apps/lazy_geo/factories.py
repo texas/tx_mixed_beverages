@@ -11,6 +11,6 @@ from ..receipts.factories import LocationFactory
 class CorrectionFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Correction
-    to = factory.LazyAttribute(lambda x: Point(0, 0))
-    fro = factory.LazyAttribute(lambda x: Point(0, 0))
+    to = factory.LazyAttribute(lambda x: Point(0, 1))
+    fro = factory.LazyAttribute(lambda x: Point(2, 3))
     obj = factory.SubFactory(LocationFactory)
