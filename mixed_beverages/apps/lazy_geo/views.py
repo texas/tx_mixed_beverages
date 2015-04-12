@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import DetailView
 from mixed_beverages.apps.receipts import models
@@ -35,5 +37,11 @@ class MarkerList(GeoJSONLayerView):
 
 
 class FixDetail(DetailView):
-    model = models.Receipt
+    # do I need to restrict to locations that are geocoded?
+    model = models.Location
     template_name = 'lazy_geo/fixit.html'
+
+    def data_as_json(self):
+        if self.object.data:
+            return json.dumps(self.object.data)
+        return '{}'

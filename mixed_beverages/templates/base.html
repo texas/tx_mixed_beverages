@@ -15,7 +15,7 @@
   {% block content %}
     <div id="map" class="map"></div>
     {# url routes #}
-    <script>
+    <script role="routes">
       var URLS = {
         geojson: "{% url 'lazy_geo:geo' %}",
         location: "/api/location/",
