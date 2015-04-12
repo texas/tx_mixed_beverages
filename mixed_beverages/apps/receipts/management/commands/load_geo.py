@@ -47,3 +47,4 @@ class Command(BaseCommand):
                     continue
                 location.coordinate = data['coordinate']
                 location.coordinate_quality = data['coordinate_quality']
+                location.save()

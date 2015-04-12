@@ -33,7 +33,13 @@ class Location(BaseLocation):
     data = HStoreField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.coordinate or self.pk)
+        bits = []
+        if self.data:
+            bits.append(self.data['name'])
+        if self.coordinate_quality:
+            bits.append('({0.y},{0.x})'.format(self.coordinate))
+            bits.append(self.coordinate_quality)
+        return ' '.join(bits)
 
     # CUSTOM PROPERTIES #
     @property
@@ -115,15 +121,15 @@ class Receipt(models.Model):
     location = models.ForeignKey(Location, related_name='receipts',
         null=True, blank=True)
 
+    class Meta:
+        ordering = ('-date', )
+
     def __unicode__(self):
         return '{} {} {}'.format(
             self.name,
             self.date,
             self.tax,
         )
-
-    class Meta:
-        ordering = ('-date', )
 
     # CUSTOM METHODS #
 
