@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.exceptions import SuspiciousOperation
+from django.utils import timezone
 
 
 class BaseLocation(models.Model):
@@ -87,6 +88,8 @@ class CorrectionManager(models.GeoManager):
 class Correction(models.Model):
     """
     A user submitted coordinate correction.
+
+    WISHLIST have a state for reject, revert
     """
     fro = models.PointField(help_text='The old coordinate')
     to = models.PointField(help_text='The suggested coordinate')
@@ -99,6 +102,8 @@ class Correction(models.Model):
         null=True, blank=True)
     # should be a GFK if we want to be generic
     obj = models.ForeignKey('receipts.Location')
+    created_at = models.DateTimeField(default=timezone.now)
+    approved_at = models.DateTimeField(null=True, blank=True)
 
     obj_coordinate_field = 'coordinate'
     obj_coordinate_quality_field = 'coordinate_quality'
@@ -112,6 +117,8 @@ class Correction(models.Model):
     def approve(self, approver):
         setattr(self.obj, self.obj_coordinate_field, self.to)
         setattr(self.obj, self.obj_coordinate_quality_field, 'me')
+        self.obj.save()
         self.approved_by = approver
         self.approved = True
-        self.obj.save()
+        self.approved_at = timezone.now()
+        self.save()

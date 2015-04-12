@@ -50,5 +50,5 @@ class FixDetail(DetailView):
     def post(self, request, **kwargs):
         obj = self.get_object()
         correction = Correction.objects.create_from_request(obj, request)
-        correction.approve()
+        correction.approve(request.user)
         return self.get(request, **kwargs)

@@ -74,3 +74,4 @@ class CorrectionTests(TestCase):
         self.assertEqual(correction.approved_by, self.user2)
         self.assertEqual(location.coordinate_quality, 'me')
         self.assertEqual(location.coordinate, correction.to)
+        # TODO self.assertEqual(location.approved_at)
