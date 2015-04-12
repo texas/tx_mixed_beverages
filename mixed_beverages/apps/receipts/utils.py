@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import csv
 import datetime
 import os
@@ -31,17 +33,16 @@ def row_to_receipt(row):
 def slurp(path, force=False):
     """Import a csv."""
     assert os.path.isfile(path)
-    # checked = False
+    source = os.path.basename(path)
+    if Receipt.objects.filter(source=source).exists():
+        print('already imported {}'.format(source))
+        return
     with open(path, 'rb') as f:
         reader = csv.reader(f)
         receipts = []
         for row in reader:
             receipt = row_to_receipt(row)
-            # TODO break if we've already imported this csv
-            # if not force and not checked:
-            #     if Receipt.objects.filter(date=receipt.date).exists():
-            #         break
-            #     checked = True
+            receipt.source = source
             receipts.append(receipt)
         Receipt.objects.bulk_create(receipts)
 
@@ -103,10 +104,13 @@ def set_location_data(show_progress=False):
         latest_receipts = list(x.receipts.filter(date__gt=cutoff_date)
                                .order_by('-date')[:4])
         if not latest_receipts:
-            if x.data:
-                # clear old data
-                x.data = {}
-                x.save(update_fields=('data', ))
+            # clear old data, could be more efficient but meh. I could do the
+            # cutoff date logic in python so I always get a queryset.
+            x.data = {
+                'name': unicode(x.get_latest().name),
+                'avg_tax': '0',
+            }
+            x.save(update_fields=('data', ))
             continue
         latest_receipt = latest_receipts[0]
         avg_tax = sum(x.tax for x in latest_receipts) / len(latest_receipts)

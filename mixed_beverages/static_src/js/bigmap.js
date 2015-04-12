@@ -2,6 +2,7 @@
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-hash';
+import './ui/Control.GeoZoom';
 import $ from 'jquery';
 import _ from 'lodash';
 import d3 from 'd3';
@@ -20,20 +21,17 @@ var map, nav;
 var markerStyle = function (feature) {
   var style = {
     fillOpacity: 0.8,
-    opacity: 1,
+    opacity: 0.9,
     radius: 7,
     weight: 1
   };
   var tax = parseInt(feature.properties.data.avg_tax, 10);  // actually a float, but we don't care about cents
-  if (isNaN(tax)) {
-    style.color = "#000";
-    style.dashArray = "5,5";  // TODO get this working
-    style.radius = 5;
-  } else if (tax === 0) {
+  if (tax === 0) {
     style.color = taxColorScale(tax);
-    style.radius = 5;
+    style.radius = 4;
   } else {
-    style.color = taxColorScale(tax);
+    style.fillColor = taxColorScale(tax);
+    style.color = d3.rgb(style.fillColor).darker(1);
   }
   return style;
 };
@@ -74,9 +72,14 @@ var _getJSON = function (data) {
 
 export function render() {
   // map = L.map('map').setView([31.505, -98.09], 8);
-  map = L.map('map').setView([30.27045435, -97.7414384914151], DECLUSTER_ZOOM);  // DEBUG
+  map = L.map('map', {
+    center: [30.2655, -97.7426],
+    zoom: DECLUSTER_ZOOM,
+    zoomControl: false
+  });
   var legend = new Legend();
   nav = new Nav(map, showLocationPopup);
+  map.addControl(new L.Control.GeoZoom());
   map.addControl(legend.render());
   map.addControl(nav.render());
   window.map = map;  // DEBUG

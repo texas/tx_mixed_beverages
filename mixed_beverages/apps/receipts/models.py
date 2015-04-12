@@ -33,7 +33,13 @@ class Location(BaseLocation):
     data = HStoreField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.coordinate or self.pk)
+        bits = []
+        if self.data:
+            bits.append(self.data['name'])
+        if self.coordinate_quality:
+            bits.append('({0.y},{0.x})'.format(self.coordinate))
+            bits.append(self.coordinate_quality)
+        return ' '.join(bits)
 
     # CUSTOM PROPERTIES #
     @property
@@ -106,11 +112,17 @@ class Receipt(models.Model):
     zip = models.CharField(max_length=5)
     county_code = models.PositiveSmallIntegerField()
 
+    # bookkeeping
+    source = models.CharField(max_length=255, null=True, blank=True)
+
     # denormalized fields
     business = models.ForeignKey(Business, related_name='receipts',
         null=True, blank=True)
     location = models.ForeignKey(Location, related_name='receipts',
         null=True, blank=True)
+
+    class Meta:
+        ordering = ('-date', )
 
     def __unicode__(self):
         return '{} {} {}'.format(
@@ -118,9 +130,6 @@ class Receipt(models.Model):
             self.date,
             self.tax,
         )
-
-    class Meta:
-        ordering = ('-date', )
 
     # CUSTOM METHODS #
 

@@ -39,8 +39,12 @@ class Command(BaseCommand):
                     location = receipt.location
                 except Location.DoesNotExist:
                     raise CommandError('run `make process` first')
+                if not location:
+                    raise CommandError(
+                        'No location set, run `make process` first')
                 if location.coordinate:
                     # don't overwrite existing coordinate data
                     continue
                 location.coordinate = data['coordinate']
                 location.coordinate_quality = data['coordinate_quality']
+                location.save()
