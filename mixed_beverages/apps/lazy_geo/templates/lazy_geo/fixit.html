@@ -8,8 +8,8 @@
   <form id="fixit-form" method="POST">
     {% csrf_token %}
     <input type="submit" value="suggest new location"/>
-    <input type="hidden" id="fixit-form-lat" name="lat" required/>
-    <input type="hidden" id="fixit-form-lng" name="lng" required/>
+    <input type="hidden" id="fixit-form-lat" name="lat" required=required/>
+    <input type="hidden" id="fixit-form-lng" name="lng" required=required/>
   </form>
   <script role="data">
     var data = {

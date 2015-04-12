@@ -1,9 +1,10 @@
 import json
 
+from django.contrib.gis.geos import Point
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import DetailView
-from mixed_beverages.apps.receipts import models
 from djgeojson.views import GeoJSONLayerView
+from mixed_beverages.apps.receipts import models
 
 from .utils import GeocodeException
 
@@ -45,3 +46,16 @@ class FixDetail(DetailView):
         if self.object.data:
             return json.dumps(self.object.data)
         return '{}'
+
+    def post(self, request, **kwargs):
+        obj = self.get_object()
+        lat = request.POST.get('lat')
+        lng = request.POST.get('lng')
+        if lat and lng:
+            obj.coordinate = Point(
+                x=float(lng),
+                y=float(lat),
+            )
+            obj.coordinate_quality = 'me'
+            obj.save()
+        return self.get(request, **kwargs)

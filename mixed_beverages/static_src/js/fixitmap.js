@@ -7,18 +7,21 @@ var corrected;
 
 
 function _dragend(e) {
-  window.zz = e;
-  console.log(this, e)
+  var latlng = e.target.getLatLng();
   e.target.openPopup();
+  document.getElementById('fixit-form-lat').value = latlng.lat;
+  document.getElementById('fixit-form-lng').value = latlng.lng;
 }
 
 function addReferencePoint() {
   original = L.marker([data.lat, data.lng], {
+    opacity: 0.5
   }).addTo(map)
     .bindPopup(data.data.name).openPopup();
 
   corrected = L.marker([data.lat, data.lng], {
-    draggable: true
+    draggable: true,
+    zIndexOffset: 1
   })
     .on('dragend', _dragend)
     .bindPopup(document.getElementById('fixit-form'))
