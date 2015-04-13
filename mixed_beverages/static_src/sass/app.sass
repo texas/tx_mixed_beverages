@@ -41,10 +41,11 @@ body
     clear: left
     float: left
   span
-    display: block
+    display: inline-block
+    height: 1em
+    vertical-align: middle
     width: 1em
   dd
-    font-weight: bold
     margin-left: 1.5em
 
 
@@ -77,3 +78,8 @@ body
   height: 0.7em
   text-decoration: none
   width: 0.7em
+
+
+@media (max-device-width: 480px)
+  .leaflet-control-attribution, .top-locations .distance
+    display: none

@@ -24,7 +24,7 @@ export default class {
         </div>
         <div>
           <input type="search" class="search" placeholder="Search...">
-          Top: <ol class="top-locations"></ol>
+          <ol class="top-locations"></ol>
         </div>
       </div>`);
     this.ui = {
