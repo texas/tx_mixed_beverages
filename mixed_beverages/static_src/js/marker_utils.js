@@ -1,7 +1,7 @@
 /* global URLS: false */
 var $ = require('jquery');
+import { DECLUSTER_ZOOM } from './settings';
 
-var locationCache = {};
 var thousands = require('./utils').thousands;
 
 
@@ -38,28 +38,45 @@ var contentize = function (data) {
 };
 
 
+var locationCache = {};
 export function showLocationPopup(marker) {
-  if (marker._popup) {
-    marker.openPopup();
-    return;
-  }
   var id = marker.feature.id;
-  var showPopup = function (data) {
+  var map = marker._map || marker.__parent._group._map;  // HACK
+
+  var showPopup = function () {
     if (!marker._map) {
-      console.warn('Marker has not been rendered yet', marker);
+      map.panTo(marker.getLatLng());
+      if (map.getZoom() < DECLUSTER_ZOOM) {
+        map.setZoom(DECLUSTER_ZOOM);
+      }
+      marker.once('add', function () {
+        marker.openPopup();
+      });
       return;
     }
-    marker.bindPopup(contentize(data)).openPopup();
+    marker.openPopup();
   };
+
+  var setupPopup = function (data) {
+    if (!marker._popup) {
+      marker.bindPopup(contentize(data));
+    }
+    showPopup();
+  };
+
+  if (marker._popup) {
+    showPopup();
+    return;
+  }
 
   var data = locationCache[id];
   if (!data) {
     $.getJSON(URLS.location + id + '/', function (data) {
       data.feature = marker.feature;
       locationCache[id] = data;
-      showPopup(data);
+      setupPopup(data);
     });
   } else {
-    showPopup(data);
+    setupPopup(data);
   }
 }

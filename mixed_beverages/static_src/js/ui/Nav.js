@@ -2,7 +2,7 @@ import L from 'leaflet';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { DECLUSTER_ZOOM, N_RESULTS } from '../settings';
+import { N_RESULTS } from '../settings';
 import { thousands, distance } from '../utils';
 import { showLocationPopup } from '../marker_utils';
 
@@ -65,10 +65,6 @@ export default class {
 
     this.ui.top.on('click', 'li', function (evt) {
       var marker = $(this).data('marker');
-      if (map.getZoom() < DECLUSTER_ZOOM) {
-        map.panTo(marker.getLatLng()).setZoom(DECLUSTER_ZOOM);
-        // FIXME user then has to click again because the marker does not exist yet
-      }
       showLocationPopup(marker);
       evt.stopPropagation();  // keep click from closing the popup
     });
