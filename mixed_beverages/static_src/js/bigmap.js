@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-hash';
 import './ui/Control.GeoZoom';
+import $ from 'jquery';
 import _ from 'lodash';
 import d3 from 'd3';
 import Cookies from 'cookies-js';
@@ -118,5 +119,5 @@ export function render() {
                   <a href="/about/">About</a> this site.`
   }).addTo(map);
 
-  // $.getJSON(URLS.geojson, _getJSON);
+  $.getJSON(URLS.geojson, _getJSON);
 }
