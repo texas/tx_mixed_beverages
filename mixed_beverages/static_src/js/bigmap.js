@@ -3,9 +3,9 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet-hash';
 import './ui/Control.GeoZoom';
-import $ from 'jquery';
 import _ from 'lodash';
 import d3 from 'd3';
+import Cookies from 'cookies-js';
 window.d3 = d3;  // DEBUG
 
 import { DECLUSTER_ZOOM } from './settings';
@@ -70,6 +70,26 @@ var _getJSON = function (data) {
 };
 
 
+function firstVisit () {
+  L.popup().setLatLng(map.getCenter()).setContent(`<div>
+    <h2>Welcome</h2>
+    <p>
+
+      This map helps explore mixed beverage gross receipts taxes collected by
+      the <a href="http://www.window.state.tx.us/taxinfo/mixbev/"
+      target="_blank">Texas
+      Comptroller</a>. This is <em>separate</em> from the
+      regular sales tax collected and does not apply to beer/wine/liquor sales
+      (since they are not mixed drinks).
+
+    </p>
+    <p>
+      For more information, see <a href="/about/">about this site</a>.
+    </p>
+    </div>`).openOn(map);
+}
+
+
 export function render() {
   // map = L.map('map').setView([31.505, -98.09], 8);
   map = L.map('map', {
@@ -77,6 +97,10 @@ export function render() {
     zoom: DECLUSTER_ZOOM,
     zoomControl: false
   });
+  if (Cookies.enabled && !Cookies.get('returning')) {
+    Cookies.set('returning', '1', {expires: 86400 * 30 * 3});
+    firstVisit();
+  }
   var legend = new Legend();
   nav = new Nav(map, showLocationPopup);
   map.addControl(new L.Control.GeoZoom());
@@ -94,5 +118,5 @@ export function render() {
                   <a href="/about/">About</a> this site.`
   }).addTo(map);
 
-  $.getJSON(URLS.geojson, _getJSON);
+  // $.getJSON(URLS.geojson, _getJSON);
 }
