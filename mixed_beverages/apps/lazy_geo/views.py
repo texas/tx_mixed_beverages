@@ -1,6 +1,8 @@
 import json
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseBadRequest, JsonResponse
+from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
 from mixed_beverages.apps.receipts import models
@@ -60,6 +62,10 @@ class FixDetail(DetailView):
 class CorrectionDetail(DetailView):
     model = Correction
     template_name = 'lazy_geo/fixit.html'
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CorrectionDetail, self).dispatch(*args, **kwargs)
 
     def data_as_json(self):
         data = {}
