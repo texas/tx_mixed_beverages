@@ -18,6 +18,7 @@ export default class {
     };
     this.data = this.transformData(data);
     this.plotHeight = this.height - this.margin.top - this.margin.bottom;
+    this.plotWidth = this.width - this.margin.left - this.margin.right;
     this.findBounds();
     this.render();
   }
@@ -27,7 +28,9 @@ export default class {
     // use lodash because it's faster than native Array.map
     return _.map(data,
       (x) => {
-        return {tax: parseFloat(x.tax), date: formatter.parse(x.date)};
+        var date = formatter.parse(x.date);
+        var month = date.getFullYear() * 12 + date.getMonth();
+        return {tax: parseFloat(x.tax), month, date: x.date};
       });
   }
 
@@ -36,19 +39,18 @@ export default class {
     this.yScale = d3.scale.linear().domain([0, maxTax])
       .range([this.plotHeight, 0]);
 
-    // FIXME x axis is kind of messed up because i'm using dates as ordinals
-    // months have an inconsistent number of days, and I have to go up a month
-    // to make the top bound inclusive insteead of exclusive
-    var dates = d3.extent(this.data, (d) => d.date);
-    this.xScale = d3.time.scale().domain([dates[0], dates[1].getTime() + 34 * 86400 * 1000])
-      .range([0, this.width - this.margin.left - this.margin.right]);
+    var dates = d3.extent(this.data, (d) => d.month);
+    this.xScale = d3.scale.linear().domain([dates[0], dates[1] + 1])
+      .range([0, this.plotWidth]);
   }
 
   xAxis() {
-    var xAxisFormat = (s) => d3.time.format('%b')(s)[0];
+    var months = 'JFMAMJJASOND';
+    var xAxisFormat = (value) => months[value % 12];
+    var _xDomain = this.xScale.domain();
     return d3.svg.axis().orient('bottom')
       .scale(this.xScale)
-      .ticks(d3.time.months)
+      .ticks(_xDomain[1] - _xDomain[0])  // only make ticks at months
       .tickSize(6, 0)
       .tickFormat(xAxisFormat);
   }
@@ -61,7 +63,7 @@ export default class {
   }
 
   render() {
-    var barSpacing = this.xScale(this.xScale.domain()[0].getTime() + 30 * 86400 * 1000);
+    var barSpacing = this.xScale(this.xScale.domain()[0] + 1);
     var barWidth = Math.floor(barSpacing) - 3;
     var svg = d3.select(this.elem)
       .append('svg')
@@ -84,9 +86,9 @@ export default class {
         })
         .attr('width', barWidth)
         .attr('height', (d) => this.plotHeight - this.yScale(d.tax))
-        .attr('title', (d) => thousands(d.tax))
+        .attr('title', (d) => `${ d.date } - ${ thousands(d.tax) }`)
         .attr('transform',
-          (d) => `translate(${ this.xScale(d.date) }, ${ this.yScale(d.tax)})`);
+          (d) => `translate(${ this.xScale(d.month) }, ${ this.yScale(d.tax)})`);
 
     // axes
     svg.append('g')
