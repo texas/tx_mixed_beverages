@@ -1,6 +1,8 @@
 Mixed Beverages
 ===============
 
+[![Build Status](https://travis-ci.org/texas/tx_mixed_beverages.svg?branch=master)](https://travis-ci.org/texas/tx_mixed_beverages)
+
 Data
 ----
 
