@@ -27,7 +27,6 @@ class CorrectionManagerTests(TestCase):
         self.assertEqual(correction.fro.y, 34)
         self.assertEqual(correction.to.x, 2)
         self.assertEqual(correction.to.y, 1)
-        self.assertFalse(correction.approved)
         self.assertEqual(correction.submitter, self.user)
         self.assertEqual(correction.status, 'submitted')
 
@@ -71,9 +70,8 @@ class CorrectionTests(TestCase):
     def test_approve_works(self):
         correction = CorrectionFactory(submitter=self.user)
         location = correction.obj
-        self.assertFalse(correction.approved)
+        self.assertEqual(correction.status, 'submitted')
         correction.approve(self.user2)
-        self.assertTrue(correction.approved)
         self.assertEqual(correction.approved_by, self.user2)
         self.assertEqual(location.coordinate_quality, 'me')
         self.assertEqual(location.coordinate, correction.to)

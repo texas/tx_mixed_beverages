@@ -82,7 +82,6 @@ class CorrectionManager(models.GeoManager):
                     x=float(lng),
                     y=float(lat),
                 ),
-                approved=False,
                 status='submitted',
                 obj=obj,
                 ip_address=request.META.get('HTTP_X_FORWARDED_FOR',
@@ -111,7 +110,6 @@ class Correction(models.Model):
 
     fro = models.PointField(help_text='The old coordinate')
     to = models.PointField(help_text='The suggested coordinate')
-    approved = models.BooleanField(default=False)
     submitter = models.ForeignKey(settings.AUTH_USER_MODEL,
         related_name='+',
         null=True, blank=True)
@@ -124,7 +122,8 @@ class Correction(models.Model):
     approved_at = models.DateTimeField(null=True, blank=True)
     ip_address = models.GenericIPAddressField('IP address', unpack_ipv4=True,
         blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES,
+        default='submitted')
     comment = models.TextField(null=True, blank=True)
 
     obj_coordinate_field = 'coordinate'
@@ -141,7 +140,6 @@ class Correction(models.Model):
         setattr(self.obj, self.obj_coordinate_quality_field, 'me')
         self.obj.save()
         self.approved_by = approver
-        self.approved = True
         self.approved_at = timezone.now()
         self.status = 'approved'
         self.save()
