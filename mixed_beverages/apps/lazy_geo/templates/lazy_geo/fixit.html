@@ -28,6 +28,7 @@
         fro_lng: {{ object.fro.x }},
         to_lat: {{ object.to.y }},
         to_lng: {{ object.to.x }},
+        data: {name: "{{ obj.obj }}"},
         address: "{{ object.obj.address|escapejs }}",
       };
     {% endif %}

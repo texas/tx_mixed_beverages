@@ -4,6 +4,7 @@ import $ from 'jquery';
 import {extractLatLng} from './utils';
 
 var map;
+var originalPoint;
 var original;
 var corrected;
 
@@ -17,17 +18,21 @@ function _dragend(e) {
 
 
 function addReferencePoint() {
-  original = L.marker([data.lat, data.lng], {
+  original = L.marker(originalPoint, {
     opacity: 0.5
   }).addTo(map);
 
-  corrected = L.marker([data.lat, data.lng], {
+  var correctedPoint = data.id ? [data.lat, data.lng] : [data.to_lat, data.to_lng];
+  corrected = L.marker(correctedPoint, {
     draggable: true,
     zIndexOffset: 1
   })
     .on('dragend', _dragend)
     .bindPopup(document.getElementById('fixit-form'))
     .addTo(map);
+  if (!data.id) {
+    corrected.openPopup();
+  }
 }
 
 
@@ -55,7 +60,6 @@ function _onAdd(map) {
   return $container[0];
 }
 
-
 function addNav() {
   var NavControl = L.Control.extend({
     position: 'topright',
@@ -67,7 +71,8 @@ function addNav() {
 
 
 export function render() {
-  map = L.map('map').setView([data.lat, data.lng], 16);
+  originalPoint = data.id ? [data.lat, data.lng] : [data.fro_lat, data.fro_lng];
+  map = L.map('map').setView(originalPoint, 16);
 
   L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
     maxZoom: 18,
