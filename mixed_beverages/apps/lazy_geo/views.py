@@ -55,3 +55,23 @@ class FixDetail(DetailView):
         correction = Correction.objects.create_from_request(obj, request)
         correction.approve(request.user)
         return self.get(request, **kwargs)
+
+
+class CorrectionDetail(DetailView):
+    model = Correction
+    template_name = 'lazy_geo/fixit.html'
+
+    def data_as_json(self):
+        data = {}
+        data['address'] = self.object.obj.address
+        if self.object.data:
+            data.update(self.object.data)
+            return json.dumps(self.object.data)
+        return '{}'
+
+    def post(self, request, **kwargs):
+        # TODO if user has edit permissions
+        if request.user.is_staff():
+            correction = self.get_object()
+            correction.approve(request.user)
+        return self.get(request, **kwargs)

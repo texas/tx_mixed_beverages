@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.exceptions import SuspiciousOperation
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 
@@ -134,6 +135,11 @@ class Correction(models.Model):
 
     def __unicode__(self):
         return 'by {0.submitter}'.format(self)
+
+    def get_absolute_url(self):
+        return reverse('lazy_geo:correction-detail', kwargs={'pk': self.pk})
+
+    # CUSTOM METHODS #
 
     def approve(self, approver):
         setattr(self.obj, self.obj_coordinate_field, self.to)
