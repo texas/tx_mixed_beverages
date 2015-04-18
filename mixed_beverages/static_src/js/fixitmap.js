@@ -56,6 +56,9 @@ function _onAdd(map) {
     <div class="address">${ data.address }</div>
     <input placeholder="Paste blob here."/>
     </div>`);
+  if (data.data.status) {
+    $container.append(`<div class="status status-${ data.data.status }">${ data.data.status }</div>`);
+  }
   $container.find('input').on('keyup', _onKeyup);
   return $container[0];
 }
