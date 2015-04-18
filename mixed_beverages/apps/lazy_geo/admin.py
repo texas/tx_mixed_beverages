@@ -5,7 +5,7 @@ from . import models
 
 @admin.register(models.Correction)
 class CorrectionAdmin(admin.ModelAdmin):
-    list_display = ('obj', 'submitter', 'approved_by',
+    list_display = ('obj', 'status', 'submitter', 'approved_by',
         'created_at', 'approved_at')
     list_filter = ('status', )
     raw_id_fields = ('obj', )

@@ -1,7 +1,11 @@
 import json
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.core.urlresolvers import reverse
+from django.http import (
+    HttpResponseBadRequest, JsonResponse, HttpResponseRedirect,
+    HttpResponseForbidden,
+)
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
@@ -55,8 +59,11 @@ class FixDetail(DetailView):
     def post(self, request, **kwargs):
         obj = self.get_object()
         correction = Correction.objects.create_from_request(obj, request)
-        correction.approve(request.user)
-        return self.get(request, **kwargs)
+        if request.user.is_staff:
+            correction.approve(request.user)
+            return self.get(request, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('lazy_geo:thanks'))
 
 
 class CorrectionDetail(DetailView):
@@ -67,17 +74,11 @@ class CorrectionDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(CorrectionDetail, self).dispatch(*args, **kwargs)
 
-    def data_as_json(self):
-        data = {}
-        data['address'] = self.object.obj.address
-        if self.object.data:
-            data.update(self.object.data)
-            return json.dumps(self.object.data)
-        return '{}'
-
     def post(self, request, **kwargs):
-        # TODO if user has edit permissions
-        if request.user.is_staff():
+        # TODO if user has edit permissions for finer grain access
+        if request.user.is_staff:
             correction = self.get_object()
             correction.approve(request.user)
+        else:
+            return HttpResponseForbidden()
         return self.get(request, **kwargs)
