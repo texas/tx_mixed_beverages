@@ -22,12 +22,19 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
+    def display_name(self, obj):
+        return obj.data['name']
+
+    def display_tax(self, obj):
+        return obj.data['avg_tax']
+
     formfield_overrides = {
         PointField: {
             'widget': forms.TextInput(attrs={'size': 80}),
         }
     }
     inlines = [ReceiptInline, ]
+    list_display = ('display_name', 'display_tax', 'coordinate_quality')
     list_filter = ('coordinate_quality', )
     save_on_top = True
 
