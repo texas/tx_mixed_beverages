@@ -12,12 +12,25 @@
     <input type="hidden" id="fixit-form-lng" name="lng" required=required/>
   </form>
   <script role="data">
-    var data = {
-      id: {{ object.pk }},
-      lat: {{ object.coordinate.y }},
-      lng: {{ object.coordinate.x }},
-      address: "{{ object.address|escapejs }}",
-      data: {{ view.data_as_json|safe }}
-    };
+    {% if object.coordinate %}
+      {# Location Detail #}
+      var data = {
+        id: {{ object.pk }},
+        lat: {{ object.coordinate.y }},
+        lng: {{ object.coordinate.x }},
+        address: "{{ object.address|escapejs }}",
+        data: {{ view.data_as_json|safe }}
+      };
+    {% else %}
+      {# Correction Detail #}
+      var data = {
+        fro_lat: {{ object.fro.y }},
+        fro_lng: {{ object.fro.x }},
+        to_lat: {{ object.to.y }},
+        to_lng: {{ object.to.x }},
+        address: "{{ object.obj.address|escapejs }}",
+        data: {name: "{{ object.obj }}", status: "{{ object.status }}"}
+      };
+    {% endif %}
   </script>
 {% endblock %}

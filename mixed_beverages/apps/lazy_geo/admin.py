@@ -1,15 +1,13 @@
-from django import forms
 from django.contrib import admin
-from django.contrib.gis.db.models.fields import PointField
 
 from . import models
 
 
 @admin.register(models.Correction)
-class CorrectionInline(admin.ModelAdmin):
-    formfield_overrides = {
-        PointField: {
-            'widget': forms.TextInput(attrs={'size': 80}),
-        }
-    }
+class CorrectionAdmin(admin.ModelAdmin):
+    list_display = ('obj', 'status', 'submitter', 'approved_by',
+        'created_at', 'approved_at')
+    list_filter = ('status', )
     raw_id_fields = ('obj', )
+    readonly_fields = ('fro', 'to', 'submitter', 'approved_by', 'obj',
+        'created_at', 'approved_at', 'ip_address')

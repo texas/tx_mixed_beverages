@@ -1,6 +1,12 @@
 import json
 
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.urlresolvers import reverse
+from django.http import (
+    HttpResponseBadRequest, JsonResponse, HttpResponseRedirect,
+    HttpResponseForbidden,
+)
+from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
 from mixed_beverages.apps.receipts import models
@@ -53,5 +59,26 @@ class FixDetail(DetailView):
     def post(self, request, **kwargs):
         obj = self.get_object()
         correction = Correction.objects.create_from_request(obj, request)
-        correction.approve(request.user)
+        if request.user.is_staff:
+            correction.approve(request.user)
+            return self.get(request, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('lazy_geo:thanks'))
+
+
+class CorrectionDetail(DetailView):
+    model = Correction
+    template_name = 'lazy_geo/fixit.html'
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CorrectionDetail, self).dispatch(*args, **kwargs)
+
+    def post(self, request, **kwargs):
+        # TODO if user has edit permissions for finer grain access
+        if request.user.is_staff:
+            correction = self.get_object()
+            correction.approve(request.user)
+        else:
+            return HttpResponseForbidden()
         return self.get(request, **kwargs)

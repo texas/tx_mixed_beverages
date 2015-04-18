@@ -6,6 +6,7 @@ import logging
 from django.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import HStoreField
+from django.core.urlresolvers import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseLocation
 from mixed_beverages.apps.lazy_geo.utils import geocode_address
@@ -40,6 +41,10 @@ class Location(BaseLocation):
             bits.append('({0.y},{0.x})'.format(self.coordinate))
             bits.append(self.coordinate_quality)
         return ' '.join(bits)
+
+    def get_absolute_url(self):
+        return '{0}#16/{1.coordinate.y}/{1.coordinate.x}'.\
+            format(reverse('mixed_beverages:home'), self)
 
     # CUSTOM PROPERTIES #
     @property
