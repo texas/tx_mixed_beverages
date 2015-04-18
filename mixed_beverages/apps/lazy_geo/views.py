@@ -37,7 +37,7 @@ class AddressGeocode(DetailView):
 
 
 class MarkerList(GeoJSONLayerView):
-    queryset = models.Location.objects.exclude(coordinate=None)
+    queryset = models.Location.objects.exclude(coordinate=None)[:1000]
     geometry_field = 'coordinate'
     precision = 6
     properties = ('coordinate_quality', 'data',)
