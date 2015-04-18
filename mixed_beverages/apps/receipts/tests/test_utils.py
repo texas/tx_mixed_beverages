@@ -39,7 +39,7 @@ class PostProcessTests(TestCase):
         self.assertNotEqual(r3.location, r1.location)
         self.assertEqual(Location.objects.count(), 2)
 
-    def test_set_location_data_filters_old_data(self):
+    def test_set_location_data_filters_old_avg_tax(self):
         # setup
         location = LocationFactory()
         ReceiptFactory(location=location, date='1970-11-01', tax=1)
@@ -47,7 +47,7 @@ class PostProcessTests(TestCase):
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        self.assertIsNone(location.data)
+        self.assertEqual(location.data['avg_tax'], '0')
 
     def test_set_location_data_deletes_old_data(self):
         # setup
@@ -61,7 +61,7 @@ class PostProcessTests(TestCase):
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        self.assertEqual(location.data, {})  # not NULL like above
+        self.assertEqual(location.data['avg_tax'], '0')  # not NULL like above
 
     def test_set_location_data_works(self):
         # setup

@@ -67,22 +67,31 @@ class CorrectionManager(models.GeoManager):
     def create_from_request(self, obj, request):
         lat = request.POST.get('lat')
         lng = request.POST.get('lng')
+        data = {}
         if request.user.is_anonymous():
-            raise SuspiciousOperation('must be logged in')
+            if settings.ALLOW_ANONYMOUS_CORRECTIONS:
+                data['submitter'] = None
+            else:
+                raise SuspiciousOperation('must be logged in')
+        else:
+            data['submitter'] = request.user
         if lat and lng:
-            return self.create(
+            data.update(
                 fro=obj.coordinate,
                 to=Point(
                     x=float(lng),
                     y=float(lat),
                 ),
-                submitter=request.user,
                 approved=False,
+                status='submitted',
                 obj=obj,
+                ip_address=request.META.get('HTTP_X_FORWARDED_FOR',
+                    request.META.get('REMOTE_ADDR')),
             )
         else:
             # TODO better exception
             raise TypeError('missing lat or lng')
+        return self.create(**data)
 
 
 class Correction(models.Model):
@@ -90,7 +99,16 @@ class Correction(models.Model):
     A user submitted coordinate correction.
 
     WISHLIST have a state for reject, revert
+
+    Some inspiration from django.contrib.comments:
+    https://github.com/django/django-contrib-comments/blob/master/django_comments/models.py
     """
+    STATUS_CHOICES = (
+        ('submitted', 'Submitted'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    )
+
     fro = models.PointField(help_text='The old coordinate')
     to = models.PointField(help_text='The suggested coordinate')
     approved = models.BooleanField(default=False)
@@ -104,6 +122,10 @@ class Correction(models.Model):
     obj = models.ForeignKey('receipts.Location')
     created_at = models.DateTimeField(default=timezone.now)
     approved_at = models.DateTimeField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField('IP address', unpack_ipv4=True,
+        blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    comment = models.TextField(null=True, blank=True)
 
     obj_coordinate_field = 'coordinate'
     obj_coordinate_quality_field = 'coordinate_quality'
@@ -121,4 +143,5 @@ class Correction(models.Model):
         self.approved_by = approver
         self.approved = True
         self.approved_at = timezone.now()
+        self.status = 'approved'
         self.save()
