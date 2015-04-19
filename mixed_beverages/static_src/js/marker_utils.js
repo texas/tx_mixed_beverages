@@ -29,7 +29,7 @@ var contentize = function (data) {
   $container.append(`<a target="admin" title="${ quality }: ${ quality_descriptions[quality] }"
     class="location--ind q-${ quality }"
     href="${ url }">&nbsp</a>`);
-  window.zz = new BarChart($container[0], data.receipts, {
+  new BarChart($container[0], data.receipts, {
     width: 300,
     height: 180
   });
