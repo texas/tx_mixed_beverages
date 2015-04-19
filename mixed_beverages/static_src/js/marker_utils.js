@@ -2,7 +2,7 @@
 var $ = require('jquery');
 import { DECLUSTER_ZOOM } from './settings';
 
-var thousands = require('./utils').thousands;
+import BarChart from './d3/Chart';
 
 
 var quality_descriptions = {
@@ -29,10 +29,9 @@ var contentize = function (data) {
   $container.append(`<a target="admin" title="${ quality }: ${ quality_descriptions[quality] }"
     class="location--ind q-${ quality }"
     href="${ url }">&nbsp</a>`);
-  var $list = $('<dl class="dl-horizontal"/>').appendTo($container);
-  $.each(data.receipts, function (idx, x) {
-    $list.append(`<dt>${ x.date.replace(/\-\d+$/, '') }</dt>`);
-    $list.append(`<dd>${ thousands(x.tax) }</dd>`);
+  new BarChart($container[0], data.receipts, {
+    width: 300,
+    height: 180
   });
   return $container[0];
 };
