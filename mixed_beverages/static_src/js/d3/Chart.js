@@ -86,9 +86,10 @@ export default class {
         })
         .attr('width', barWidth)
         .attr('height', (d) => this.plotHeight - this.yScale(d.tax))
-        .attr('title', (d) => `${ d.date } - ${ thousands(d.tax) }`)
         .attr('transform',
-          (d) => `translate(${ this.xScale(d.month) }, ${ this.yScale(d.tax)})`);
+          (d) => `translate(${ this.xScale(d.month) }, ${ this.yScale(d.tax)})`)
+        .append('title')
+          .html((d) => `${ d.date } - ${ thousands(d.tax) }`);
 
     // axes
     svg.append('g')
