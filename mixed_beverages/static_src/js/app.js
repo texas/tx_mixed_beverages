@@ -12,7 +12,6 @@ L.Icon.Default.imagePath = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3
 var bodyClass = document.body.className;
 if (bodyClass.indexOf('bigmap') !== -1) {
   bigmap.render();
-
 } else if (bodyClass.indexOf('fixit') !== -1) {
   fixit.render();
 }
