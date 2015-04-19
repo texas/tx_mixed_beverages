@@ -13,8 +13,8 @@ export default class {
     this.margin = {
       top: 5,
       right: 0,
-      bottom: 20,
-      left: 40
+      bottom: 15,
+      left: 28
     };
     this.data = this.transformData(data);
     this.plotHeight = this.height - this.margin.top - this.margin.bottom;
@@ -51,15 +51,15 @@ export default class {
     return d3.svg.axis().orient('bottom')
       .scale(this.xScale)
       .ticks(_xDomain[1] - _xDomain[0])  // only make ticks at months
-      .tickSize(6, 0)
+      .tickSize(4, 0)
       .tickFormat(xAxisFormat);
   }
 
   yAxis() {
     return d3.svg.axis().orient('left')
       .scale(this.yScale)
-      .tickSize(6, 0)
-      .tickFormat(thousands);
+      .tickSize(4, 0)
+      .tickFormat(d3.format('sr'));
   }
 
   render() {
