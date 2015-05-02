@@ -43,6 +43,8 @@ class PostProcessTests(TestCase):
         # setup
         location = LocationFactory()
         ReceiptFactory(location=location, date='1970-11-01', tax=1)
+        # need a recent receipt so it knows not to go back in time
+        ReceiptFactory(date='2015-02-01', tax=1337)
 
         set_location_data()
 
@@ -53,8 +55,13 @@ class PostProcessTests(TestCase):
         # setup
         location = LocationFactory()
         receipt = ReceiptFactory(location=location, date='2015-02-01', tax=1)
+        # need a recent receipt so it knows not to go back in time
+        ReceiptFactory(date='2015-02-01', tax=1337)
 
         set_location_data()
+        location = Location.objects.get(pk=location.pk)
+        # sanity check
+        self.assertEqual(location.data['avg_tax'], '1.00')
 
         receipt.date = '1970-01-01'
         receipt.save()

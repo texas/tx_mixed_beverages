@@ -10,10 +10,6 @@ from progressbar import ProgressBar
 from .models import Receipt, Business, Location
 
 
-# Receipt.objects.latest('date').date
-latest_receipt_date = datetime.date(2015, 3, 1)  # TODO set this at import time
-
-
 def row_to_receipt(row):
     cleaned_row = map(str.strip, row)  # csv gives us `str` instead of unicode
     return Receipt(
@@ -96,6 +92,13 @@ def group_by_location(show_progress=False):
 
 
 def set_location_data(show_progress=False):
+    """
+    Denormalizes data into the `Location` model.
+
+    timing: real    3m25.569s
+    """
+    latest_receipt_date = Receipt.objects.latest('date').date
+
     progress = ProgressBar() if show_progress else lambda x: x
     queryset = Location.objects.all()
     # good enough, go back 4 * 31 days to get 4 months
