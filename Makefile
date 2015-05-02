@@ -3,10 +3,14 @@ MANAGE=python manage.py
 
 help:
 	@echo "make commands:"
-	@echo "  make help    - this help"
-	@echo "  make clean   - remove temporary files"
-	@echo "  make test    - run test suite"
-	@echo "  make resetdb - delete and recreate the database"
+	@echo "-----------------------------------------------"
+	@echo "make help     this help"
+	@echo "make clean    remove temporary files"
+	@echo "make test     run test suite"
+	@echo "make resetdb  delete and recreate the database"
+	@echo "make slurp    Import all csvs found in ./data/"
+	@echo "make process  Generate stats"
+	@echo "make import   Shortcut for 'slurp process'"
 
 
 clean:
@@ -28,11 +32,11 @@ resetdb:
 	phd psql -c 'CREATE EXTENSION hstore; CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
+.PHONY: data/*.CSV
+data/*.CSV:
+	./mixed_beverages/scripts/slurp.py $@
 
-slurp: $(wildcard data/*.CSV)
-	$(foreach file, $(wildcard data/*.CSV), \
-		./mixed_beverages/scripts/slurp.py $(file);)
-	echo "done"
+slurp: data/*.CSV
 
 process:
 	./mixed_beverages/scripts/post_process.py
