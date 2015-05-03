@@ -50,10 +50,13 @@ function _onKeyup(e) {
 
 
 function _onAdd(map) {
+  var lookup = data.data.name + ',' + data.address.replace('\n', ',');
   var $container = $(`<div class="nav leaflet-bar">
     <p class="help">Drag pin to set a new location for</p>
     <div>${ data.data.name }</div>
-    <div class="address">${ data.address }</div>
+    <div class="address">
+      <a href="https://www.google.com/maps/?q=${ lookup }" rel="noreferrer" target="_blank">${ data.address }</a>
+    </div>
     <input placeholder="Paste blob here."/>
     </div>`);
   if (data.data.status) {
