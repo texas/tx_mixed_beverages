@@ -95,28 +95,27 @@ def set_location_data(show_progress=False):
     """
     Denormalizes data into the `Location` model.
 
-    timing: real    3m25.569s
+    timing: real    2m50.342s
     """
     latest_receipt_date = Receipt.objects.latest('date').date
 
     progress = ProgressBar() if show_progress else lambda x: x
     queryset = Location.objects.all()
     # good enough, go back 4 * 31 days to get 4 months
-    cutoff_date = latest_receipt_date - datetime.timedelta(days=124)
+    cutoff_date = latest_receipt_date - datetime.timedelta(days=4 * 31)
     for x in progress(queryset):
-        latest_receipts = list(x.receipts.filter(date__gt=cutoff_date)
-                               .order_by('-date')[:4])
-        if not latest_receipts:
-            # clear old data, could be more efficient but meh. I could do the
-            # cutoff date logic in python so I always get a queryset.
+        latest_receipts = list(x.receipts.order_by('-date')[:4])
+        latest_receipt = latest_receipts[0]
+        recent_receipts = filter(lambda x: x.date > cutoff_date, latest_receipts)
+        if not recent_receipts:
+            # clear old data
             x.data = {
-                'name': unicode(x.get_latest().name),
+                'name': unicode(latest_receipt.name),
                 'avg_tax': '0',
             }
             x.save(update_fields=('data', ))
             continue
-        latest_receipt = latest_receipts[0]
-        avg_tax = sum(x.tax for x in latest_receipts) / len(latest_receipts)
+        avg_tax = sum(x.tax for x in recent_receipts) / len(recent_receipts)
         # remember that hstore only stores text
         x.data = {
             'name': unicode(latest_receipt.name),
