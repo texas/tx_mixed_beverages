@@ -2,6 +2,7 @@ import json
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import (
     HttpResponseBadRequest, JsonResponse, HttpResponseRedirect,
     HttpResponseForbidden,
@@ -37,7 +38,8 @@ class AddressGeocode(DetailView):
 
 
 class MarkerList(GeoJSONLayerView):
-    queryset = models.Location.objects.exclude(coordinate=None)
+    queryset = models.Location.objects.filter(coordinate__isnull=False).exclude(
+        Q(data__avg_tax='0') | Q(data__avg_tax='0.00'))
     geometry_field = 'coordinate'
     precision = 6
     properties = ('coordinate_quality', 'data',)

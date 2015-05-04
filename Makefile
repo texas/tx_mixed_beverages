@@ -21,9 +21,9 @@ clean:
 	find . -name "*.pyc" -delete
 	find . -name ".DS_Store" -delete
 
-# make sure to install the hstore extension in template1
+# Note: make sure to install the hstore extension in template1
 test:
-	ENVIRONMENT=test $(MANAGE) test
+	$(MANAGE) test
 
 
 resetdb:
