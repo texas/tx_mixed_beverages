@@ -47,9 +47,9 @@ import: slurp process
 # use these tasks to transfer geocoding data from one database to another
 # say... between `resetdb` calls
 dump_geo:
-	$(MANAGE) dump_geo > geo_data.blob
+	$(MANAGE) dump_geo > data/geo_data.blob
 load_geo:
-	$(MANAGE) load_geo geo_data.blob
+	$(MANAGE) load_geo data/geo_data.blob
 
 
 docker/build:
