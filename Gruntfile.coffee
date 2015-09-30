@@ -2,21 +2,17 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
     sass:
-      options:
-        sourceMap: true
       dist:
         files:
           'mixed_beverages/static/app.css': 'mixed_beverages/static_src/sass/app.sass'
-    autoprefixer:
+    postcss:
       options:
-        browsers: ['last 2 versions']
-        diff: true
-        map: true
-        single_file:
-          src: 'mixed_beverages/static/app.css'
-          # overwrite original
-          dest: 'mixed_beverages/static/app.css'
-    jshint:
+        processors: [
+          require('autoprefixer')({browsers: 'last 2 versions'}),
+        ]
+      dist:
+        src: 'mixed_beverages/static/app.css'
+    eslint:
       all: [
         'mixed_beverages/static_src/js/**/*.js'
       ]
@@ -38,7 +34,7 @@ module.exports = (grunt) ->
         livereload: true
       sass:
         files: ['mixed_beverages/static_src/sass/**/*.sass']
-        tasks: ['sass', 'autoprefixer']
+        tasks: ['sass', 'postcss']
         options:
           livereload: false
           # spawn has to be on or else the css watch won't catch changes
@@ -54,14 +50,14 @@ module.exports = (grunt) ->
           spawn: false
 
   grunt.loadNpmTasks 'grunt-sass'
-  grunt.loadNpmTasks 'grunt-autoprefixer'
-  grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-postcss'
+  grunt.loadNpmTasks 'grunt-eslint'
   grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # build the assets needed
-  grunt.registerTask('build', ['sass', 'autoprefixer', 'browserify', 'uglify'])
+  grunt.registerTask('build', ['sass', 'postcss', 'browserify', 'uglify'])
   # build the assets with sanity checks
   grunt.registerTask('default', ['build'])
   # build assets and automatically re-build when a file changes

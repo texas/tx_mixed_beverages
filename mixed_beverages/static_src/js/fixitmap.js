@@ -80,7 +80,7 @@ export function render() {
   originalPoint = data.id ? [data.lat, data.lng] : [data.fro_lat, data.fro_lng];
   map = L.map('map').setView(originalPoint, 16);
 
-  L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg', {
+  L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
                   under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
