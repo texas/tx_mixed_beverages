@@ -12,7 +12,7 @@ module.exports = (grunt) ->
         ]
       dist:
         src: 'mixed_beverages/static/app.css'
-    jshint:
+    eslint:
       all: [
         'mixed_beverages/static_src/js/**/*.js'
       ]
@@ -51,7 +51,7 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-sass'
   grunt.loadNpmTasks 'grunt-postcss'
-  grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-eslint'
   grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
