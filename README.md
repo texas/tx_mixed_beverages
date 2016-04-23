@@ -14,13 +14,11 @@ Data
 Setting up the project
 ----------------------
 
-Install requirements:
+In a Python 3 virtualenv:
 
-    pip install -r requirements.txt
-    npm install
-
-Setup your Python path:
-
+    # install requirements
+    make install
+    # add base dir to your Python path
     add2virtualenv .
 
 Setup your environment:
