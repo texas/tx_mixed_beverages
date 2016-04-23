@@ -34,4 +34,3 @@ First, you have to get the [csvs](http://www.texastransparency.org/Data_Center/S
 Then:
 
     make import
-
