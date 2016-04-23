@@ -3,6 +3,13 @@ MANAGE=python manage.py
 help: ## Shows this help
 	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
 
+install: ## Install requirements
+	pip install -r requirements.txt
+
+requirements.txt: ## Generate a new requirements.txt
+requirements.txt: requirements.in
+	pip-compile $< > $@
+
 clean: ## Remove temporary files
 	rm -rf MANIFEST
 	rm -rf build
