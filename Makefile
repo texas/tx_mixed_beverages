@@ -5,6 +5,7 @@ help: ## Shows this help
 
 install: ## Install requirements
 	pip install -r requirements.txt
+	npm install
 
 requirements.txt: ## Generate a new requirements.txt
 requirements.txt: requirements.in

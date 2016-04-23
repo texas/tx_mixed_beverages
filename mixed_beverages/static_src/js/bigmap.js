@@ -110,7 +110,7 @@ export function render() {
   window.map = map;  // DEBUG
   new L.hash(map);
 
-  L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+  L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
                   under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
