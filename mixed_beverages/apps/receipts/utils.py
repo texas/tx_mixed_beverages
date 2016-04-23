@@ -31,7 +31,7 @@ def slurp(path, force=False):
     if Receipt.objects.filter(source=source).exists():
         print('already imported {}'.format(source))
         return
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='windows-1252') as f:
         reader = csv.reader(f)
         receipts = []
         for row in reader:
