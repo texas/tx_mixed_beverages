@@ -22,7 +22,7 @@ class Command(BaseCommand):
         if not os.path.isfile(infile):
             raise CommandError('{} is not a file'.format(infile))
 
-        with open(infile, 'rb') as fh:
+        with open(infile, 'r') as fh:
             for line in fh:
                 data = json.loads(line)
                 try:

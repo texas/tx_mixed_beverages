@@ -42,14 +42,13 @@ def slurp(path, force=False):
 
 
 def group_by_name(show_progress=False):
-    progress = tqdm if show_progress else lambda x: x
     names = (
         Receipt.objects.filter(business=None).values('name')
         .order_by('name').annotate(Count('name'))
     )
     if not names:
         return
-    for x in progress(names):
+    for x in tqdm(names, disable=not show_progress):
         name = x['name']
         business, __ = Business.objects.get_or_create(name=name)
         (Receipt.objects
@@ -62,7 +61,6 @@ def group_by_location(show_progress=False):
 
     Optimized for making the initial import faster.
     """
-    progress = tqdm if show_progress else lambda x: x
     receipts_without_location = (
         Receipt.objects.filter(location=None)
         .order_by('address', 'city', 'state', 'zip')
@@ -70,7 +68,7 @@ def group_by_location(show_progress=False):
     if not receipts_without_location:
         return
     last_reference = None
-    for x in progress(receipts_without_location):
+    for x in tqdm(receipts_without_location, disable=not show_progress):
         # TODO is grouping by `tabc_permit` the same thing?
         reference = dict(
             address=x.address,
@@ -102,11 +100,10 @@ def set_location_data(show_progress=False):
     """
     latest_receipt_date = Receipt.objects.latest('date').date
 
-    progress = tqdm if show_progress else lambda x: x
     queryset = Location.objects.all()
     # good enough, go back 4 * 31 days to get 4 months
     cutoff_date = latest_receipt_date - datetime.timedelta(days=4 * 31)
-    for x in progress(queryset):
+    for x in tqdm(queryset, disable=not show_progress):
         latest_receipts = list(x.receipts.order_by('-date')[:4])
         latest_receipt = latest_receipts[0]
         recent_receipts = list(filter(lambda x: x.date > cutoff_date, latest_receipts))
