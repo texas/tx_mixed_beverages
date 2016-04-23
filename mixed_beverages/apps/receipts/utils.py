@@ -1,17 +1,15 @@
-from __future__ import unicode_literals
-
 import csv
 import datetime
 import os
 
 from django.db.models import Count
-from progressbar import ProgressBar
+from tqdm import tqdm
 
 from .models import Receipt, Business, Location
 
 
 def row_to_receipt(row):
-    cleaned_row = map(str.strip, row)  # csv gives us `str` instead of unicode
+    cleaned_row = list(map(str.strip, row))  # csv gives us `str` instead of unicode
     return Receipt(
         tabc_permit=cleaned_row[0],
         name=cleaned_row[1],
@@ -33,7 +31,7 @@ def slurp(path, force=False):
     if Receipt.objects.filter(source=source).exists():
         print('already imported {}'.format(source))
         return
-    with open(path, 'rb') as f:
+    with open(path, 'r') as f:
         reader = csv.reader(f)
         receipts = []
         for row in reader:
@@ -44,10 +42,11 @@ def slurp(path, force=False):
 
 
 def group_by_name(show_progress=False):
-    progress = ProgressBar() if show_progress else lambda x: x
-    names = (Receipt.objects.filter(business=None).values('name')
-        .order_by('name').annotate(Count('name')))
-    progress = ProgressBar()
+    progress = tqdm if show_progress else lambda x: x
+    names = (
+        Receipt.objects.filter(business=None).values('name')
+        .order_by('name').annotate(Count('name'))
+    )
     if not names:
         return
     for x in progress(names):
@@ -63,9 +62,11 @@ def group_by_location(show_progress=False):
 
     Optimized for making the initial import faster.
     """
-    progress = ProgressBar() if show_progress else lambda x: x
-    receipts_without_location = (Receipt.objects.filter(location=None)
-        .order_by('address', 'city', 'state', 'zip'))
+    progress = tqdm if show_progress else lambda x: x
+    receipts_without_location = (
+        Receipt.objects.filter(location=None)
+        .order_by('address', 'city', 'state', 'zip')
+    )
     if not receipts_without_location:
         return
     last_reference = None
@@ -82,8 +83,10 @@ def group_by_location(show_progress=False):
             continue
         try:
             # look for an existing `Location`
-            location = (Receipt.objects
-                .filter(**reference).exclude(location=None)[0].location)
+            location = (
+                Receipt.objects
+                .filter(**reference).exclude(location=None)[0].location
+            )
         except IndexError:
             # create a new `Location`
             location = Location.objects.create()
@@ -99,18 +102,18 @@ def set_location_data(show_progress=False):
     """
     latest_receipt_date = Receipt.objects.latest('date').date
 
-    progress = ProgressBar() if show_progress else lambda x: x
+    progress = tqdm if show_progress else lambda x: x
     queryset = Location.objects.all()
     # good enough, go back 4 * 31 days to get 4 months
     cutoff_date = latest_receipt_date - datetime.timedelta(days=4 * 31)
     for x in progress(queryset):
         latest_receipts = list(x.receipts.order_by('-date')[:4])
         latest_receipt = latest_receipts[0]
-        recent_receipts = filter(lambda x: x.date > cutoff_date, latest_receipts)
+        recent_receipts = list(filter(lambda x: x.date > cutoff_date, latest_receipts))
         if not recent_receipts:
             # clear old data
             x.data = {
-                'name': unicode(latest_receipt.name),
+                'name': str(latest_receipt.name),
                 'avg_tax': '0',
             }
             x.save(update_fields=('data', ))
@@ -118,7 +121,7 @@ def set_location_data(show_progress=False):
         avg_tax = sum(x.tax for x in recent_receipts) / len(recent_receipts)
         # remember that hstore only stores text
         x.data = {
-            'name': unicode(latest_receipt.name),
+            'name': str(latest_receipt.name),
             'avg_tax': '{:.2f}'.format(avg_tax),
         }
         x.save(update_fields=('data', ))
@@ -126,9 +129,9 @@ def set_location_data(show_progress=False):
 
 def post_process():
     show_progress = True  # TODO add a way to silence progress bar
-    print 'group_by_name'
+    print('group_by_name')
     group_by_name(show_progress=show_progress)
-    print 'group_by_location'
+    print('group_by_location')
     group_by_location(show_progress=show_progress)
-    print 'set_location_data'
+    print('set_location_data')
     set_location_data(show_progress=show_progress)
