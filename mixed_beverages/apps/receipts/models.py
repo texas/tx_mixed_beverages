@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import logging
 
 from django.db import models
@@ -21,7 +18,7 @@ class Business(models.Model):
     class Meta:
         verbose_name_plural = 'businesses'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -33,7 +30,7 @@ class Location(BaseLocation):
     # denormalized data to help generate map data
     data = HStoreField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         bits = []
         if self.data:
             bits.append(self.data['name'])
@@ -85,7 +82,7 @@ class Location(BaseLocation):
         self.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
         self.save()
         logger.debug(data)
-        logger.info('{}'.format(self))
+        logger.info('%s', self)
 
 
 class Receipt(models.Model):
@@ -121,15 +118,19 @@ class Receipt(models.Model):
     source = models.CharField(max_length=255, null=True, blank=True)
 
     # denormalized fields
-    business = models.ForeignKey(Business, related_name='receipts',
-        null=True, blank=True)
-    location = models.ForeignKey(Location, related_name='receipts',
-        null=True, blank=True)
+    business = models.ForeignKey(
+        Business, related_name='receipts',
+        null=True, blank=True,
+    )
+    location = models.ForeignKey(
+        Location, related_name='receipts',
+        null=True, blank=True,
+    )
 
     class Meta:
         ordering = ('-date', )
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} {} {}'.format(
             self.name,
             self.date,

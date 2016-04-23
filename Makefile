@@ -1,19 +1,17 @@
 MANAGE=python manage.py
 
+help: ## Shows this help
+	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
 
-help:
-	@echo "make commands:"
-	@echo "-----------------------------------------------"
-	@echo "make help     this help"
-	@echo "make clean    remove temporary files"
-	@echo "make test     run test suite"
-	@echo "make resetdb  delete and recreate the database"
-	@echo "make slurp    Import all csvs found in ./data/"
-	@echo "make process  Generate stats"
-	@echo "make import   Shortcut for 'slurp process'"
+install: ## Install requirements
+	pip install -r requirements.txt
+	npm install
 
+requirements.txt: ## Generate a new requirements.txt
+requirements.txt: requirements.in
+	pip-compile $< > $@
 
-clean:
+clean: ## Remove temporary files
 	rm -rf MANIFEST
 	rm -rf build
 	rm -rf dist
@@ -22,11 +20,10 @@ clean:
 	find . -name ".DS_Store" -delete
 
 # Note: make sure to install the hstore extension in template1
-test:
+test: ## Run test suite
 	$(MANAGE) test
 
-
-resetdb:
+resetdb: ## Delete and recreate the database
 	-phd dropdb
 	phd createdb
 	phd psql -c 'CREATE EXTENSION hstore; CREATE EXTENSION postgis;'
@@ -36,11 +33,13 @@ resetdb:
 data/*.CSV:
 	./mixed_beverages/scripts/slurp.py $@
 
+slurp: ## Import all csvs found in ./data
 slurp: data/*.CSV
 
-process:
+process: ## Generate stats
 	./mixed_beverages/scripts/post_process.py
 
+import: ## Shortcut for 'make slurp process'
 import: slurp process
 
 

@@ -1,0 +1,20 @@
+Django<=1.9
+
+dj-database-url
+psycopg2
+project-runpy
+django-extensions
+djangorestframework
+requests
+django-geojson
+
+
+# Deployment
+whitenoise
+waitress
+
+
+# Dev requirements
+factory-boy
+pip-tools
+tqdm
