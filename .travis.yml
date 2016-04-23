@@ -1,6 +1,6 @@
 language: python
 addons:
-  postgresql: "9.4"
+  postgresql: "9.5"
 env:
   PYTHONPATH=. ENVIRONMENT=test DATABASE_URL="postgis:///mixed_beverages"
 install: "pip install -r requirements.txt --download-cache $HOME/.pip-cache"
