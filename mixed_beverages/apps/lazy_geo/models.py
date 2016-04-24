@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
@@ -45,7 +42,8 @@ class BaseLocation(models.Model):
     )
 
     coordinate = models.PointField(null=True, blank=True)
-    coordinate_quality = models.CharField(max_length=2,
+    coordinate_quality = models.CharField(
+        max_length=2,
         choices=QUALITY_CHOICES, null=True, blank=True)
 
     # MANAGERS #
@@ -85,7 +83,8 @@ class CorrectionManager(models.GeoManager):
                 ),
                 status='submitted',
                 obj=obj,
-                ip_address=request.META.get('HTTP_X_FORWARDED_FOR',
+                ip_address=request.META.get(
+                    'HTTP_X_FORWARDED_FOR',
                     request.META.get('REMOTE_ADDR')),
             )
         else:
@@ -111,19 +110,23 @@ class Correction(models.Model):
 
     fro = models.PointField(help_text='The old coordinate')
     to = models.PointField(help_text='The suggested coordinate')
-    submitter = models.ForeignKey(settings.AUTH_USER_MODEL,
+    submitter = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         related_name='+',
         null=True, blank=True)
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         related_name='+',
         null=True, blank=True)
     # should be a GFK if we want to be generic
     obj = models.ForeignKey('receipts.Location')
     created_at = models.DateTimeField(default=timezone.now)
     approved_at = models.DateTimeField(null=True, blank=True)
-    ip_address = models.GenericIPAddressField('IP address', unpack_ipv4=True,
+    ip_address = models.GenericIPAddressField(
+        'IP address', unpack_ipv4=True,
         blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES,
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES,
         default='submitted')
     comment = models.TextField(null=True, blank=True)
 
