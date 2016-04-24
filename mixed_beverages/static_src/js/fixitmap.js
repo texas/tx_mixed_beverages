@@ -1,56 +1,52 @@
 /* global data */
-import L from 'leaflet';
-import $ from 'jquery';
-import {extractLatLng} from './utils';
+import L from 'leaflet'
+import $ from 'jquery'
+import { extractLatLng } from './utils'
 
-var map;
-var originalPoint;
-var original;
-var corrected;
+var map
+var originalPoint
+var original
+var corrected
 
-
-function _dragend(e) {
-  var latlng = e.target.getLatLng();
-  e.target.openPopup();
-  document.getElementById('fixit-form-lat').value = latlng.lat;
-  document.getElementById('fixit-form-lng').value = latlng.lng;
+function _dragend (e) {
+  var latlng = e.target.getLatLng()
+  e.target.openPopup()
+  document.getElementById('fixit-form-lat').value = latlng.lat
+  document.getElementById('fixit-form-lng').value = latlng.lng
 }
 
-
-function addReferencePoint() {
+function addReferencePoint () {
   original = L.marker(originalPoint, {
     opacity: 0.5
-  }).addTo(map);
+  }).addTo(map)
 
-  var correctedPoint = data.id ? [data.lat, data.lng] : [data.to_lat, data.to_lng];
+  var correctedPoint = data.id ? [data.lat, data.lng] : [data.to_lat, data.to_lng]
   corrected = L.marker(correctedPoint, {
     draggable: true,
     zIndexOffset: 1
   })
     .on('dragend', _dragend)
     .bindPopup(document.getElementById('fixit-form'))
-    .addTo(map);
+    .addTo(map)
   if (!data.id) {
-    corrected.openPopup();
+    corrected.openPopup()
   }
 }
 
-
-function _onKeyup(e) {
+function _onKeyup (e) {
   if (e.which === 27) {
-    this.value = '';
-    return;
+    this.value = ''
+    return
   }
-  var data = extractLatLng(this.value);
+  var data = extractLatLng(this.value)
   if (data && data.lat) {
-    corrected.setLatLng([data.lat, data.lng]);
-    _dragend({target: corrected});
+    corrected.setLatLng([data.lat, data.lng])
+    _dragend({target: corrected})
   }
 }
 
-
-function _onAdd(map) {
-  var lookup = data.data.name + ',' + data.address.replace('\n', ',');
+function _onAdd (map) {
+  var lookup = data.data.name + ',' + data.address.replace('\n', ',')
   var $container = $(`<div class="nav leaflet-bar">
     <p class="help">Drag pin to set a new location for</p>
     <div>${ data.data.name }</div>
@@ -58,27 +54,26 @@ function _onAdd(map) {
       <a href="https://www.google.com/maps/?q=${ lookup }" rel="noreferrer" target="_blank">${ data.address }</a>
     </div>
     <input placeholder="Paste blob here."/>
-    </div>`);
+    </div>`)
   if (data.data.status) {
-    $container.append(`<div class="status status-${ data.data.status }">${ data.data.status }</div>`);
+    $container.append(`<div class="status status-${ data.data.status }">${ data.data.status }</div>`)
   }
-  $container.find('input').on('keyup', _onKeyup);
-  return $container[0];
+  $container.find('input').on('keyup', _onKeyup)
+  return $container[0]
 }
 
-function addNav() {
+function addNav () {
   var NavControl = L.Control.extend({
     position: 'topright',
     onAdd: _onAdd
-  });
-  var nav = new NavControl();
-  nav.addTo(map);
+  })
+  var nav = new NavControl()
+  nav.addTo(map)
 }
 
-
-export function render() {
-  originalPoint = data.id ? [data.lat, data.lng] : [data.fro_lat, data.fro_lng];
-  map = L.map('map').setView(originalPoint, 16);
+export function render () {
+  originalPoint = data.id ? [data.lat, data.lng] : [data.fro_lat, data.fro_lng]
+  map = L.map('map').setView(originalPoint, 16)
 
   L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
     maxZoom: 18,
@@ -87,7 +82,7 @@ export function render() {
                   Data by <a href="http://openstreetmap.org">OpenStreetMap</a>,
                   under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
                   <a href="/about/">About</a> this site.`
-  }).addTo(map);
-  addReferencePoint();
-  addNav();
+  }).addTo(map)
+  addReferencePoint()
+  addNav()
 }
