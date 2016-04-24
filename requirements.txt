@@ -9,7 +9,7 @@ click==6.6                # via pip-tools
 dj-database-url==0.4.1
 django-extensions==1.6.1
 django-geojson==2.9.0
-django==1.9
+django==1.9.5
 djangorestframework==3.3.3
 factory-boy==2.7.0
 fake-factory==0.5.7       # via factory-boy
