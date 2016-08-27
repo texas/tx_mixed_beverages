@@ -7,9 +7,9 @@ install: ## Install requirements
 	pip install -r requirements.txt
 	npm install
 
+.PHONY: requirements.txt
 requirements.txt: ## Generate a new requirements.txt
-requirements.txt: requirements.in
-	pip-compile $< > $@
+	pip-compile --upgrade $< > $@
 
 clean: ## Remove temporary files
 	rm -rf MANIFEST
