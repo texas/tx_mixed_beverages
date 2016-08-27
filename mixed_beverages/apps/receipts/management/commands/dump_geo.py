@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import json
 
 from django.core.management.base import BaseCommand
@@ -21,6 +19,6 @@ class Command(BaseCommand):
                 'city': latest.city,
                 'state': latest.state,
                 'zip': latest.zip,
-                'coordinate': unicode(location.coordinate),
+                'coordinate': str(location.coordinate),
                 'coordinate_quality': location.coordinate_quality,
             }))
