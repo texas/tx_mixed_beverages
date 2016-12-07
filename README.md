@@ -6,8 +6,7 @@ Mixed Beverages
 Data
 ----
 
-* http://www.window.state.tx.us/taxinfo/mixbev/
-* http://www.texastransparency.org/Data_Center/Search_Datasets.php
+* https://www.comptroller.texas.gov/transparency/open-data/search-datasets/
 
 
 Setting up the project
@@ -27,7 +26,7 @@ Setup your environment:
 
 #### Pull data
 
-First, you have to get the [csvs](http://www.texastransparency.org/Data_Center/Search_Datasets.php).
+First, you have to get the [csvs](https://www.comptroller.texas.gov/transparency/open-data/search-datasets/).
 
 Then:
 

@@ -13,6 +13,15 @@ class LocationFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Location
 
+    @factory.post_generation
+    def receipts(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for receipt in extracted:
+                self.receipts.add(receipt)
+
 
 class ReceiptFactory(factory.DjangoModelFactory):
     class Meta:

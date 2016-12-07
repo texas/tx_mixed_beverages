@@ -6,7 +6,7 @@ RUN apt-get -qq update && \
       # i need dis
       curl \
       # python
-      python2.7 python-dev python-pip \
+      python3.5 python-dev python-pip \
       # postgis
       libpq-dev libgeos-dev gdal-bin \
       > /dev/null && \

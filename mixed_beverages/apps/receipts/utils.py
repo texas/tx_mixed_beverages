@@ -9,7 +9,10 @@ from .models import Receipt, Business, Location
 
 
 def row_to_receipt(row):
-    cleaned_row = list(map(str.strip, row))  # csv gives us `str` instead of unicode
+    cleaned_row = list(map(str.strip, row))
+    if len(cleaned_row[0]) > 8:
+        return None
+
     return Receipt(
         tabc_permit=cleaned_row[0],
         name=cleaned_row[1],
@@ -31,11 +34,15 @@ def slurp(path, force=False):
     if Receipt.objects.filter(source=source).exists():
         print('already imported {}'.format(source))
         return
+
     with open(path, 'r', encoding='windows-1252') as f:
         reader = csv.reader(f)
         receipts = []
         for row in reader:
             receipt = row_to_receipt(row)
+            if receipt is None:
+                continue
+
             receipt.source = source
             receipts.append(receipt)
         Receipt.objects.bulk_create(receipts)
@@ -48,6 +55,7 @@ def group_by_name(show_progress=False):
     )
     if not names:
         return
+
     for x in tqdm(names, disable=not show_progress):
         name = x['name']
         business, __ = Business.objects.get_or_create(name=name)
@@ -60,6 +68,7 @@ def group_by_location(show_progress=False):
     Group businesses by location.
 
     Optimized for making the initial import faster.
+    FIXME this is really slow
     """
     receipts_without_location = (
         Receipt.objects.filter(location=None)
@@ -67,6 +76,7 @@ def group_by_location(show_progress=False):
     )
     if not receipts_without_location:
         return
+
     last_reference = None
     for x in tqdm(receipts_without_location, disable=not show_progress):
         # TODO is grouping by `tabc_permit` the same thing?
@@ -79,6 +89,7 @@ def group_by_location(show_progress=False):
         if reference == last_reference:
             # the .update(...) and .order_by(...) makes this possible
             continue
+
         try:
             # look for an existing `Location`
             location = (
