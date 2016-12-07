@@ -1,18 +1,14 @@
-FROM ubuntu:14.04
+FROM python:3.5
 MAINTAINER Chris <c@crccheck.com>
 
 RUN apt-get -qq update && \
       DEBIAN_FRONTEND=noninteractive apt-get install -y \
       # i need dis
       curl \
-      # python
-      python3.5 python-dev python-pip \
       # postgis
       libpq-dev libgeos-dev gdal-bin \
       > /dev/null && \
       apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN pip install --upgrade pip
 
 # node https://github.com/nodejs/docker-node/blob/master/6.9/Dockerfile
 
@@ -46,12 +42,14 @@ RUN npm config set color false; \
   npm config set loglevel warn; \
   npm install -g grunt-cli --no-color
 
-ADD . /app
+
+COPY requirements.txt /app/requirements.txt
+COPY package.json /app/package.json
 WORKDIR /app
-
 RUN pip install --quiet --disable-pip-version-check -r /app/requirements.txt
+RUN npm install --silent && npm cache clear
 
-RUN npm install > /dev/null
+COPY . /app
 RUN grunt build --no-color
 
 RUN python manage.py collectstatic --noinput -v0
