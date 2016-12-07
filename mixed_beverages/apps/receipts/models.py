@@ -78,10 +78,10 @@ class Location(BaseLocation):
             'zipcode': receipt.zip,
         })
         self.coordinate = Point(
-            x=float(data['Longitude']),
-            y=float(data['Latitude']),
+            x=float(data['geometry']['coordinates'][0]),
+            y=float(data['geometry']['coordinates'][1]),
         )
-        self.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
+        self.coordinate_quality = data['properties']['quality']
         self.save()
         logger.debug(data)
         logger.info('%s', self)
