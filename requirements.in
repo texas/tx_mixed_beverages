@@ -16,5 +16,7 @@ waitress
 
 # Dev requirements
 factory-boy
+flake8
+mypy-lang
 pip-tools
 tqdm

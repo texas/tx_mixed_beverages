@@ -1,9 +1,10 @@
 import os
+from typing import Dict
 
-from django.core.exceptions import ImproperlyConfigured
 import requests
 
 
+# DEPRECATED, use Geodude service directly instead
 def get_remaining_credits():
     # if you run out of credits, go to
     # https://geoservices.tamu.edu/UserServices/Payments/
@@ -23,7 +24,7 @@ class GeocodeException(Exception):
     pass
 
 
-def geocode_address(address, force=False):
+def geocode_address(address: Dict, force: bool=False) -> Dict:
     """
     Geocode an address dict.
 
@@ -34,18 +35,9 @@ def geocode_address(address, force=False):
     """
     if not address['city'] and not address['zipcode']:
         raise GeocodeException("Can't look up without a city or zip")
-    api_key = os.environ.get('TAMU_API_KEY')
-    if not api_key:
-        raise ImproperlyConfigured(
-            "Can't look up without 'TAMU_API_KEY' environment variable")
-    url = (
-        'http://geoservices.tamu.edu/Services/Geocode/WebService/'
-        'GeocoderWebServiceHttpNonParsed_V04_01.aspx'
-    )
+    geodude_url = os.getenv('GEODUDE_URL')
     params = {
-        'apiKey': api_key,
-        'version': '4.01',
-        'streetAddress': address['address'],
+        'address': address['address'],
         'city': address['city'],
         'state': address['state'],
         'zip': address['zipcode'],
@@ -53,26 +45,7 @@ def geocode_address(address, force=False):
     headers = {
         'user-agent': 'default/lazy_geo v0.0'
     }
-    response = requests.get(url, params=params, headers=headers)
-    if response.status_code != 200:
-        raise GeocodeException('Got a non-200 response: {}'
-            .format(response.status_code))
-    fields = [
-        'TransactionId',
-        'Version',
-        'QueryStatusCodeValue',
-        'Latitude',
-        'Longitude',
-        'NAACCRGISCoordinateQualityCode',
-        'NAACCRGISCoordinateQualityName',
-        'MatchScore',
-        'MatchType',
-        'FeatureMatchingResultType',
-        'FeatureMatchingResultCount',
-        'FeatureMatchingGeographyType',
-        'RegionSize',
-        'RegionSizeUnits',
-        'MatchedLocationType',
-        'TimeTaken',
-    ]
-    return dict(zip(fields, response.text.split(',')))
+    response = requests.get('{}/tamu'.format(geodude_url), params=params, headers=headers)
+    if not response.ok:
+        raise GeocodeException('Got a non-200 response: {}'.format(response.status_code))
+    return response.json()
