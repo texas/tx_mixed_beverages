@@ -65,10 +65,12 @@ class Location(BaseLocation):
         if self.coordinate and not force:
             logger.info('{} already geocoded'.format(self))
             return
+
         receipt = self.get_latest()
         if receipt is None:
             logger.warning('Location {} has no address'.format(self.pk))
             return
+
         data = geocode_address({
             'address': receipt.address,
             'city': receipt.city,

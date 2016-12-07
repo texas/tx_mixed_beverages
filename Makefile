@@ -23,6 +23,9 @@ clean: ## Remove temporary files
 test: ## Run test suite
 	$(MANAGE) test
 
+tdd: ## Run tests with a watcher
+	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
+
 resetdb: ## Delete and recreate the database
 	-phd dropdb
 	phd createdb
