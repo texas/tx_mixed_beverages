@@ -1,11 +1,5 @@
 djangorestframework
 
-
-# Deployment
-whitenoise
-waitress
-
-
 # Dev requirements
 factory-boy
 pip-tools
