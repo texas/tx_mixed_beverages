@@ -1,12 +1,4 @@
-Django<1.11
-
-dj-database-url
-psycopg2
-project-runpy
-django-extensions
 djangorestframework
-requests
-django-geojson
 
 
 # Deployment
