@@ -1,6 +1,1 @@
 djangorestframework
-
-# Dev requirements
-factory-boy
-pip-tools
-tqdm
