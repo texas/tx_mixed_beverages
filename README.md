@@ -1,16 +1,15 @@
-Mixed Beverages
-===============
+# Mixed Beverages
 
 [![Build Status](https://travis-ci.org/texas/tx_mixed_beverages.svg?branch=master)](https://travis-ci.org/texas/tx_mixed_beverages)
 
-Data
-----
+## Data
 
-* https://www.comptroller.texas.gov/transparency/open-data/search-datasets/
+A great overview and introduction to the data: https://data.texas.gov/stories/s/tj7s-7tc8
 
+You can export the raw data at:
+https://data.texas.gov/Government-and-Taxes/Mixed-Beverage-Gross-Receipts/naix-2893
 
-Setting up the project
-----------------------
+## Setting up the project
 
 In a Python 3 virtualenv:
 
@@ -25,6 +24,8 @@ Setup your environment:
     DEBUG=1
 
 #### Pull data
+
+**NOTE:** The data format and process has changed so this is out of date
 
 First, you have to get the [csvs](https://www.comptroller.texas.gov/transparency/open-data/search-datasets/).
 
