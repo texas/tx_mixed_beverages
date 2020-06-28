@@ -10,7 +10,9 @@ before_script:
   - psql -U postgres -c 'CREATE DATABASE mixed_beverages;'
   - psql -U postgres -c "CREATE EXTENSION postgis" -d template1
   - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d template1
-script: make test
+script:
+  - make test
+  - make lint
 branches:
   only:
     - master
