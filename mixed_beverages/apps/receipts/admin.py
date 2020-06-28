@@ -7,19 +7,14 @@ from . import models
 class ReceiptInline(admin.TabularInline):
     extra = 0
     model = models.Receipt
-    readonly_fields = (
+    fields = (
         "name",
         "tabc_permit",
         "date",
         "total",
-        "address",
-        "city",
-        "state",
-        "zip",
-        "county_code",
-        "business",
         "location",
     )
+    readonly_fields = fields
 
 
 @admin.register(models.Business)
@@ -32,16 +27,7 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(GeoModelAdmin):
-    # List
-    ######
-
-    def display_name(self, obj):
-        return obj.data["name"]
-
-    def display_tax(self, obj):
-        return obj.data["avg_tax"]
-
-    list_display = ("display_name", "display_tax", "coordinate_quality")
+    list_display = ("street_address", "city", "state", "zip")
     list_filter = ("coordinate_quality",)
 
     # Detail
@@ -51,11 +37,12 @@ class LocationAdmin(GeoModelAdmin):
         ReceiptInline,
     ]
     save_on_top = True
+    readonly_fields = ("street_address", "city", "state", "zip", "data", "businesses")
 
 
 @admin.register(models.Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ("name", "date", "total", "city", "zip")
+    list_display = ("name", "date", "total")
     search_fields = ("name",)
     fieldsets = (
         (
@@ -76,13 +63,12 @@ class ReceiptAdmin(admin.ModelAdmin):
                 "fields": (
                     "location_name",
                     "location_number",
-                    "address",
-                    ("city", "state", "zip"),
+                    "location",
                     "county_code",
                 )
             },
         ),
-        ("Relations", {"fields": ("business", "location",)}),
+        ("Relations", {"fields": ("business",)}),
     )
     readonly_fields = (
         "name",
@@ -96,10 +82,6 @@ class ReceiptAdmin(admin.ModelAdmin):
         "total",
         "location_name",
         "location_number",
-        "address",
-        "city",
-        "state",
-        "zip",
         "county_code",
         "business",
         "location",

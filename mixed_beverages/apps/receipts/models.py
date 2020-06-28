@@ -21,6 +21,11 @@ class Business(models.Model):
 
 
 class Location(BaseLocation):
+    street_address = models.CharField(max_length=100)
+    city = models.CharField(max_length=30)
+    state = models.CharField(max_length=20)
+    zip = models.CharField(max_length=15)
+
     data = JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
@@ -40,23 +45,9 @@ class Location(BaseLocation):
             reverse("mixed_beverages:home"), self
         )
 
-    # CUSTOM PROPERTIES #
     @property
     def address(self):
-        """Get a human readable address."""
-        latest = self.get_latest()
-        if not latest:
-            return ""
-
-        return "{0.address}\n{0.city}, {0.state} {0.zip}".format(latest)
-
-    # CUSTOM METHODS #
-
-    def get_latest(self):
-        try:
-            return self.receipts.order_by("-date")[0]
-        except IndexError:
-            return None
+        return f"{self.street_address}\n{self.city}, {self.state} {self.zip}"
 
     def geocode(self, force=False):
         logger = logging.getLogger("geocode")
@@ -64,17 +55,12 @@ class Location(BaseLocation):
             logger.info("{} already geocoded".format(self))
             return
 
-        receipt = self.get_latest()
-        if receipt is None:
-            logger.warning("Location {} has no address".format(self.pk))
-            return
-
         data = geocode_address(
             {
-                "address": receipt.address,
-                "city": receipt.city,
-                "state": receipt.state,
-                "zipcode": receipt.zip,
+                "address": self.address,
+                "city": self.city,
+                "state": self.state,
+                "zipcode": self.zip,
             }
         )
         self.coordinate = Point(x=float(data["Longitude"]), y=float(data["Latitude"]),)
@@ -88,25 +74,38 @@ class Receipt(models.Model):
     """
     A location's tax receipt for a month
 
-    Column_Order|Column_Description|Data_Type|Size
-    Col01|TABC Permit Number|Number|8
-    Col02|Trade Name|Char|30
-    Col03|Location Address|Char|30
-    Col04|Locaiton City|Char|20
-    Col05|Location State|Char|2
-    Col06|Location Zip Code|Number|5
-    Col07|Location County Code|Number|3
-    Col08|Report Period (YYYY/MM)|Char|7
-    Col09|Report Tax|Number|13
-
-    Location fields maybe should get split out, but will make importing slower.
+    $ csvstat Mixed_Beverage_Gross_Receipts.csv --len
+    1. Taxpayer Number: None
+    2. Taxpayer Name: 50
+    3. Taxpayer Address: 40
+    4. Taxpayer City: 20
+    5. Taxpayer State: 2
+    6. Taxpayer Zip: None
+    7. Taxpayer County: None
+    8. Location Number: None
+    9. Location Name: 50
+    10. Location Address: 50
+    11. Location City: 23
+    12. Location State: 2
+    13. Location Zip: None
+    14. Location County: None
+    15. Inside/Outside City Limits: None
+    16. TABC Permit Number: 12
+    17. Responsibility Begin Date: None
+    18. Responsibility End Date: None
+    19. Obligation End Date: None
+    20. Liquor Receipts: None
+    21. Wine Receipts: None
+    22. Beer Receipts: None
+    23. Cover Charge Receipts: None
+    24. Total Receipts: None
     """
 
     name = models.CharField(max_length=100)
     # TODO figure out name/tax_numbner/tabc_permit cardinality
-    tax_number = models.CharField("taxpayer number", max_length=50)
+    tax_number = models.CharField("taxpayer number", max_length=80)
     tabc_permit = models.CharField(
-        "TABC permit number", max_length=50, help_text="example: MB888888"
+        "TABC permit number", max_length=40, help_text="example: MB888888"
     )
     # responsibility begin date
     # responsibility end date
@@ -123,10 +122,6 @@ class Receipt(models.Model):
     # location fields
     location_name = models.CharField(max_length=100)
     location_number = models.PositiveSmallIntegerField()
-    address = models.CharField(max_length=100)
-    city = models.CharField(max_length=80)
-    state = models.CharField(max_length=2)
-    zip = models.CharField(max_length=10)
     county_code = models.PositiveSmallIntegerField(help_text="A number from 1 to 254")
     # inside/outside city limits
 
@@ -141,7 +136,7 @@ class Receipt(models.Model):
     location = models.ForeignKey(
         Location,
         related_name="receipts",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
