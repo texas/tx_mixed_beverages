@@ -3,8 +3,7 @@ cache: pip
 python: "3.7"
 addons:
   postgresql: "11.8"
-env:
-  PYTHONPATH=. ENVIRONMENT=test"
+env: PYTHONPATH=. ENVIRONMENT=test"
 install: "pip install -r requirements.txt"
 before_script:
   - psql -U postgres -c 'CREATE DATABASE mixed_beverages;'
