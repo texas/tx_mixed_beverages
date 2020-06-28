@@ -9,14 +9,21 @@ from .models import Receipt, Business, Location
 
 
 def assign_businesses(show_progress=False):
-    tax_numbers_to_assign = Receipt.objects.filter(business=None).values("tax_number")
-    if not tax_numbers_to_assign:
+    businesses_to_create = (
+        Receipt.objects.filter(business=None)
+        .values("tax_number", "name")
+        .order_by("tax_number")
+        .annotate(Count("tax_number"))
+    )
+
+    if not businesses_to_create:
         return
 
-    for tax_number in tqdm(tax_numbers_to_assign, disable=not show_progress):
-        business, __ = Business.objects.get_or_create(tax_number=tax_number)
-        # FIXME business needs a name!
-        Receipt.objects.filter(tax_number=tax_number, business=None).update(
+    for business_data in tqdm(businesses_to_create, disable=not show_progress):
+        business, __ = Business.objects.get_or_create(
+            tax_number=business_data["tax_number"], defaults=dict(name=business_data["name"])
+        )
+        Receipt.objects.filter(tax_number=business_data["tax_number"], business=None).update(
             business=business
         )
 
