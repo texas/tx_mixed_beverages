@@ -3,7 +3,7 @@ import logging
 from django.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.postgres.fields import HStoreField
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseLocation
 from mixed_beverages.apps.lazy_geo.utils import geocode_address
@@ -122,10 +122,12 @@ class Receipt(models.Model):
     # denormalized fields
     business = models.ForeignKey(
         Business, related_name='receipts',
+        on_delete=models.CASCADE,
         null=True, blank=True,
     )
     location = models.ForeignKey(
         Location, related_name='receipts',
+        on_delete=models.CASCADE,
         null=True, blank=True,
     )
 
