@@ -16,6 +16,7 @@ requests = "^2.24.0"
 django-geojson = "^3.0.0"
 whitenoise = "^5.1.0"
 waitress = "^1.4.4"
+djangorestframework = "^3.11.0"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "^2.12.0"
