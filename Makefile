@@ -25,18 +25,25 @@ tdd: ## Run tests with a watcher
 lint: ## Run lint check
 	black --check .
 
+resetmigrations:
+	find . -name "0001_initial.py" -delete
+	$(MANAGE) makemigrations receipts lazy_geo
+	black .
+
 resetdb: ## Delete and recreate the database
 	-phd dropdb
 	phd createdb
-	phd psql -c 'CREATE EXTENSION hstore; CREATE EXTENSION postgis;'
+	phd psql -c 'CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
-.PHONY: data/*.CSV
-data/*.CSV:
-	./mixed_beverages/scripts/slurp.py $@
+admin: ## Set up a local admin/admin account
+	echo "from django.contrib.auth import get_user_model; \
+	  User = get_user_model(); \
+	  User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \
+	  python manage.py shell
 
-slurp: ## Import all csvs found in ./data
-slurp: data/*.CSV
+slurp: ## Import downloaded CSVs
+	$(MANAGE) slurp ~/Downloads/Mixed_Beverage_Gross_Receipts.csv
 
 process: ## Generate stats
 	./mixed_beverages/scripts/post_process.py

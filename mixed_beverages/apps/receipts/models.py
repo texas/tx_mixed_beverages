@@ -10,11 +10,8 @@ from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 
 class Business(models.Model):
-    """
-    A business can have multiple locations.
-    """
-
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
+    tax_number = models.CharField(max_length=50, unique=True)
 
     class Meta:
         verbose_name_plural = "businesses"
@@ -22,15 +19,12 @@ class Business(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def locations(self):
-        return Location.objects.filter(receipts__business=self)
-
 
 class Location(BaseLocation):
     data = JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
+    businesses = models.ManyToManyField(Business, related_name="locations")
 
     def __str__(self):
         bits = []
@@ -53,6 +47,7 @@ class Location(BaseLocation):
         latest = self.get_latest()
         if not latest:
             return ""
+
         return "{0.address}\n{0.city}, {0.state} {0.zip}".format(latest)
 
     # CUSTOM METHODS #
@@ -107,21 +102,35 @@ class Receipt(models.Model):
     Location fields maybe should get split out, but will make importing slower.
     """
 
-    tabc_permit = models.CharField(max_length=8)
-    name = models.CharField(max_length=30)
-    date = models.DateField(help_text="Use the 1st of the month for simplicity")
-    tax = models.DecimalField(max_digits=13, decimal_places=2)
+    name = models.CharField(max_length=100)
+    # TODO figure out name/tax_numbner/tabc_permit cardinality
+    tax_number = models.CharField("taxpayer number", max_length=50)
+    tabc_permit = models.CharField(
+        "TABC permit number", max_length=50, help_text="example: MB888888"
+    )
+    # responsibility begin date
+    # responsibility end date
+    date = models.DateField(help_text="Obligation End Date")
+    # taxpayer address, city, zip, county
+
+    liquor = models.DecimalField("liquor receipts", max_digits=13, decimal_places=2)
+    wine = models.DecimalField("wine receipts", max_digits=13, decimal_places=2)
+    beer = models.DecimalField("beer receipts", max_digits=13, decimal_places=2)
+    cover = models.DecimalField(
+        "cover charge receipts", max_digits=13, decimal_places=2
+    )
+    total = models.DecimalField("total receipts", max_digits=13, decimal_places=2)
     # location fields
-    address = models.CharField(max_length=30)
-    city = models.CharField(max_length=20)
+    location_name = models.CharField(max_length=100)
+    location_number = models.PositiveSmallIntegerField()
+    address = models.CharField(max_length=100)
+    city = models.CharField(max_length=80)
     state = models.CharField(max_length=2)
-    zip = models.CharField(max_length=5)
-    county_code = models.PositiveSmallIntegerField()
+    zip = models.CharField(max_length=10)
+    county_code = models.PositiveSmallIntegerField(help_text="A number from 1 to 254")
+    # inside/outside city limits
 
-    # bookkeeping
-    source = models.CharField(max_length=255, null=True, blank=True)
-
-    # denormalized fields
+    # Denormalized fields, populated in after import
     business = models.ForeignKey(
         Business,
         related_name="receipts",
@@ -139,9 +148,10 @@ class Receipt(models.Model):
 
     class Meta:
         ordering = ("-date",)
+        unique_together = ("tax_number", "date")
 
     def __str__(self):
-        return "{} {} {}".format(self.name, self.date, self.tax,)
+        return "{} {} {}".format(self.name, self.date, self.total)
 
     # CUSTOM METHODS #
 
@@ -151,6 +161,7 @@ class Receipt(models.Model):
         if location and location.coordinate and not force:
             logger.info("{} already geocoded".format(self))
             return
+
         data = geocode_address(
             {
                 "address": self.address,

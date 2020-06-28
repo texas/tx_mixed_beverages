@@ -50,8 +50,8 @@ class BaseLocation(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
-        return unicode(self.coordinate or self.pk)
+    def __str__(self):
+        return str(self.coordinate or self.pk)
 
     # CUSTOM METHODS #
 
@@ -138,7 +138,7 @@ class Correction(models.Model):
     # MANAGERS #
     objects = CorrectionManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "by {0.submitter}".format(self)
 
     def get_absolute_url(self):

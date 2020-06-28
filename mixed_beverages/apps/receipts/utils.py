@@ -8,46 +8,6 @@ from tqdm import tqdm
 from .models import Receipt, Business, Location
 
 
-def row_to_receipt(row):
-    cleaned_row = list(map(str.strip, row))
-    if len(cleaned_row[0]) > 8:
-        return None
-
-    return Receipt(
-        tabc_permit=cleaned_row[0],
-        name=cleaned_row[1],
-        address=cleaned_row[2],
-        city=cleaned_row[3],
-        state=cleaned_row[4],
-        zip=cleaned_row[5],
-        county_code=cleaned_row[6],
-        # assign to the first of the month
-        date="{}-{}-01".format(*cleaned_row[8].split("/")),
-        tax=cleaned_row[9],
-    )
-
-
-def slurp(path, force=False):
-    """Import a csv."""
-    assert os.path.isfile(path)
-    source = os.path.basename(path)
-    if Receipt.objects.filter(source=source).exists():
-        print("already imported {}".format(source))
-        return
-
-    with open(path, "r", encoding="windows-1252") as f:
-        reader = csv.reader(f)
-        receipts = []
-        for row in reader:
-            receipt = row_to_receipt(row)
-            if receipt is None:
-                continue
-
-            receipt.source = source
-            receipts.append(receipt)
-        Receipt.objects.bulk_create(receipts)
-
-
 def group_by_name(show_progress=False):
     names = (
         Receipt.objects.filter(business=None)
@@ -120,7 +80,7 @@ def set_location_data(show_progress=False):
             }
             x.save(update_fields=("data",))
             continue
-        avg_tax = sum(x.tax for x in recent_receipts) / len(recent_receipts)
+        avg_tax = sum(x.total for x in recent_receipts) / len(recent_receipts)
         # remember that hstore only stores text
         x.data = {
             "name": str(latest_receipt.name),
