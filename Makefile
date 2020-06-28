@@ -42,12 +42,8 @@ admin: ## Set up a local admin/admin account
 	  User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \
 	  python manage.py shell
 
-.PHONY: data/*.CSV
-data/*.CSV:
-	./mixed_beverages/scripts/slurp.py $@
-
-slurp: ## Import all csvs found in ./data
-slurp: data/*.CSV
+slurp: ## Import downloaded CSVs
+	$(MANAGE) slurp ~/Downloads/Mixed_Beverage_Gross_Receipts.csv
 
 process: ## Generate stats
 	./mixed_beverages/scripts/post_process.py
