@@ -11,6 +11,12 @@ https://data.texas.gov/Government-and-Taxes/Mixed-Beverage-Gross-Receipts/naix-2
 
 ## Setting up the project
 
+### OSX
+
+    brew install gdal
+
+### Installing
+
     # install requirements
     make install
 
