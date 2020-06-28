@@ -36,6 +36,12 @@ resetdb: ## Delete and recreate the database
 	phd psql -c 'CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
+admin: ## Set up a local admin/admin account
+	echo "from django.contrib.auth import get_user_model; \
+	  User = get_user_model(); \
+	  User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \
+	  python manage.py shell
+
 .PHONY: data/*.CSV
 data/*.CSV:
 	./mixed_beverages/scripts/slurp.py $@
