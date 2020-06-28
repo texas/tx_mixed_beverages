@@ -23,7 +23,7 @@ SECRET_KEY = env.get("SECRET_KEY", "Rotom")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.get("DEBUG", False)
 
-ALLOWED_HOSTS = ["*"]  # TODO
+ALLOWED_HOSTS = ["*"]  # Reverse proxy handles host matching for us
 
 
 # Application definition
