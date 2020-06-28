@@ -80,7 +80,7 @@ def set_location_data(show_progress=False):
             }
             x.save(update_fields=("data",))
             continue
-        avg_tax = sum(x.tax for x in recent_receipts) / len(recent_receipts)
+        avg_tax = sum(x.total for x in recent_receipts) / len(recent_receipts)
         # remember that hstore only stores text
         x.data = {
             "name": str(latest_receipt.name),
