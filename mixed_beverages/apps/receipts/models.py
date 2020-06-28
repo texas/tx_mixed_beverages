@@ -10,10 +10,6 @@ from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 
 class Business(models.Model):
-    """
-    A business can have multiple locations.
-    """
-
     name = models.CharField(max_length=30)
 
     class Meta:
@@ -22,15 +18,12 @@ class Business(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def locations(self):
-        return Location.objects.filter(receipts__business=self)
-
 
 class Location(BaseLocation):
     data = JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
+    businesses = models.ManyToManyField(related_name="locations")
 
     def __str__(self):
         bits = []
@@ -53,6 +46,7 @@ class Location(BaseLocation):
         latest = self.get_latest()
         if not latest:
             return ""
+
         return "{0.address}\n{0.city}, {0.state} {0.zip}".format(latest)
 
     # CUSTOM METHODS #
@@ -141,7 +135,7 @@ class Receipt(models.Model):
         ordering = ("-date",)
 
     def __str__(self):
-        return "{} {} {}".format(self.name, self.date, self.tax,)
+        return "{} {} {}".format(self.name, self.date, self.tax)
 
     # CUSTOM METHODS #
 
@@ -151,6 +145,7 @@ class Receipt(models.Model):
         if location and location.coordinate and not force:
             logger.info("{} already geocoded".format(self))
             return
+
         data = geocode_address(
             {
                 "address": self.address,
