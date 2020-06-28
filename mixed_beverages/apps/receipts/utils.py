@@ -8,20 +8,15 @@ from tqdm import tqdm
 from .models import Receipt, Business, Location
 
 
-def group_by_name(show_progress=False):
-    names = (
-        Receipt.objects.filter(business=None)
-        .values("name")
-        .order_by("name")
-        .annotate(Count("name"))
-    )
-    if not names:
+def assign_businesses(show_progress=False):
+    tax_numbers_to_assign = Receipt.objects.filter(business=None).values("tax_number")
+    if not tax_numbers_to_assign:
         return
 
-    for x in tqdm(names, disable=not show_progress):
-        name = x["name"]
-        business, __ = Business.objects.get_or_create(name=name)
-        (Receipt.objects.filter(name=name, business=None).update(business=business))
+    for tax_number in tqdm(tax_numbers_to_assign, disable=not show_progress):
+        business, __ = Business.objects.get_or_create(tax_number=tax_number)
+        # FIXME business needs a name!
+        Receipt.objects.filter(name=name, business=None).update(business=business)
 
 
 def group_by_location(show_progress=False):
@@ -91,8 +86,8 @@ def set_location_data(show_progress=False):
 
 def post_process():
     show_progress = True  # TODO add a way to silence progress bar
-    print("group_by_name")
-    group_by_name(show_progress=show_progress)
+    print("assign_businesses")
+    assign_businesses(show_progress=show_progress)
     print("group_by_location")
     group_by_location(show_progress=show_progress)
     print("set_location_data")
