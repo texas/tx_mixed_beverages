@@ -21,11 +21,12 @@ def assign_businesses(show_progress=False):
 
     for business_data in tqdm(businesses_to_create, disable=not show_progress):
         business, __ = Business.objects.get_or_create(
-            tax_number=business_data["tax_number"], defaults=dict(name=business_data["name"])
+            tax_number=business_data["tax_number"],
+            defaults=dict(name=business_data["name"]),
         )
-        Receipt.objects.filter(tax_number=business_data["tax_number"], business=None).update(
-            business=business
-        )
+        Receipt.objects.filter(
+            tax_number=business_data["tax_number"], business=None
+        ).update(business=business)
 
 
 def group_by_location(show_progress=False):
@@ -44,18 +45,19 @@ def group_by_location(show_progress=False):
     last_reference = None
     for x in tqdm(receipts_without_location, disable=not show_progress):
         # TODO is grouping by `tabc_permit` the same thing?
-        reference = dict(address=x.address, city=x.city, state=x.state, zip=x.zip,)
+        reference = dict(address=x.address, city=x.city, state=x.state, zip=x.zip)
         if reference == last_reference:
-            # the .update(...) and .order_by(...) makes this possible
+            # Doing .update(...) and .order_by(...) makes this possible
             continue
 
         try:
-            # look for an existing `Location`
+            # Look for an existing `Location`
+            # TODO store address in `Location` model
             location = (
                 Receipt.objects.filter(**reference).exclude(location=None)[0].location
             )
         except IndexError:
-            # create a new `Location`
+            # Create a new `Location`
             location = Location.objects.create()
         receipts_without_location.filter(**reference).update(location=location)
         last_reference = reference
@@ -70,7 +72,7 @@ def set_location_data(show_progress=False):
     latest_receipt_date = Receipt.objects.latest("date").date
 
     queryset = Location.objects.all()
-    # good enough, go back 4 * 31 days to get 4 months
+    # Good enough, go back 4 * 31 days to get 4 months
     cutoff_date = latest_receipt_date - datetime.timedelta(days=4 * 31)
     for x in tqdm(queryset, disable=not show_progress):
         latest_receipts = list(x.receipts.order_by("-date")[:4])
@@ -85,7 +87,6 @@ def set_location_data(show_progress=False):
             x.save(update_fields=("data",))
             continue
         avg_tax = sum(x.total for x in recent_receipts) / len(recent_receipts)
-        # remember that hstore only stores text
         x.data = {
             "name": str(latest_receipt.name),
             "avg_tax": "{:.2f}".format(avg_tax),
