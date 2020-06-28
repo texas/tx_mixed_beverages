@@ -25,10 +25,15 @@ tdd: ## Run tests with a watcher
 lint: ## Run lint check
 	black --check .
 
+resetmigrations:
+	find . -name "0001_initial.py" -delete
+	$(MANAGE) makemigrations receipts lazy_geo
+	black .
+
 resetdb: ## Delete and recreate the database
 	-phd dropdb
 	phd createdb
-	phd psql -c 'CREATE EXTENSION hstore; CREATE EXTENSION postgis;'
+	phd psql -c 'CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
 .PHONY: data/*.CSV
