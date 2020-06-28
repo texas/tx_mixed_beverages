@@ -57,11 +57,45 @@ class LocationAdmin(GeoModelAdmin):
 class ReceiptAdmin(admin.ModelAdmin):
     list_display = ("name", "date", "total", "city", "zip")
     search_fields = ("name",)
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "tax_number",
+                    "tabc_permit",
+                    "date",
+                    ("liquor", "wine", "beer", "cover", "total"),
+                )
+            },
+        ),
+        (
+            "Location",
+            {
+                "fields": (
+                    "location_name",
+                    "location_number",
+                    "address",
+                    ("city", "state", "zip"),
+                    "county_code",
+                )
+            },
+        ),
+        ("Relations", {"fields": ("business", "location",)}),
+    )
     readonly_fields = (
         "name",
+        "tax_number",
         "tabc_permit",
         "date",
+        "liquor",
+        "wine",
+        "beer",
+        "cover",
         "total",
+        "location_name",
+        "location_number",
         "address",
         "city",
         "state",
