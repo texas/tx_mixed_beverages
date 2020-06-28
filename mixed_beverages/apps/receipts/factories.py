@@ -13,6 +13,11 @@ class LocationFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Location
 
+    street_address = factory.Faker("street_address")
+    city = factory.Faker("city")
+    state = "TX"
+    zip = FuzzyText(length=5, chars=string.digits)
+
     @factory.post_generation
     def receipts(self, create, extracted, **kwargs):
         if not create:
@@ -37,10 +42,6 @@ class ReceiptFactory(factory.DjangoModelFactory):
     cover = FuzzyDecimal(low=0, high=1000, precision=2)
     total = FuzzyDecimal(low=0, high=10000, precision=2)
     location_number = 1
-    address = factory.Faker("street_address")
-    city = factory.Faker("city")
-    state = "TX"
-    zip = FuzzyText(length=5, chars=string.digits)
     county_code = 255
 
     location = factory.SubFactory(LocationFactory)
