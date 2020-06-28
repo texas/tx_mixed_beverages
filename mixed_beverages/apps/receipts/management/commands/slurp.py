@@ -2,7 +2,39 @@ import os.path
 import csv as csv_lib
 
 from django.core.management.base import BaseCommand
-from ... import models
+from obj_update import obj_update_or_create
+
+from ...models import Receipt
+
+
+# Is this useful?
+# def row_to_receipt(row):
+#     cleaned_row = list(map(str.strip, row))
+#     if len(cleaned_row[0]) > 8:
+#         return None
+
+#     return Receipt(
+#         tabc_permit=cleaned_row[0],
+#         name=cleaned_row[1],
+#         address=cleaned_row[2],
+#         city=cleaned_row[3],
+#         state=cleaned_row[4],
+#         zip=cleaned_row[5],
+#         county_code=cleaned_row[6],
+#         # assign to the first of the month
+#         date="{}-{}-01".format(*cleaned_row[8].split("/")),
+#         tax=cleaned_row[9],
+#     )
+
+
+def date_fmt(date: str):
+    """Convert m/d/y to Y-M-D"""
+    try:
+        month, day, year = date.split("/")
+        return f"{year}-{month}-{day}"
+
+    except:
+        return None
 
 
 class Command(BaseCommand):
@@ -17,7 +49,26 @@ class Command(BaseCommand):
         with open(csv, "r", encoding="windows-1252") as fh:
             reader = csv_lib.DictReader(fh)
             for row in reader:
-                print(row)
+                receipt, created = obj_update_or_create(
+                    Receipt,
+                    tax_number=row["Taxpayer Number"],
+                    date=date_fmt(row["Obligation End Date"]),
+                    defaults=dict(
+                        name=row["Taxpayer Name"],
+                        tabc_permit=row["TABC Permit Number"],
+                        liquor=row["Liquor Receipts"],
+                        wine=row["Wine Receipts"],
+                        beer=row["Beer Receipts"],
+                        cover=row["Cover Charge Receipts"],
+                        total=row["Total Receipts"],
+                        address=row["Location Address"],
+                        city=row["Location City"],
+                        state=row["Location State"],
+                        zip=row["Location Zip"],
+                        county_code=row["Location County"],
+                    ),
+                )
+                print(row, receipt, created)
                 break
             #     receipt = row_to_receipt(row)
             #     if receipt is None:
