@@ -8,6 +8,7 @@ ONE_DAY = 86400
 ONE_WEEK = ONE_DAY * 7
 
 
+app_name = "lazy_geo"
 urlpatterns = [
     url(
         r"^data.geojson$",
