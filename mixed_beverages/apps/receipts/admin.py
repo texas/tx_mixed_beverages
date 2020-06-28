@@ -27,22 +27,7 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(GeoModelAdmin):
-    # List
-    ######
-
-    def display_name(self, obj):
-        if obj.data:
-            return obj.data["name"]
-
-        return "-name-"
-
-    def display_tax(self, obj):
-        if obj.data:
-            return obj.data["avg_tax"]
-
-        return "-tax"
-
-    list_display = ("display_name", "display_tax", "coordinate_quality")
+    list_display = ("street_address", "city", "state", "zip")
     list_filter = ("coordinate_quality",)
 
     # Detail
@@ -52,7 +37,7 @@ class LocationAdmin(GeoModelAdmin):
         ReceiptInline,
     ]
     save_on_top = True
-    readonly_fields = ("data", "businesses")
+    readonly_fields = ("street_address", "city", "state", "zip", "data", "businesses")
 
 
 @admin.register(models.Receipt)
