@@ -10,7 +10,8 @@ from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 
 class Business(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=80)
+    tax_number = models.CharField(max_length=50, unique=True)
 
     class Meta:
         verbose_name_plural = "businesses"
@@ -23,7 +24,7 @@ class Location(BaseLocation):
     data = JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
-    businesses = models.ManyToManyField(related_name="locations")
+    businesses = models.ManyToManyField(Business, related_name="locations")
 
     def __str__(self):
         bits = []
@@ -101,21 +102,35 @@ class Receipt(models.Model):
     Location fields maybe should get split out, but will make importing slower.
     """
 
-    tabc_permit = models.CharField(max_length=8)
     name = models.CharField(max_length=30)
-    date = models.DateField(help_text="Use the 1st of the month for simplicity")
-    tax = models.DecimalField(max_digits=13, decimal_places=2)
+    # TODO figure out name/tax_numbner/tabc_permit cardinality
+    tax_number = models.CharField("taxpayer number", max_length=50)
+    tabc_permit = models.CharField(
+        "TABC permit number", max_length=8, help_text="example: MB888888"
+    )
+    # responsibility begin date
+    # responsibility end date
+    date = models.DateField(help_text="Obligation End Date")
+
+    liquor = models.DecimalField("liquor receipts", max_digits=13, decimal_places=2)
+    wine = models.DecimalField("wine receipts", max_digits=13, decimal_places=2)
+    beer = models.DecimalField("beer receipts", max_digits=13, decimal_places=2)
+    cover = models.DecimalField(
+        "cover charge receipts", max_digits=13, decimal_places=2
+    )
+    total = models.DecimalField("total receipts", max_digits=13, decimal_places=2)
     # location fields
+    # Should I just have a foreigh key to Location?
     address = models.CharField(max_length=30)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
     zip = models.CharField(max_length=5)
     county_code = models.PositiveSmallIntegerField()
+    # location number
+    # location name
+    # inside/outside city limits
 
-    # bookkeeping
-    source = models.CharField(max_length=255, null=True, blank=True)
-
-    # denormalized fields
+    # Denormalized fields, populated in after import
     business = models.ForeignKey(
         Business,
         related_name="receipts",
@@ -135,7 +150,7 @@ class Receipt(models.Model):
         ordering = ("-date",)
 
     def __str__(self):
-        return "{} {} {}".format(self.name, self.date, self.tax)
+        return "{} {} {}".format(self.name, self.date, self.total)
 
     # CUSTOM METHODS #
 

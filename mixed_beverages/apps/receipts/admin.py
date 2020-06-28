@@ -11,7 +11,7 @@ class ReceiptInline(admin.TabularInline):
         "name",
         "tabc_permit",
         "date",
-        "tax",
+        "total",
         "address",
         "city",
         "state",
@@ -55,13 +55,13 @@ class LocationAdmin(GeoModelAdmin):
 
 @admin.register(models.Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ("name", "date", "tax", "city", "zip")
+    list_display = ("name", "date", "total", "city", "zip")
     search_fields = ("name",)
     readonly_fields = (
         "name",
         "tabc_permit",
         "date",
-        "tax",
+        "total",
         "address",
         "city",
         "state",
