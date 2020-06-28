@@ -12,5 +12,3 @@ class Command(BaseCommand):
         show_progress = True  # TODO add a way to silence progress bar
         print("assign_businesses")
         assign_businesses(show_progress=show_progress)
-        print('group_by_location')
-        group_by_location(show_progress=show_progress)

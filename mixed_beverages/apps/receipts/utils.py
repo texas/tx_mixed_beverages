@@ -29,40 +29,6 @@ def assign_businesses(show_progress=False):
         ).update(business=business)
 
 
-def group_by_location(show_progress=False):
-    """
-    Group businesses by location.
-
-    Optimized for making the initial import faster.
-    FIXME this is really slow
-    """
-    receipts_without_location = Receipt.objects.filter(location=None).order_by(
-        "address", "city", "state", "zip"
-    )
-    if not receipts_without_location:
-        return
-
-    last_reference = None
-    for x in tqdm(receipts_without_location, disable=not show_progress):
-        # TODO is grouping by `tabc_permit` the same thing?
-        reference = dict(address=x.address, city=x.city, state=x.state, zip=x.zip)
-        if reference == last_reference:
-            # Doing .update(...) and .order_by(...) makes this possible
-            continue
-
-        try:
-            # Look for an existing `Location`
-            # TODO store address in `Location` model
-            location = (
-                Receipt.objects.filter(**reference).exclude(location=None)[0].location
-            )
-        except IndexError:
-            # Create a new `Location`
-            location = Location.objects.create()
-        receipts_without_location.filter(**reference).update(location=location)
-        last_reference = reference
-
-
 def set_location_data(show_progress=False):
     """
     Denormalizes data into the `Location` model.
