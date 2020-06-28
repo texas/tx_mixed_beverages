@@ -27,7 +27,7 @@ class ReceiptFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Receipt
 
-    tabc_permit = FuzzyText(length=6, prefix='MB', chars=string.digits)
+    tabc_permit = FuzzyText(length=6, prefix="MB", chars=string.digits)
     name = FuzzyText(length=30)
     date = FuzzyDate(start_date=date(1970, 1, 1))
     tax = FuzzyDecimal(low=0, high=10000, precision=2)
