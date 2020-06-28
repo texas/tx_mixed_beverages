@@ -12,10 +12,7 @@ class ReceiptInline(admin.TabularInline):
         "tabc_permit",
         "date",
         "total",
-        "address",
-        "city",
-        "state",
-        "zip",
+        "location",
     )
     readonly_fields = fields
 
@@ -60,7 +57,7 @@ class LocationAdmin(GeoModelAdmin):
 
 @admin.register(models.Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ("name", "date", "total", "city", "zip")
+    list_display = ("name", "date", "total")
     search_fields = ("name",)
     fieldsets = (
         (
@@ -81,13 +78,12 @@ class ReceiptAdmin(admin.ModelAdmin):
                 "fields": (
                     "location_name",
                     "location_number",
-                    "address",
-                    ("city", "state", "zip"),
+                    "location",
                     "county_code",
                 )
             },
         ),
-        ("Relations", {"fields": ("business", "location",)}),
+        ("Relations", {"fields": ("business",)}),
     )
     readonly_fields = (
         "name",
@@ -101,10 +97,6 @@ class ReceiptAdmin(admin.ModelAdmin):
         "total",
         "location_name",
         "location_number",
-        "address",
-        "city",
-        "state",
-        "zip",
         "county_code",
         "business",
         "location",
