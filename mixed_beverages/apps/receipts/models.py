@@ -21,6 +21,11 @@ class Business(models.Model):
 
 
 class Location(BaseLocation):
+    street_address = models.CharField(max_length=100)
+    city = models.CharField(max_length=30)
+    state = models.CharField(max_length=20)
+    zip = models.CharField(max_length=15)
+
     data = JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
@@ -136,10 +141,6 @@ class Receipt(models.Model):
     # location fields
     location_name = models.CharField(max_length=100)
     location_number = models.PositiveSmallIntegerField()
-    address = models.CharField(max_length=100)
-    city = models.CharField(max_length=30)
-    state = models.CharField(max_length=2)
-    zip = models.CharField(max_length=10)
     county_code = models.PositiveSmallIntegerField(help_text="A number from 1 to 254")
     # inside/outside city limits
 
