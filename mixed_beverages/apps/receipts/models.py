@@ -10,7 +10,7 @@ from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 
 class Business(models.Model):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=100)
     tax_number = models.CharField(max_length=50, unique=True)
 
     class Meta:
@@ -102,11 +102,11 @@ class Receipt(models.Model):
     Location fields maybe should get split out, but will make importing slower.
     """
 
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     # TODO figure out name/tax_numbner/tabc_permit cardinality
     tax_number = models.CharField("taxpayer number", max_length=50)
     tabc_permit = models.CharField(
-        "TABC permit number", max_length=8, help_text="example: MB888888"
+        "TABC permit number", max_length=50, help_text="example: MB888888"
     )
     # responsibility begin date
     # responsibility end date
@@ -120,12 +120,12 @@ class Receipt(models.Model):
     )
     total = models.DecimalField("total receipts", max_digits=13, decimal_places=2)
     # location fields
-    location_name = models.CharField(max_length=80)
+    location_name = models.CharField(max_length=100)
     location_number = models.PositiveSmallIntegerField()
-    address = models.CharField(max_length=30)
-    city = models.CharField(max_length=20)
+    address = models.CharField(max_length=100)
+    city = models.CharField(max_length=80)
     state = models.CharField(max_length=2)
-    zip = models.CharField(max_length=5)
+    zip = models.CharField(max_length=10)
     county_code = models.PositiveSmallIntegerField()
     # inside/outside city limits
 

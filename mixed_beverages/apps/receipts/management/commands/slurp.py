@@ -3,6 +3,7 @@ import csv as csv_lib
 
 from django.core.management.base import BaseCommand
 from obj_update import obj_update_or_create
+from tqdm import tqdm
 
 from ...models import Receipt
 
@@ -47,8 +48,10 @@ class Command(BaseCommand):
         assert os.path.isfile(csv)
 
         with open(csv, "r", encoding="windows-1252") as fh:
+            row_count = sum(1 for row in fh)
+            fh.seek(0)
             reader = csv_lib.DictReader(fh)
-            for row in reader:
+            for row in tqdm(reader, total=row_count - 1):
                 receipt, created = obj_update_or_create(
                     Receipt,
                     tax_number=row["Taxpayer Number"],
@@ -70,12 +73,3 @@ class Command(BaseCommand):
                         county_code=row["Location County"],
                     ),
                 )
-                print(row, receipt, created)
-                break
-            #     receipt = row_to_receipt(row)
-            #     if receipt is None:
-            #         continue
-
-            #     receipt.source = source
-            #     receipts.append(receipt)
-            # Receipt.objects.bulk_create(receipts)
