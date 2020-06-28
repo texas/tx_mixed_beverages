@@ -10,51 +10,122 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Business',
+            name="Business",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
             ],
-            options={
-                'verbose_name_plural': 'businesses',
-            },
+            options={"verbose_name_plural": "businesses",},
         ),
         migrations.CreateModel(
-            name='Location',
+            name="Location",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('coordinate', django.contrib.gis.db.models.fields.PointField(blank=True, null=True, srid=4326)),
-                ('coordinate_quality', models.CharField(blank=True, choices=[('me', 'User Inputted'), ('00', 'AddressPoint'), ('01', 'GPS'), ('02', 'Parcel'), ('03', 'StreetSegmentInterpolation'), ('09', 'AddressZipCentroid'), ('10', 'POBoxZIPCentroid'), ('11', 'CityCentroid'), ('98', 'Unknown'), ('99', 'Unmatchable')], max_length=2, null=True)),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(blank=True, help_text='denormalized data to help generate map data', null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "coordinate",
+                    django.contrib.gis.db.models.fields.PointField(
+                        blank=True, null=True, srid=4326
+                    ),
+                ),
+                (
+                    "coordinate_quality",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("me", "User Inputted"),
+                            ("00", "AddressPoint"),
+                            ("01", "GPS"),
+                            ("02", "Parcel"),
+                            ("03", "StreetSegmentInterpolation"),
+                            ("09", "AddressZipCentroid"),
+                            ("10", "POBoxZIPCentroid"),
+                            ("11", "CityCentroid"),
+                            ("98", "Unknown"),
+                            ("99", "Unmatchable"),
+                        ],
+                        max_length=2,
+                        null=True,
+                    ),
+                ),
+                (
+                    "data",
+                    django.contrib.postgres.fields.jsonb.JSONField(
+                        blank=True,
+                        help_text="denormalized data to help generate map data",
+                        null=True,
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False,},
         ),
         migrations.CreateModel(
-            name='Receipt',
+            name="Receipt",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tabc_permit', models.CharField(max_length=8)),
-                ('name', models.CharField(max_length=30)),
-                ('date', models.DateField(help_text='Use the 1st of the month for simplicity')),
-                ('tax', models.DecimalField(decimal_places=2, max_digits=13)),
-                ('address', models.CharField(max_length=30)),
-                ('city', models.CharField(max_length=20)),
-                ('state', models.CharField(max_length=2)),
-                ('zip', models.CharField(max_length=5)),
-                ('county_code', models.PositiveSmallIntegerField()),
-                ('source', models.CharField(blank=True, max_length=255, null=True)),
-                ('business', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='receipts', to='receipts.Business')),
-                ('location', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='receipts', to='receipts.Location')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("tabc_permit", models.CharField(max_length=8)),
+                ("name", models.CharField(max_length=30)),
+                (
+                    "date",
+                    models.DateField(
+                        help_text="Use the 1st of the month for simplicity"
+                    ),
+                ),
+                ("tax", models.DecimalField(decimal_places=2, max_digits=13)),
+                ("address", models.CharField(max_length=30)),
+                ("city", models.CharField(max_length=20)),
+                ("state", models.CharField(max_length=2)),
+                ("zip", models.CharField(max_length=5)),
+                ("county_code", models.PositiveSmallIntegerField()),
+                ("source", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "business",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="receipts",
+                        to="receipts.Business",
+                    ),
+                ),
+                (
+                    "location",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="receipts",
+                        to="receipts.Location",
+                    ),
+                ),
             ],
-            options={
-                'ordering': ('-date',),
-            },
+            options={"ordering": ("-date",),},
         ),
     ]

@@ -13,24 +13,85 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('receipts', '0001_initial'),
+        ("receipts", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Correction',
+            name="Correction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fro', django.contrib.gis.db.models.fields.PointField(help_text='The old coordinate', srid=4326)),
-                ('to', django.contrib.gis.db.models.fields.PointField(help_text='The suggested coordinate', srid=4326)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('approved_at', models.DateTimeField(blank=True, null=True)),
-                ('ip_address', models.GenericIPAddressField(blank=True, null=True, unpack_ipv4=True, verbose_name='IP address')),
-                ('status', models.CharField(choices=[('submitted', 'Submitted'), ('approved', 'Approved'), ('rejected', 'Rejected')], default='submitted', max_length=20)),
-                ('comment', models.TextField(blank=True, null=True)),
-                ('approved_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('obj', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='receipts.Location')),
-                ('submitter', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "fro",
+                    django.contrib.gis.db.models.fields.PointField(
+                        help_text="The old coordinate", srid=4326
+                    ),
+                ),
+                (
+                    "to",
+                    django.contrib.gis.db.models.fields.PointField(
+                        help_text="The suggested coordinate", srid=4326
+                    ),
+                ),
+                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("approved_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "ip_address",
+                    models.GenericIPAddressField(
+                        blank=True,
+                        null=True,
+                        unpack_ipv4=True,
+                        verbose_name="IP address",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("submitted", "Submitted"),
+                            ("approved", "Approved"),
+                            ("rejected", "Rejected"),
+                        ],
+                        default="submitted",
+                        max_length=20,
+                    ),
+                ),
+                ("comment", models.TextField(blank=True, null=True)),
+                (
+                    "approved_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "obj",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="receipts.Location",
+                    ),
+                ),
+                (
+                    "submitter",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
