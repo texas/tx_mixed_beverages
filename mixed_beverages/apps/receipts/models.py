@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 from django.contrib.gis.geos import Point
-from django.contrib.postgres.fields import HStoreField
+from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseLocation
@@ -27,8 +27,7 @@ class Business(models.Model):
 
 
 class Location(BaseLocation):
-    # denormalized data to help generate map data
-    data = HStoreField(null=True, blank=True)
+    data = JSONField(null=True, blank=True, help_text='denormalized data to help generate map data')
 
     def __str__(self):
         bits = []

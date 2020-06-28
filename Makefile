@@ -17,7 +17,7 @@ clean: ## Remove temporary files
 
 # Note: make sure to install the hstore extension in template1
 test: ## Run test suite
-	$(MANAGE) test
+	$(MANAGE) test --noinput
 
 tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
