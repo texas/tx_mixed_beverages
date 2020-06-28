@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from obj_update import obj_update_or_create
 from tqdm import tqdm
 
-from ...models import Receipt
+from ...models import Location, Receipt
 
 
 # Is this useful?
@@ -52,6 +52,12 @@ class Command(BaseCommand):
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
             for row in tqdm(reader, total=row_count - 1):
+                location = Location.objects.get_or_create(
+                    street_address=row["Location Address"],
+                    city=row["Location City"],
+                    state=row["Location State"],
+                    zip=row["Location Zip"],
+                )
                 receipt, created = obj_update_or_create(
                     Receipt,
                     tax_number=row["Taxpayer Number"],
@@ -66,10 +72,7 @@ class Command(BaseCommand):
                         total=row["Total Receipts"],
                         location_name=row["Location Name"],
                         location_number=row["Location Number"],
-                        address=row["Location Address"],
-                        city=row["Location City"],
-                        state=row["Location State"],
-                        zip=row["Location Zip"],
                         county_code=row["Location County"],
+                        location=location,
                     ),
                 )

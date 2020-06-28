@@ -45,23 +45,9 @@ class Location(BaseLocation):
             reverse("mixed_beverages:home"), self
         )
 
-    # CUSTOM PROPERTIES #
     @property
     def address(self):
-        """Get a human readable address."""
-        latest = self.get_latest()
-        if not latest:
-            return ""
-
-        return "{0.address}\n{0.city}, {0.state} {0.zip}".format(latest)
-
-    # CUSTOM METHODS #
-
-    def get_latest(self):
-        try:
-            return self.receipts.order_by("-date")[0]
-        except IndexError:
-            return None
+        return f"{self.street_address}\n{self.city}, {self.state} {self.zip}"
 
     def geocode(self, force=False):
         logger = logging.getLogger("geocode")
@@ -69,17 +55,12 @@ class Location(BaseLocation):
             logger.info("{} already geocoded".format(self))
             return
 
-        receipt = self.get_latest()
-        if receipt is None:
-            logger.warning("Location {} has no address".format(self.pk))
-            return
-
         data = geocode_address(
             {
-                "address": receipt.address,
-                "city": receipt.city,
-                "state": receipt.state,
-                "zipcode": receipt.zip,
+                "address": self.address,
+                "city": self.city,
+                "state": self.state,
+                "zipcode": self.zip,
             }
         )
         self.coordinate = Point(x=float(data["Longitude"]), y=float(data["Latitude"]),)
@@ -155,7 +136,7 @@ class Receipt(models.Model):
     location = models.ForeignKey(
         Location,
         related_name="receipts",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
