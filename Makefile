@@ -36,6 +36,10 @@ resetdb: ## Delete and recreate the database
 	phd psql -c 'CREATE EXTENSION postgis;'
 	$(MANAGE) migrate --noinput
 
+# WIP
+install/geocode:
+	phd psql -c 'CREATE EXTENSION fuzzystrmatch; CREATE EXTENSION postgis_tiger_geocoder; CREATE EXTENSION postgis_topology;'
+
 admin: ## Set up a local admin/admin account
 	echo "from django.contrib.auth import get_user_model; \
 	  User = get_user_model(); \
