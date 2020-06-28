@@ -16,7 +16,9 @@ def assign_businesses(show_progress=False):
     for tax_number in tqdm(tax_numbers_to_assign, disable=not show_progress):
         business, __ = Business.objects.get_or_create(tax_number=tax_number)
         # FIXME business needs a name!
-        Receipt.objects.filter(name=name, business=None).update(business=business)
+        Receipt.objects.filter(tax_number=tax_number, business=None).update(
+            business=business
+        )
 
 
 def group_by_location(show_progress=False):
@@ -82,13 +84,3 @@ def set_location_data(show_progress=False):
             "avg_tax": "{:.2f}".format(avg_tax),
         }
         x.save(update_fields=("data",))
-
-
-def post_process():
-    show_progress = True  # TODO add a way to silence progress bar
-    print("assign_businesses")
-    assign_businesses(show_progress=show_progress)
-    print("group_by_location")
-    group_by_location(show_progress=show_progress)
-    print("set_location_data")
-    set_location_data(show_progress=show_progress)
