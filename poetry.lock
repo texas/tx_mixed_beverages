@@ -85,6 +85,14 @@ version = "0.5.0"
 
 [[package]]
 category = "main"
+description = "`dj-obj-update` helps you update an object but only saves if something changed."
+name = "dj-obj-update"
+optional = false
+python-versions = ">=3.4"
+version = "0.5.1"
+
+[[package]]
+category = "main"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 name = "django"
 optional = false
@@ -326,7 +334,7 @@ version = "5.1.0"
 brotli = ["brotli"]
 
 [metadata]
-content-hash = "08bdd4b86ee2361dcf1d24282be9a2b56db0596a475ba819766e97ed5a28a861"
+content-hash = "cae7825a6ead7f27ead239c2bcfb8878902dd60f8142992ae79f8e72c282132a"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -361,6 +369,10 @@ click = [
 dj-database-url = [
     {file = "dj-database-url-0.5.0.tar.gz", hash = "sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163"},
     {file = "dj_database_url-0.5.0-py2.py3-none-any.whl", hash = "sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9"},
+]
+dj-obj-update = [
+    {file = "dj-obj-update-0.5.1.tar.gz", hash = "sha256:ef232d9ed7b5c8c165e19df69d78bd0f162b3d30da4ff8933991ca30a4e54590"},
+    {file = "dj_obj_update-0.5.1-py3-none-any.whl", hash = "sha256:9c4ef486cf8513a702121bbf1e1830db379582ba453a2ef16c58b8234b1c303e"},
 ]
 django = [
     {file = "Django-3.0.7-py3-none-any.whl", hash = "sha256:e1630333248c9b3d4e38f02093a26f1e07b271ca896d73097457996e0fae12e8"},

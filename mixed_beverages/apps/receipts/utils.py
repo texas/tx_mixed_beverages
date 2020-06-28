@@ -27,27 +27,6 @@ def row_to_receipt(row):
     )
 
 
-def slurp(path, force=False):
-    """Import a csv."""
-    assert os.path.isfile(path)
-    source = os.path.basename(path)
-    if Receipt.objects.filter(source=source).exists():
-        print("already imported {}".format(source))
-        return
-
-    with open(path, "r", encoding="windows-1252") as f:
-        reader = csv.reader(f)
-        receipts = []
-        for row in reader:
-            receipt = row_to_receipt(row)
-            if receipt is None:
-                continue
-
-            receipt.source = source
-            receipts.append(receipt)
-        Receipt.objects.bulk_create(receipts)
-
-
 def group_by_name(show_progress=False):
     names = (
         Receipt.objects.filter(business=None)
