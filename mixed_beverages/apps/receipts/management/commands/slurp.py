@@ -57,8 +57,8 @@ class Command(BaseCommand):
                     city=row["Location City"],
                     state=row["Location State"],
                     zip=row["Location Zip"],
+                    defaults=dict(data={"name": row["Location Name"]}),
                 )
-                # TODO rough geocode location
                 receipt, created = obj_update_or_create(
                     Receipt,
                     tax_number=row["Taxpayer Number"],
