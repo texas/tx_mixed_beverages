@@ -7,7 +7,7 @@ from . import models
 class ReceiptInline(admin.TabularInline):
     extra = 0
     model = models.Receipt
-    readonly_fields = (
+    fields = (
         "name",
         "tabc_permit",
         "date",
@@ -16,10 +16,10 @@ class ReceiptInline(admin.TabularInline):
         "city",
         "state",
         "zip",
-        "county_code",
         "business",
         "location",
     )
+    readonly_fields = fields
 
 
 @admin.register(models.Business)
