@@ -52,12 +52,13 @@ class Command(BaseCommand):
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
             for row in tqdm(reader, total=row_count - 1):
-                location = Location.objects.get_or_create(
+                location, __ = Location.objects.get_or_create(
                     street_address=row["Location Address"],
                     city=row["Location City"],
                     state=row["Location State"],
                     zip=row["Location Zip"],
                 )
+                # TODO rough geocode location
                 receipt, created = obj_update_or_create(
                     Receipt,
                     tax_number=row["Taxpayer Number"],
