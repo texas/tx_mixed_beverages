@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.exceptions import SuspiciousOperation
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -47,9 +47,6 @@ class BaseLocation(models.Model):
         max_length=2,
         choices=QUALITY_CHOICES, null=True, blank=True)
 
-    # MANAGERS #
-    objects = models.GeoManager()
-
     class Meta:
         abstract = True
 
@@ -63,7 +60,7 @@ class BaseLocation(models.Model):
         pass
 
 
-class CorrectionManager(models.GeoManager):
+class CorrectionManager(models.Manager):
     def create_from_request(self, obj, request):
         lat = request.POST.get('lat')
         lng = request.POST.get('lng')
@@ -114,13 +111,15 @@ class Correction(models.Model):
     submitter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='+',
+        on_delete=models.CASCADE,
         null=True, blank=True)
     approved_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='+',
+        on_delete=models.CASCADE,
         null=True, blank=True)
     # should be a GFK if we want to be generic
-    obj = models.ForeignKey('receipts.Location')
+    obj = models.ForeignKey('receipts.Location', on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     approved_at = models.DateTimeField(null=True, blank=True)
     ip_address = models.GenericIPAddressField(

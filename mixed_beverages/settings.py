@@ -63,7 +63,7 @@ WSGI_APPLICATION = 'mixed_beverages.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {'default': dj_database_url.config(default='sqlite:///mixed_beverages.db')}
+DATABASES = {'default': dj_database_url.config(default='postgis:///mixed_beverages')}
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/

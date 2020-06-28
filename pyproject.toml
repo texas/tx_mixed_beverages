@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "tx_mixed_beverages"
+version = "0.0.0"
+description = "Texas Mixed Beverage Gross Receipts Tax data"
+authors = []
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Django = "^3.0.7"
+dj-database-url = "^0.5.0"
+psycopg2 = "^2.8.5"
+project-runpy = "^1.0.1"
+django-extensions = "^2.2.9"
+requests = "^2.24.0"
+django-geojson = "^3.0.0"
+whitenoise = "^5.1.0"
+waitress = "^1.4.4"
+djangorestframework = "^3.11.0"
+
+[tool.poetry.dev-dependencies]
+factory-boy = "^2.12.0"
+tqdm = "^4.46.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

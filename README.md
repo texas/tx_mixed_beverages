@@ -11,12 +11,14 @@ https://data.texas.gov/Government-and-Taxes/Mixed-Beverage-Gross-Receipts/naix-2
 
 ## Setting up the project
 
-In a Python 3 virtualenv:
+### OSX
+
+    brew install gdal
+
+### Installing
 
     # install requirements
     make install
-    # add base dir to your Python path
-    add2virtualenv .
 
 Setup your environment:
 

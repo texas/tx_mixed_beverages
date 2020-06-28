@@ -4,12 +4,8 @@ help: ## Shows this help
 	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
 
 install: ## Install requirements
-	pip install -r requirements.txt
+	poetry install
 	npm install
-
-.PHONY: requirements.txt
-requirements.txt: ## Generate a new requirements.txt
-	pip-compile --upgrade $< > $@
 
 clean: ## Remove temporary files
 	rm -rf MANIFEST
@@ -21,7 +17,7 @@ clean: ## Remove temporary files
 
 # Note: make sure to install the hstore extension in template1
 test: ## Run test suite
-	$(MANAGE) test
+	$(MANAGE) test --noinput
 
 tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
