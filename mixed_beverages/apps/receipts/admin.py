@@ -16,8 +16,6 @@ class ReceiptInline(admin.TabularInline):
         "city",
         "state",
         "zip",
-        "business",
-        "location",
     )
     readonly_fields = fields
 
@@ -36,10 +34,16 @@ class LocationAdmin(GeoModelAdmin):
     ######
 
     def display_name(self, obj):
-        return obj.data["name"]
+        if obj.data:
+            return obj.data["name"]
+
+        return "-name-"
 
     def display_tax(self, obj):
-        return obj.data["avg_tax"]
+        if obj.data:
+            return obj.data["avg_tax"]
+
+        return "-tax"
 
     list_display = ("display_name", "display_tax", "coordinate_quality")
     list_filter = ("coordinate_quality",)
@@ -51,6 +55,7 @@ class LocationAdmin(GeoModelAdmin):
         ReceiptInline,
     ]
     save_on_top = True
+    readonly_fields = ("data", "businesses")
 
 
 @admin.register(models.Receipt)
