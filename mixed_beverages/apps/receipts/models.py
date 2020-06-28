@@ -111,6 +111,7 @@ class Receipt(models.Model):
     # responsibility begin date
     # responsibility end date
     date = models.DateField(help_text="Obligation End Date")
+    # taxpayer address, city, zip, county
 
     liquor = models.DecimalField("liquor receipts", max_digits=13, decimal_places=2)
     wine = models.DecimalField("wine receipts", max_digits=13, decimal_places=2)
@@ -126,7 +127,7 @@ class Receipt(models.Model):
     city = models.CharField(max_length=80)
     state = models.CharField(max_length=2)
     zip = models.CharField(max_length=10)
-    county_code = models.PositiveSmallIntegerField()
+    county_code = models.PositiveSmallIntegerField(help_text="A number from 1 to 254")
     # inside/outside city limits
 
     # Denormalized fields, populated in after import

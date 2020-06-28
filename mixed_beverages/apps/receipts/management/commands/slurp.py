@@ -39,7 +39,7 @@ def date_fmt(date: str):
 
 
 class Command(BaseCommand):
-    help = "Import a CSV file"
+    help = "Import a CSV file. Doing a full import over 2.3MM rows will take about 1.5 hours"
 
     def add_arguments(self, parser):
         parser.add_argument("csv")
