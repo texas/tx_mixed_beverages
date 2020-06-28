@@ -10,33 +10,33 @@ from django.utils import timezone
 class BaseLocation(models.Model):
     # http://geoservices.tamu.edu/Services/Geocode/About/#NAACCRGISCoordinateQualityCodes
     QUALITY_CHOICES = (
-        ('me', 'User Inputted'),
-        ('00', 'AddressPoint'),
+        ("me", "User Inputted"),
+        ("00", "AddressPoint"),
         # 'Coordinates derived from local government-maintained address '
         # 'points, which are based on property parcel locations, not '
         # 'interpolation over a street segment’s address range')
-        ('01', 'GPS'),
+        ("01", "GPS"),
         # 'Coordinates assigned by Global Positioning System (GPS)')
-        ('02', 'Parcel'),
+        ("02", "Parcel"),
         # 'Coordinates are match of house number and '
         # 'street, and based on property parcel location')
-        ('03', 'StreetSegmentInterpolation'),
+        ("03", "StreetSegmentInterpolation"),
         # 'Coordinates are match '
         #   'of house number and street, interpolated over the matching '
         #   'street segment’s address range')
-        ('09', 'AddressZipCentroid'),
+        ("09", "AddressZipCentroid"),
         # 'Coordinates are address 5-digit ZIP code centroid')
-        ('10', 'POBoxZIPCentroid'),
+        ("10", "POBoxZIPCentroid"),
         # 'Coordinates are point ZIP code '
         # 'of Post Office Box or Rural Route')
-        ('11', 'CityCentroid'),
+        ("11", "CityCentroid"),
         # 'Coordinates are centroid of address '
         # 'city (when address ZIP code is unknown or invalid, and there are '
         # 'multiple ZIP codes for the city)')
-        ('98', 'Unknown'),
+        ("98", "Unknown"),
         # 'Latitude and longitude are assigned, but '
         # 'coordinate quality is unknown')
-        ('99', 'Unmatchable'),
+        ("99", "Unmatchable"),
         # 'Latitude and longitude are not '
         # 'assigned, but geocoding was attempted; unable to assign '
         # 'coordinates based on available information')
@@ -44,8 +44,8 @@ class BaseLocation(models.Model):
 
     coordinate = models.PointField(null=True, blank=True)
     coordinate_quality = models.CharField(
-        max_length=2,
-        choices=QUALITY_CHOICES, null=True, blank=True)
+        max_length=2, choices=QUALITY_CHOICES, null=True, blank=True
+    )
 
     class Meta:
         abstract = True
@@ -62,32 +62,29 @@ class BaseLocation(models.Model):
 
 class CorrectionManager(models.Manager):
     def create_from_request(self, obj, request):
-        lat = request.POST.get('lat')
-        lng = request.POST.get('lng')
+        lat = request.POST.get("lat")
+        lng = request.POST.get("lng")
         data = {}
         if request.user.is_anonymous():
             if settings.ALLOW_ANONYMOUS_CORRECTIONS:
-                data['submitter'] = None
+                data["submitter"] = None
             else:
-                raise SuspiciousOperation('must be logged in')
+                raise SuspiciousOperation("must be logged in")
         else:
-            data['submitter'] = request.user
+            data["submitter"] = request.user
         if lat and lng:
             data.update(
                 fro=obj.coordinate,
-                to=Point(
-                    x=float(lng),
-                    y=float(lat),
-                ),
-                status='submitted',
+                to=Point(x=float(lng), y=float(lat),),
+                status="submitted",
                 obj=obj,
                 ip_address=request.META.get(
-                    'HTTP_X_FORWARDED_FOR',
-                    request.META.get('REMOTE_ADDR')),
+                    "HTTP_X_FORWARDED_FOR", request.META.get("REMOTE_ADDR")
+                ),
             )
         else:
             # TODO better exception
-            raise TypeError('missing lat or lng')
+            raise TypeError("missing lat or lng")
         return self.create(**data)
 
 
@@ -100,55 +97,60 @@ class Correction(models.Model):
     Some inspiration from django.contrib.comments:
     https://github.com/django/django-contrib-comments/blob/master/django_comments/models.py
     """
+
     STATUS_CHOICES = (
-        ('submitted', 'Submitted'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
+        ("submitted", "Submitted"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
     )
 
-    fro = models.PointField(help_text='The old coordinate')
-    to = models.PointField(help_text='The suggested coordinate')
+    fro = models.PointField(help_text="The old coordinate")
+    to = models.PointField(help_text="The suggested coordinate")
     submitter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='+',
+        related_name="+",
         on_delete=models.CASCADE,
-        null=True, blank=True)
+        null=True,
+        blank=True,
+    )
     approved_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='+',
+        related_name="+",
         on_delete=models.CASCADE,
-        null=True, blank=True)
+        null=True,
+        blank=True,
+    )
     # should be a GFK if we want to be generic
-    obj = models.ForeignKey('receipts.Location', on_delete=models.CASCADE)
+    obj = models.ForeignKey("receipts.Location", on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     approved_at = models.DateTimeField(null=True, blank=True)
     ip_address = models.GenericIPAddressField(
-        'IP address', unpack_ipv4=True,
-        blank=True, null=True)
+        "IP address", unpack_ipv4=True, blank=True, null=True
+    )
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES,
-        default='submitted')
+        max_length=20, choices=STATUS_CHOICES, default="submitted"
+    )
     comment = models.TextField(null=True, blank=True)
 
-    obj_coordinate_field = 'coordinate'
-    obj_coordinate_quality_field = 'coordinate_quality'
+    obj_coordinate_field = "coordinate"
+    obj_coordinate_quality_field = "coordinate_quality"
 
     # MANAGERS #
     objects = CorrectionManager()
 
     def __unicode__(self):
-        return 'by {0.submitter}'.format(self)
+        return "by {0.submitter}".format(self)
 
     def get_absolute_url(self):
-        return reverse('lazy_geo:correction-detail', kwargs={'pk': self.pk})
+        return reverse("lazy_geo:correction-detail", kwargs={"pk": self.pk})
 
     # CUSTOM METHODS #
 
     def approve(self, approver):
         setattr(self.obj, self.obj_coordinate_field, self.to)
-        setattr(self.obj, self.obj_coordinate_quality_field, 'me')
+        setattr(self.obj, self.obj_coordinate_quality_field, "me")
         self.obj.save()
         self.approved_by = approver
         self.approved_at = timezone.now()
-        self.status = 'approved'
+        self.status = "approved"
         self.save()

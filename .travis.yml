@@ -1,14 +1,19 @@
 language: python
 cache: pip
-python: "3.5"
+python: "3.7"
 addons:
-  postgresql: "9.4"
-env:
-  PYTHONPATH=. ENVIRONMENT=test DATABASE_URL="postgis:///mixed_beverages"
+  postgresql: "11.8"
+env: PYTHONPATH=. ENVIRONMENT=test"
 install: "pip install -r requirements.txt"
 before_script:
   - psql -U postgres -c 'CREATE DATABASE mixed_beverages;'
-  - psql -U postgres -c "CREATE EXTENSION hstore" -d template1
   - psql -U postgres -c "CREATE EXTENSION postgis" -d template1
   - psql -U postgres -c "CREATE EXTENSION postgis_topology" -d template1
-script: make test
+script:
+  - make test
+  - make lint
+branches:
+  only:
+    - master
+notifications:
+  email: false

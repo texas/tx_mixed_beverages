@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 """
 
 import os
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mixed_beverages.settings")
 
 from django.core.wsgi import get_wsgi_application

@@ -13,10 +13,11 @@ class Business(models.Model):
     """
     A business can have multiple locations.
     """
+
     name = models.CharField(max_length=30)
 
     class Meta:
-        verbose_name_plural = 'businesses'
+        verbose_name_plural = "businesses"
 
     def __str__(self):
         return self.name
@@ -27,20 +28,23 @@ class Business(models.Model):
 
 
 class Location(BaseLocation):
-    data = JSONField(null=True, blank=True, help_text='denormalized data to help generate map data')
+    data = JSONField(
+        null=True, blank=True, help_text="denormalized data to help generate map data"
+    )
 
     def __str__(self):
         bits = []
         if self.data:
-            bits.append(self.data['name'])
+            bits.append(self.data["name"])
         if self.coordinate_quality:
-            bits.append('({0.y},{0.x})'.format(self.coordinate))
+            bits.append("({0.y},{0.x})".format(self.coordinate))
             bits.append(self.coordinate_quality)
-        return ' '.join(bits)
+        return " ".join(bits)
 
     def get_absolute_url(self):
-        return '{0}#16/{1.coordinate.y}/{1.coordinate.x}'.\
-            format(reverse('mixed_beverages:home'), self)
+        return "{0}#16/{1.coordinate.y}/{1.coordinate.x}".format(
+            reverse("mixed_beverages:home"), self
+        )
 
     # CUSTOM PROPERTIES #
     @property
@@ -48,42 +52,41 @@ class Location(BaseLocation):
         """Get a human readable address."""
         latest = self.get_latest()
         if not latest:
-            return ''
-        return '{0.address}\n{0.city}, {0.state} {0.zip}'.format(latest)
+            return ""
+        return "{0.address}\n{0.city}, {0.state} {0.zip}".format(latest)
 
     # CUSTOM METHODS #
 
     def get_latest(self):
         try:
-            return self.receipts.order_by('-date')[0]
+            return self.receipts.order_by("-date")[0]
         except IndexError:
             return None
 
     def geocode(self, force=False):
-        logger = logging.getLogger('geocode')
+        logger = logging.getLogger("geocode")
         if self.coordinate and not force:
-            logger.info('{} already geocoded'.format(self))
+            logger.info("{} already geocoded".format(self))
             return
 
         receipt = self.get_latest()
         if receipt is None:
-            logger.warning('Location {} has no address'.format(self.pk))
+            logger.warning("Location {} has no address".format(self.pk))
             return
 
-        data = geocode_address({
-            'address': receipt.address,
-            'city': receipt.city,
-            'state': receipt.state,
-            'zipcode': receipt.zip,
-        })
-        self.coordinate = Point(
-            x=float(data['Longitude']),
-            y=float(data['Latitude']),
+        data = geocode_address(
+            {
+                "address": receipt.address,
+                "city": receipt.city,
+                "state": receipt.state,
+                "zipcode": receipt.zip,
+            }
         )
-        self.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
+        self.coordinate = Point(x=float(data["Longitude"]), y=float(data["Latitude"]),)
+        self.coordinate_quality = data["NAACCRGISCoordinateQualityCode"]
         self.save()
         logger.debug(data)
-        logger.info('%s', self)
+        logger.info("%s", self)
 
 
 class Receipt(models.Model):
@@ -103,10 +106,10 @@ class Receipt(models.Model):
 
     Location fields maybe should get split out, but will make importing slower.
     """
+
     tabc_permit = models.CharField(max_length=8)
     name = models.CharField(max_length=30)
-    date = models.DateField(
-        help_text='Use the 1st of the month for simplicity')
+    date = models.DateField(help_text="Use the 1st of the month for simplicity")
     tax = models.DecimalField(max_digits=13, decimal_places=2)
     # location fields
     address = models.CharField(max_length=30)
@@ -120,45 +123,46 @@ class Receipt(models.Model):
 
     # denormalized fields
     business = models.ForeignKey(
-        Business, related_name='receipts',
+        Business,
+        related_name="receipts",
         on_delete=models.CASCADE,
-        null=True, blank=True,
+        null=True,
+        blank=True,
     )
     location = models.ForeignKey(
-        Location, related_name='receipts',
+        Location,
+        related_name="receipts",
         on_delete=models.CASCADE,
-        null=True, blank=True,
+        null=True,
+        blank=True,
     )
 
     class Meta:
-        ordering = ('-date', )
+        ordering = ("-date",)
 
     def __str__(self):
-        return '{} {} {}'.format(
-            self.name,
-            self.date,
-            self.tax,
-        )
+        return "{} {} {}".format(self.name, self.date, self.tax,)
 
     # CUSTOM METHODS #
 
     def geocode(self, force=False):
-        logger = logging.getLogger('geocode')
+        logger = logging.getLogger("geocode")
         location = self.location
         if location and location.coordinate and not force:
-            logger.info('{} already geocoded'.format(self))
+            logger.info("{} already geocoded".format(self))
             return
-        data = geocode_address({
-            'address': self.address,
-            'city': self.city,
-            'state': self.state,
-            'zipcode': self.zip,
-        })
-        location.coordinate = Point(
-            x=float(data['Longitude']),
-            y=float(data['Latitude']),
+        data = geocode_address(
+            {
+                "address": self.address,
+                "city": self.city,
+                "state": self.state,
+                "zipcode": self.zip,
+            }
         )
-        location.coordinate_quality = data['NAACCRGISCoordinateQualityCode']
+        location.coordinate = Point(
+            x=float(data["Longitude"]), y=float(data["Latitude"]),
+        )
+        location.coordinate_quality = data["NAACCRGISCoordinateQualityCode"]
         location.save()
         logger.debug(data)
-        logger.info('{}'.format(location))
+        logger.info("{}".format(location))

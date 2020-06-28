@@ -22,6 +22,9 @@ test: ## Run test suite
 tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
 
+lint: ## Run lint check
+	black --check .
+
 resetdb: ## Delete and recreate the database
 	-phd dropdb
 	phd createdb

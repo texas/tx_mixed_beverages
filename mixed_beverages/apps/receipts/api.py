@@ -29,37 +29,39 @@ class ReceiptInlineSerializer(serializers.ModelSerializer):
 
     Include TABC permit # in case the location has changed.
     """
+
     class Meta:
         model = models.Receipt
-        fields = ('tax', 'date', 'tabc_permit')
-        ordering = ('date', )
+        fields = ("tax", "date", "tabc_permit")
+        ordering = ("date",)
 
 
 class LatestReceiptSerializer(serializers.ModelSerializer):
     """
     Just get the latest receipt so we know the name of this `Location`.
     """
+
     class Meta:
         model = models.Receipt
-        exclude = ('location', )
+        exclude = ("location",)
 
 
 class LocationSerializer(serializers.ModelSerializer):
     receipts = ReceiptInlineSerializer(many=True, read_only=True)
-    latest = LatestReceiptSerializer(source='get_latest', read_only=True)
+    latest = LatestReceiptSerializer(source="get_latest", read_only=True)
 
     class Meta:
         model = models.Location
-        fields = ('id', 'receipts', 'latest')
+        fields = ("id", "receipts", "latest")
 
 
 class LocationViewSet(viewsets.ModelViewSet):
-    queryset = models.Location.objects.all().prefetch_related('receipts')
+    queryset = models.Location.objects.all().prefetch_related("receipts")
     serializer_class = LocationSerializer
 
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'receipts', ReceiptViewSet)
-router.register(r'business', BusinessViewSet)
-router.register(r'location', LocationViewSet)
+router.register(r"receipts", ReceiptViewSet)
+router.register(r"business", BusinessViewSet)
+router.register(r"location", LocationViewSet)
