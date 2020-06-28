@@ -88,25 +88,38 @@ class Receipt(models.Model):
     """
     A location's tax receipt for a month
 
-    Column_Order|Column_Description|Data_Type|Size
-    Col01|TABC Permit Number|Number|8
-    Col02|Trade Name|Char|30
-    Col03|Location Address|Char|30
-    Col04|Locaiton City|Char|20
-    Col05|Location State|Char|2
-    Col06|Location Zip Code|Number|5
-    Col07|Location County Code|Number|3
-    Col08|Report Period (YYYY/MM)|Char|7
-    Col09|Report Tax|Number|13
-
-    Location fields maybe should get split out, but will make importing slower.
+    $ csvstat Mixed_Beverage_Gross_Receipts.csv --len
+    1. Taxpayer Number: None
+    2. Taxpayer Name: 50
+    3. Taxpayer Address: 40
+    4. Taxpayer City: 20
+    5. Taxpayer State: 2
+    6. Taxpayer Zip: None
+    7. Taxpayer County: None
+    8. Location Number: None
+    9. Location Name: 50
+    10. Location Address: 50
+    11. Location City: 23
+    12. Location State: 2
+    13. Location Zip: None
+    14. Location County: None
+    15. Inside/Outside City Limits: None
+    16. TABC Permit Number: 12
+    17. Responsibility Begin Date: None
+    18. Responsibility End Date: None
+    19. Obligation End Date: None
+    20. Liquor Receipts: None
+    21. Wine Receipts: None
+    22. Beer Receipts: None
+    23. Cover Charge Receipts: None
+    24. Total Receipts: None
     """
 
     name = models.CharField(max_length=100)
     # TODO figure out name/tax_numbner/tabc_permit cardinality
-    tax_number = models.CharField("taxpayer number", max_length=50)
+    tax_number = models.CharField("taxpayer number", max_length=80)
     tabc_permit = models.CharField(
-        "TABC permit number", max_length=50, help_text="example: MB888888"
+        "TABC permit number", max_length=40, help_text="example: MB888888"
     )
     # responsibility begin date
     # responsibility end date
@@ -124,7 +137,7 @@ class Receipt(models.Model):
     location_name = models.CharField(max_length=100)
     location_number = models.PositiveSmallIntegerField()
     address = models.CharField(max_length=100)
-    city = models.CharField(max_length=80)
+    city = models.CharField(max_length=30)
     state = models.CharField(max_length=2)
     zip = models.CharField(max_length=10)
     county_code = models.PositiveSmallIntegerField(help_text="A number from 1 to 254")
