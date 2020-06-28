@@ -65,7 +65,7 @@ class CorrectionManager(models.Manager):
         lat = request.POST.get("lat")
         lng = request.POST.get("lng")
         data = {}
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             if settings.ALLOW_ANONYMOUS_CORRECTIONS:
                 data["submitter"] = None
             else:

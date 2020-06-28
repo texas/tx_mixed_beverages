@@ -1,10 +1,20 @@
+dist: bionic
 language: python
 cache: pip
 python: "3.7"
 addons:
-  postgresql: "11.8"
-env: PYTHONPATH=. ENVIRONMENT=test"
-install: "pip install -r requirements.txt"
+  postgresql: "11"
+  apt:
+    packages:
+      - postgresql-11-postgis-2.5
+env:
+  global:
+    - PYTHONPATH=.
+    - ENVIRONMENT=test
+before_install:
+  - pip install poetry
+install:
+  - poetry install -v
 before_script:
   - psql -U postgres -c 'CREATE DATABASE mixed_beverages;'
   - psql -U postgres -c "CREATE EXTENSION postgis" -d template1
