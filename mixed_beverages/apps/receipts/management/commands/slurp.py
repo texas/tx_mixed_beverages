@@ -61,6 +61,8 @@ class Command(BaseCommand):
                         beer=row["Beer Receipts"],
                         cover=row["Cover Charge Receipts"],
                         total=row["Total Receipts"],
+                        location_name=row["Location Name"],
+                        location_number=row["Location Number"],
                         address=row["Location Address"],
                         city=row["Location City"],
                         state=row["Location State"],

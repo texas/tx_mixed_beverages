@@ -120,14 +120,13 @@ class Receipt(models.Model):
     )
     total = models.DecimalField("total receipts", max_digits=13, decimal_places=2)
     # location fields
-    # Should I just have a foreigh key to Location?
+    location_name = models.CharField(max_length=80)
+    location_number = models.PositiveSmallIntegerField()
     address = models.CharField(max_length=30)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
     zip = models.CharField(max_length=5)
     county_code = models.PositiveSmallIntegerField()
-    # location number
-    # location name
     # inside/outside city limits
 
     # Denormalized fields, populated in after import
