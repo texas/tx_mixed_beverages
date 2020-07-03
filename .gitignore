@@ -1,5 +1,6 @@
 # External data
 data/
+*.csv
 
 # Django support files
 *.db

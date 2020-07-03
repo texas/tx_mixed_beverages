@@ -20,7 +20,7 @@ class PostProcessTests(TestCase):
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        self.assertEqual(location.data["avg_tax"], "0")
+        self.assertEqual(location.data["avg_total"], "0")
 
     def test_set_location_data_deletes_old_data(self):
         # setup
@@ -32,14 +32,14 @@ class PostProcessTests(TestCase):
         set_location_data()
         location.refresh_from_db()
         # sanity check
-        self.assertEqual(location.data["avg_tax"], "1.00")
+        self.assertEqual(location.data["avg_total"], "1.00")
 
         receipt.date = "1970-01-01"
         receipt.save()
         set_location_data()
 
         location.refresh_from_db()
-        self.assertEqual(location.data["avg_tax"], "0")  # not NULL like above
+        self.assertEqual(location.data["avg_total"], "0")  # not NULL like above
 
     def test_set_location_data_works(self):
         # setup
@@ -53,7 +53,7 @@ class PostProcessTests(TestCase):
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        self.assertEqual(float(location.data["avg_tax"]), 3.5)
+        self.assertEqual(float(location.data["avg_total"]), 3.0)
 
     def test_set_location_data_only_has_two_decimal_places(self):
         # setup
@@ -63,4 +63,4 @@ class PostProcessTests(TestCase):
         set_location_data()
 
         location = Location.objects.get(pk=location.pk)
-        self.assertEqual(float(location.data["avg_tax"]), 3.33)
+        self.assertEqual(float(location.data["avg_total"]), 3.33)
