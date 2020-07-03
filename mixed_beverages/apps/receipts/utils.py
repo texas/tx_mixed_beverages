@@ -48,8 +48,9 @@ def set_location_data(show_progress=False):
         receipt_stats = x.receipts.filter(total__gt=0, date__gt=cutoff_date).aggregate(
             Avg("total")
         )
+        old_data = x.data or {}
         x.data = {
-            **x.data,  # Preserve "name"
+            **old_data,  # Preserve "name"
             "avg_total": str(receipt_stats["total__avg"].quantize(Decimal(".01")))
             if receipt_stats["total__avg"]
             else "0",
