@@ -1,6 +1,7 @@
 import csv
 import datetime
 import os
+from decimal import Decimal
 
 from django.db.models import Count, Avg
 from tqdm import tqdm
@@ -48,8 +49,9 @@ def set_location_data(show_progress=False):
             Avg("total")
         )
         x.data = {
-            "avg_total": "{:.2f}".format(receipt_stats["total__avg"]),
             **x.data,  # Preserve "name"
+            "avg_total": str(receipt_stats["total__avg"].quantize(Decimal(".01")))
+            if receipt_stats["total__avg"]
+            else "0",
         }
-        print(x.data)
-        # x.save(update_fields=("data",))
+        x.save(update_fields=("data",))
