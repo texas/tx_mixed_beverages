@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from csv import DictWriter
-from obj_update import obj_update_or_create
 
 from mixed_beverages.apps.receipts.models import Location
 
