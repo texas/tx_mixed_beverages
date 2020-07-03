@@ -10,7 +10,7 @@ from mixed_beverages.apps.receipts.models import Location
 
 
 class Command(BaseCommand):
-    help = "Helper to make a CSV for batch geocoding"
+    help = "Import batch geocoding results from Geocodio"
 
     def add_arguments(self, parser):
         parser.add_argument("csv")

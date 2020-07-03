@@ -5,7 +5,11 @@ from mixed_beverages.apps.receipts.models import Location
 
 
 class Command(BaseCommand):
-    help = "Helper to make a CSV for batch geocoding"
+    help = """
+    Helper to make a CSV for batch geocoding. See https://www.geocod.io/guides/preparing-your-spreadsheet/
+
+    Then upload it to https://dash.geocod.io/import
+    """
 
     def handle(self, *args, **options):
         fieldnames = ("street_address", "city", "state", "zip")
