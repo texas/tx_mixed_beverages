@@ -11,10 +11,18 @@ class Command(BaseCommand):
     Then upload it to https://dash.geocod.io/import
     """
 
-    def handle(self, *args, **options):
-        fieldnames = ("street_address", "city", "state", "zip")
-        qs = Location.objects.filter(zip__startswith="787").values(*fieldnames)
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--limit", type=int, help="Only export up to this many locations"
+        )
 
+    def handle(self, limit, *args, **options):
+        fieldnames = ("street_address", "city", "state", "zip", "pk")
+        qs = Location.objects.filter(zip__startswith="787").values(*fieldnames)
+        if limit is not None:
+            qs = qs[:limit]
+
+        print(f"Exporting {qs.count()} locations...")
         with open("geo_export.csv", "w", newline="") as csvfile:
             writer = DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
