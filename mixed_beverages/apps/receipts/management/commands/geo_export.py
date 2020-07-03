@@ -18,7 +18,9 @@ class Command(BaseCommand):
 
     def handle(self, limit, *args, **options):
         fieldnames = ("street_address", "city", "state", "zip", "pk")
-        qs = Location.objects.filter(zip__startswith="787").values(*fieldnames)
+        qs = Location.objects.filter(
+            coordinate__isnull=True, zip__startswith="78"
+        ).values(*fieldnames)
         if limit is not None:
             qs = qs[:limit]
 
