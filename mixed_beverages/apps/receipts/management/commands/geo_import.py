@@ -28,17 +28,27 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("csv")
+        parser.add_argument(
+            "--ignore-pk", action="store_true", help='ignore "pk" field of csv'
+        )
 
-    def handle(self, csv: str, *args, **options):
+    def handle(self, csv: str, ignore_pk: bool, *args, **options):
         assert os.path.isfile(csv)
 
-        accuracies = set()
         with open(csv, "r") as fh:
             row_count = sum(1 for row in fh)
             fh.seek(0)
             reader = DictReader(fh)
             for row in tqdm(reader, total=row_count - 1):
-                location = Location.objects.get(pk=row["pk"])
+                if ignore_pk:
+                    location = Location.objects.get(
+                        street_address=row["street_address"],
+                        city=row["city"],
+                        state=row["state"],
+                        zip=row["zip"],
+                    )
+                else:
+                    location = Location.objects.get(pk=row["pk"])
                 location.coordinate = Point(
                     x=float(row["Longitude"]), y=float(row["Latitude"])
                 )
