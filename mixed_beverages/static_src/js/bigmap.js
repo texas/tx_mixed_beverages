@@ -35,8 +35,8 @@ var markerStyle = function (feature) {
   return style;
 };
 
-var _getJSON = function (data) {
-  var markers = new L.MarkerClusterGroup({
+function _getJSON(data) {
+  const markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
   });
@@ -46,7 +46,7 @@ var _getJSON = function (data) {
   nav.saveMarkers(markers);
   markers.addTo(map);
   markers.on("click", function (evt) {
-    // console.log('marker', evt.layer, this)  // DEBUG
+    console.log("marker", evt.layer, this); // DEBUG
     showLocationPopup(evt.layer);
   });
   var updateNav = function () {
@@ -65,7 +65,7 @@ var _getJSON = function (data) {
   };
   updateNav(); // initial hit
   map.on("move", _.debounce(updateNav, 500));
-};
+}
 
 function firstVisit() {
   L.popup()
