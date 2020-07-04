@@ -8,7 +8,7 @@ export default class {
     this.height = options.height;
     this.elem = elem;
 
-    // space for the axes
+    // Add space for the axes
     this.margin = {
       top: 5,
       right: 0,
@@ -23,22 +23,21 @@ export default class {
   }
 
   transformData(data) {
-    var formatter = d3.time.format("%Y-%m-%d");
-    // use lodash because it's faster than native Array.map
-    return _.map(data, (x) => {
-      var date = formatter.parse(x.date);
-      var month = date.getFullYear() * 12 + date.getMonth();
+    const parseTime = d3.timeParse("%Y-%m-%d");
+    return data.map((x) => {
+      const date = parseTime(x.date);
+      const month = date.getFullYear() * 12 + date.getMonth();
       return { tax: parseFloat(x.tax), month, date: x.date };
     });
   }
 
   findBounds() {
     var maxTax = d3.max(this.data, (d) => d.tax);
-    this.yScale = d3.scale.linear().domain([0, maxTax]).range([this.plotHeight, 0]);
+    this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0]);
 
     var dates = d3.extent(this.data, (d) => d.month);
-    this.xScale = d3.scale
-      .linear()
+    this.xScale = d3
+      .scaleLinear()
       .domain([dates[0], dates[1] + 1])
       .range([0, this.plotWidth]);
   }
