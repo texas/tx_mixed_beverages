@@ -2,6 +2,14 @@
   "name": "mixed_beverages",
   "version": "0.0.0",
   "description": "",
+  "scripts": {
+    "build:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css",
+    "build:js": "browserify mixed_beverages/static_src/js/app.js -o mixed_beverages/static/app.js -t babelify",
+    "build": "npm run build:css && npm run build:js",
+    "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
+    "watch:js": "watchify mixed_beverages/static_src/js/app.js -o mixed_beverages/static/app.js -t babelify",
+    "dev": "concurrently --kill-others 'npm run watch:*'"
+  },
   "author": "",
   "license": "Apache",
   "repository": {
