@@ -55,15 +55,6 @@ export default class {
       .tickFormat(xAxisFormat);
   }
 
-  yAxis() {
-    return d3.svg
-      .axis()
-      .orient("left")
-      .scale(this.yScale)
-      .tickSize(4, 0)
-      .tickFormat(d3.format("sr"));
-  }
-
   render() {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1);
     const barWidth = Math.max(Math.floor(barSpacing) - 3, 1);
@@ -103,11 +94,13 @@ export default class {
     //     `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
     //   )
     //   .call(this.xAxis());
-    // svg
-    //   .append("g")
-    //   .attr("class", "y axis")
-    //   .attr("title", "tax")
-    //   .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-    //   .call(this.yAxis());
+
+    const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"));
+    svg
+      .append("g")
+      .attr("class", "y axis")
+      .attr("title", "tax")
+      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .call(yAxis);
   }
 }
