@@ -8,7 +8,8 @@
     "build": "npm run build:css && npm run build:js",
     "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
     "watch:js": "watchify mixed_beverages/static_src/js/app.js -o mixed_beverages/static/app.js -t babelify --debug",
-    "dev": "concurrently --kill-others 'npm run watch:*'"
+    "django": "./manage.py runserver",
+    "dev": "concurrently --kill-others 'npm:watch:*' 'npm:django'"
   },
   "author": "",
   "license": "Apache",
