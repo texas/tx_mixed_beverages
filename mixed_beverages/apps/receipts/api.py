@@ -32,7 +32,7 @@ class ReceiptInlineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Receipt
-        fields = ("tax", "date", "tabc_permit")
+        fields = ("total", "date", "tabc_permit")
         ordering = ("date",)
 
 
