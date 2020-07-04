@@ -17,10 +17,12 @@ var quality_descriptions = {
   "99": "Unmatchable",
 };
 
-// Render data
-//
-// @returns DOMNode
-var contentize = function (data) {
+/**
+ * Render data
+ * @param {*} data
+ * @returns DOMNode
+ */
+function contentize(data) {
   var quality = data.feature.properties.coordinate_quality;
   var $container = $('<div class="location"/>');
   var url = URLS.location_fix.replace("0", data.feature.id);
@@ -33,7 +35,7 @@ var contentize = function (data) {
     height: 180,
   });
   return $container[0];
-};
+}
 
 var locationCache = {};
 export function showLocationPopup(marker) {
