@@ -66,7 +66,7 @@ export default class {
 
   render() {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1);
-    const barWidth = Math.floor(barSpacing) - 3;
+    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1);
     const svg = d3
       .select(this.elem)
       .append("svg")
