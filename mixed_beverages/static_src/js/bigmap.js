@@ -110,12 +110,12 @@ export function render() {
   window.map = map; // DEBUG
   new L.hash(map); // eslint-disable-line
 
-  L.tileLayer("http://tile.stamen.com/toner/{z}/{x}/{y}.png", {
+  L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", {
     maxZoom: 18,
-    attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
-                  under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
-                  Data by <a href="http://openstreetmap.org">OpenStreetMap</a>,
-                  under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+    attribution: `Map tiles by <a href="https://stamen.com">Stamen Design</a>,
+                  under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
+                  Data by <a href="https://openstreetmap.org">OpenStreetMap</a>,
+                  under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
                   <a href="/about/">About</a> this site.`,
   }).addTo(map);
 
