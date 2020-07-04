@@ -32,10 +32,10 @@ export default class {
   }
 
   findBounds() {
-    var maxTax = d3.max(this.data, (d) => d.tax);
+    const maxTax = d3.max(this.data, (d) => d.tax);
     this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0]);
 
-    var dates = d3.extent(this.data, (d) => d.month);
+    const dates = d3.extent(this.data, (d) => d.month);
     this.xScale = d3
       .scaleLinear()
       .domain([dates[0], dates[1] + 1])
@@ -88,28 +88,28 @@ export default class {
         stroke: (d) => d3.rgb(taxColorScale(d.tax)).darker(1),
         fill: (d) => taxColorScale(d.tax),
         "fill-opacity": "0.5",
-      })
-      .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
-      .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`);
+      });
+    // .attr("width", barWidth)
+    // .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
+    // .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+    // .append("title")
+    // .html((d) => `${d.date} - ${thousands(d.tax)}`);
 
     // axes
-    svg
-      .append("g")
-      .attr("class", "x axis")
-      .attr("title", "date")
-      .attr(
-        "transform",
-        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
-      )
-      .call(this.xAxis());
-    svg
-      .append("g")
-      .attr("class", "y axis")
-      .attr("title", "tax")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-      .call(this.yAxis());
+    // svg
+    //   .append("g")
+    //   .attr("class", "x axis")
+    //   .attr("title", "date")
+    //   .attr(
+    //     "transform",
+    //     `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
+    //   )
+    //   .call(this.xAxis());
+    // svg
+    //   .append("g")
+    //   .attr("class", "y axis")
+    //   .attr("title", "tax")
+    //   .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+    //   .call(this.yAxis());
   }
 }
