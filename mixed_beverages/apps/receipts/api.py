@@ -48,11 +48,10 @@ class LatestReceiptSerializer(serializers.ModelSerializer):
 
 class LocationSerializer(serializers.ModelSerializer):
     receipts = ReceiptInlineSerializer(many=True, read_only=True)
-    latest = LatestReceiptSerializer(source="get_latest", read_only=True)
 
     class Meta:
         model = models.Location
-        fields = ("id", "receipts", "latest")
+        fields = ("id", "receipts", "data")
 
 
 class LocationViewSet(viewsets.ModelViewSet):
