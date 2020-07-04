@@ -27,7 +27,7 @@ export default class {
     return data.map((x) => {
       const date = parseTime(x.date);
       const month = date.getFullYear() * 12 + date.getMonth();
-      return { tax: parseFloat(x.tax), month, date: x.date };
+      return { tax: parseFloat(x.total), month, date: x.date };
     });
   }
 
@@ -65,9 +65,9 @@ export default class {
   }
 
   render() {
-    var barSpacing = this.xScale(this.xScale.domain()[0] + 1);
-    var barWidth = Math.floor(barSpacing) - 3;
-    var svg = d3
+    const barSpacing = this.xScale(this.xScale.domain()[0] + 1);
+    const barWidth = Math.floor(barSpacing) - 3;
+    const svg = d3
       .select(this.elem)
       .append("svg")
       .attr("width", this.width)
@@ -75,8 +75,8 @@ export default class {
       .attr("viewbox", `0 0 ${this.width} ${this.height}`)
       .attr("preserveAspectRatio", "xMinYMin meet");
 
-    // plot
-    var plot = svg
+    // Plot
+    const plot = svg
       .append("g")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
     plot
@@ -84,16 +84,14 @@ export default class {
       .data(this.data)
       .enter()
       .append("rect")
-      .style({
-        stroke: (d) => d3.rgb(taxColorScale(d.tax)).darker(1),
-        fill: (d) => taxColorScale(d.tax),
-        "fill-opacity": "0.5",
-      });
-    // .attr("width", barWidth)
-    // .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-    // .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
-    // .append("title")
-    // .html((d) => `${d.date} - ${thousands(d.tax)}`);
+      .style("stroke", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
+      .style("fill", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
+      .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .append("title")
+      .html((d) => `${d.date} - ${thousands(d.tax)}`);
 
     // axes
     // svg
