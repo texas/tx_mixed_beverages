@@ -47,7 +47,7 @@ admin: ## Set up a local admin/admin account
 	  python manage.py shell
 
 # TODO use the json api to do incremental updates
-# sort because it's too large to use csvsort. Takes 53s
+# Sort because it's too large for csvsort. Takes 53s but saves 6 hours to import
 slurp: ## Import downloaded CSVs
 	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
 	(head -n 1 data/Mixed_Beverage_Gross_Receipts.csv && tail -n +2 data/Mixed_Beverage_Gross_Receipts.csv | sort) > data/Mixed_Beverage_Gross_Receipts_sorted.csv
