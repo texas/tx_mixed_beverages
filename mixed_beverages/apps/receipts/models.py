@@ -11,7 +11,7 @@ from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 class Business(models.Model):
     name = models.CharField(max_length=100)
-    tax_number = models.CharField(max_length=50, unique=True)
+    tax_number = models.CharField(max_length=50, primary_key=True)
 
     class Meta:
         verbose_name_plural = "businesses"
