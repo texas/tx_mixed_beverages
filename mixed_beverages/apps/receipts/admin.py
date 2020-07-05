@@ -42,8 +42,8 @@ class LocationAdmin(GeoModelAdmin):
 
 @admin.register(models.Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ("name", "date", "total")
-    search_fields = ("name",)
+    list_display = ("location_name", "name", "date", "total")
+    search_fields = ("name", "location_name")
     fieldsets = (
         (
             None,
