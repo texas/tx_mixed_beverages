@@ -15,7 +15,7 @@ def assign_businesses(show_progress=False):
     """
     businesses_to_create = (
         Receipt.objects.filter(business=None)
-        .values("tax_number", "name")
+        .values("tax_number", "taxpayer_name")
         .order_by("tax_number")
         .annotate(Count("tax_number"))
     )
@@ -26,7 +26,7 @@ def assign_businesses(show_progress=False):
     for business_data in tqdm(businesses_to_create, disable=not show_progress):
         business, __ = Business.objects.get_or_create(
             tax_number=business_data["tax_number"],
-            defaults=dict(name=business_data["name"]),
+            defaults=dict(name=business_data["taxpayer_name"]),
         )
         Receipt.objects.filter(
             tax_number=business_data["tax_number"], business=None
