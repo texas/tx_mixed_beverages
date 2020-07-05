@@ -47,6 +47,7 @@ admin: ## Set up a local admin/admin account
 	  python manage.py shell
 
 # TODO use the json api to do incremental updates
+# $ csvsort -c "TABC Permit Number" Mixed_Beverage_Gross_Receipts.csv
 slurp: ## Import downloaded CSVs
 	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts.csv

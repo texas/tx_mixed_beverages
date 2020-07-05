@@ -48,10 +48,10 @@ class Command(BaseCommand):
         assert os.path.isfile(csv)
 
         with open(csv, "r", encoding="windows-1252") as fh:
-            row_count = sum(1 for row in fh)
+            row_count = sum(1 for row in fh) - 1
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
-            for row in tqdm(reader, total=row_count - 1):
+            for row in tqdm(reader, total=row_count):
                 location, __ = Location.objects.get_or_create(
                     street_address=row["Location Address"],
                     city=row["Location City"],
