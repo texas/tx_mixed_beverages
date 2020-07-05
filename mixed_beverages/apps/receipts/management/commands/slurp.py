@@ -20,7 +20,7 @@ def date_fmt(date: str):
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, defaults):
+def Location_get(street_address, city, state, zip, name):
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
@@ -29,7 +29,7 @@ def Location_get(street_address, city, state, zip, defaults):
         city=city,
         state=state,
         zip=zip,
-        defaults=defaults,
+        defaults=dict(data={"name": name}),
     )
     return location
 
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     city=row["Location City"],
                     state=row["Location State"],
                     zip=row["Location Zip"],
-                    defaults=dict(data={"name": row["Location Name"]}),
+                    name=row["Location Name"],
                 )
                 receipt, created = obj_update_or_create(
                     Receipt,
