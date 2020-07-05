@@ -12,6 +12,8 @@ from .models import Receipt, Business, Location
 def assign_businesses(show_progress=False):
     """
     Associates "Receipts" with businesses
+
+    The initial run over 2.4MM receipts will take 4 hours
     """
     businesses_to_create = (
         Receipt.objects.filter(business=None)
