@@ -46,7 +46,7 @@ function _getJSON(data) {
   nav.saveMarkers(markers);
   markers.addTo(map);
   markers.on("click", function (evt) {
-    console.log("marker", evt.layer, this); // DEBUG
+    // console.log("marker", evt.layer, this); // DEBUG
     showLocationPopup(evt.layer);
   });
   var updateNav = function () {
