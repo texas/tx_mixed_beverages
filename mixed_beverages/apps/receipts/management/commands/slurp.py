@@ -8,26 +8,6 @@ from tqdm import tqdm
 from ...models import Location, Receipt
 
 
-# Is this useful?
-# def row_to_receipt(row):
-#     cleaned_row = list(map(str.strip, row))
-#     if len(cleaned_row[0]) > 8:
-#         return None
-
-#     return Receipt(
-#         tabc_permit=cleaned_row[0],
-#         name=cleaned_row[1],
-#         address=cleaned_row[2],
-#         city=cleaned_row[3],
-#         state=cleaned_row[4],
-#         zip=cleaned_row[5],
-#         county_code=cleaned_row[6],
-#         # assign to the first of the month
-#         date="{}-{}-01".format(*cleaned_row[8].split("/")),
-#         tax=cleaned_row[9],
-#     )
-
-
 def date_fmt(date: str):
     """Convert m/d/y to Y-M-D"""
     try:
