@@ -37,6 +37,7 @@
     "watchify": "^3.11.1"
   },
   "prettier": {
-    "printWidth": 100
+    "printWidth": 100,
+    "semi": false
   }
 }
