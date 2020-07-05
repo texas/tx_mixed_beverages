@@ -146,7 +146,7 @@ class Receipt(models.Model):
         unique_together = ("tax_number", "date")
 
     def __str__(self):
-        return "{} {} {}".format(self.name, self.date, self.total)
+        return f"{self.location_name} {self.date} {self.total}"
 
     # CUSTOM METHODS #
 
