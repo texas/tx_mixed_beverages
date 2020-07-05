@@ -1,21 +1,8 @@
 /* global URLS: false */
-var $ = require("jquery")
+const $ = require("jquery")
 import { DECLUSTER_ZOOM } from "./settings"
 
 import BarChart from "./d3/Chart"
-
-var quality_descriptions = {
-  me: "User Inputted",
-  "00": "AddressPoint",
-  "01": "GPS",
-  "02": "Parcel",
-  "03": "StreetSegmentInterpolation",
-  "09": "AddressZipCentroid",
-  "10": "POBoxZIPCentroid",
-  "11": "CityCentroid",
-  "98": "Unknown",
-  "99": "Unmatchable",
-}
 
 /**
  * Render data
@@ -38,7 +25,7 @@ export function showLocationPopup(marker) {
   var id = marker.feature.id
   var map = marker._map || marker.__parent._group._map // HACK
 
-  var showPopup = function () {
+  function showPopup() {
     if (!marker._map) {
       map.panTo(marker.getLatLng())
       if (map.getZoom() < DECLUSTER_ZOOM) {
@@ -52,7 +39,7 @@ export function showLocationPopup(marker) {
     marker.openPopup()
   }
 
-  var setupPopup = function (data) {
+  function setupPopup(data) {
     if (!marker._popup) {
       marker.bindPopup(contentize(data))
     }
