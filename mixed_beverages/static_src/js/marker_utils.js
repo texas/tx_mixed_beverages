@@ -25,7 +25,6 @@ var quality_descriptions = {
 function contentize(data) {
   var quality = data.feature.properties.coordinate_quality
   var $container = $('<div class="location"/>')
-  var url = URLS.location_fix.replace("0", data.feature.id)
   $container.append(`<span>${data.data.name}</span> `)
   new BarChart($container[0], data.receipts, {
     width: 300,
