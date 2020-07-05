@@ -10,6 +10,9 @@ from .models import Receipt, Business, Location
 
 
 def assign_businesses(show_progress=False):
+    """
+    Associates "Receipts" with businesses
+    """
     businesses_to_create = (
         Receipt.objects.filter(business=None)
         .values("tax_number", "name")
@@ -34,8 +37,6 @@ def set_location_data(show_progress=False):
     """
     Denormalizes receipt data into the `Location` model.
 
-    Location name is set in the "slurp" step.
-
     timing: real    2m50.342s
     """
     latest_receipt_date = Receipt.objects.latest("date").date
@@ -50,7 +51,7 @@ def set_location_data(show_progress=False):
         )
         old_data = x.data or {}
         x.data = {
-            **old_data,  # Preserve "name"
+            **old_data,
             "avg_total": str(receipt_stats["total__avg"].quantize(Decimal(".01")))
             if receipt_stats["total__avg"]
             else "0",
