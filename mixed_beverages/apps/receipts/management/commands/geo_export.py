@@ -18,13 +18,14 @@ class Command(BaseCommand):
 
     def handle(self, limit, *args, **options):
         fieldnames = ("street_address", "city", "state", "zip", "pk")
-        qs = Location.objects.filter(
-            coordinate__isnull=True, zip__startswith="78"
-        ).values(*fieldnames)
+        qs = Location.objects.filter(coordinate__isnull=True).values(*fieldnames)
+        original_count = qs.count()
         if limit is not None:
             qs = qs[:limit]
 
-        print(f"Exporting {qs.count()} locations...")
+        self.stdout.write(
+            f"Exporting {qs.count()} out of {original_count} locations..."
+        )
         with open("geo_export.csv", "w", newline="") as csvfile:
             writer = DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
