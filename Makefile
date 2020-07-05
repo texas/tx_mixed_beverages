@@ -46,8 +46,10 @@ admin: ## Set up a local admin/admin account
 	  User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \
 	  python manage.py shell
 
+# TODO use the json api to do incremental updates
 slurp: ## Import downloaded CSVs
-	$(MANAGE) slurp ~/Downloads/Mixed_Beverage_Gross_Receipts.csv
+	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
+	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts.csv
 
 process: ## Generate stats
 	./mixed_beverages/scripts/post_process.py
