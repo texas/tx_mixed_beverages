@@ -1,5 +1,6 @@
 import os.path
 import csv as csv_lib
+from functools import lru_cache
 
 from django.core.management.base import BaseCommand
 from obj_update import obj_update_or_create
@@ -18,6 +19,21 @@ def date_fmt(date: str):
         return None
 
 
+@lru_cache(maxsize=512)
+def Location_get(street_address, city, state, zip, defaults):
+    """
+    Wrapper around Location.objects.get_or_create just to use lru_cache
+    """
+    location, __ = Location.objects.get_or_create(
+        street_address=street_address,
+        city=city,
+        state=state,
+        zip=zip,
+        defaults=defaults,
+    )
+    return location
+
+
 class Command(BaseCommand):
     help = "Import a CSV file. Doing a full import over 2.3MM rows will take about 1.5 hours"
 
@@ -32,7 +48,7 @@ class Command(BaseCommand):
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
             for row in tqdm(reader, total=row_count):
-                location, __ = Location.objects.get_or_create(
+                location = Location_get(
                     street_address=row["Location Address"],
                     city=row["Location City"],
                     state=row["Location State"],
