@@ -29,8 +29,9 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(GeoModelAdmin):
-    list_display = ("street_address", "city", "state", "zip")
+    list_display = ("name", "street_address", "city", "state", "zip")
     list_filter = ("coordinate_quality",)
+    search_fields = ("name",)
 
     # Detail
     ########
