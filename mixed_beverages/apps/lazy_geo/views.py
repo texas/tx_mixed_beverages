@@ -14,7 +14,6 @@ from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
 from mixed_beverages.apps.receipts import models
 
-from .models import Correction
 from .utils import GeocodeException
 
 
