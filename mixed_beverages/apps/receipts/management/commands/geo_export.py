@@ -7,8 +7,6 @@ from mixed_beverages.apps.receipts.models import Location
 class Command(BaseCommand):
     help = """
     Helper to make a CSV for batch geocoding. See https://www.geocod.io/guides/preparing-your-spreadsheet/
-
-    Then upload it to https://dash.geocod.io/import
     """
 
     def add_arguments(self, parser):
@@ -31,3 +29,4 @@ class Command(BaseCommand):
             writer.writeheader()
             for row in qs:
                 writer.writerow(row)
+        self.stdout.write("Now upload geo_export.csv at https://dash.geocod.io/import")
