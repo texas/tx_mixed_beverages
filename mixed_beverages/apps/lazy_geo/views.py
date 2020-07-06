@@ -47,7 +47,4 @@ class MarkerList(GeoJSONLayerView):
     )
     geometry_field = "coordinate"
     precision = 6
-    properties = (
-        "coordinate_quality",
-        "data",
-    )
+    properties = ("coordinate_quality", "data", "name")
