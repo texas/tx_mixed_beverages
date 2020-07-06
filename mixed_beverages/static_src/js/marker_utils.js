@@ -12,7 +12,7 @@ import BarChart from "./d3/Chart"
 function contentize(data) {
   var quality = data.feature.properties.coordinate_quality
   var $container = $('<div class="location"/>')
-  $container.append(`<span>${data.data.name}</span> `)
+  $container.append(`<span>${data.name}</span> `)
   new BarChart($container[0], data.receipts, {
     width: 300,
     height: 180,
