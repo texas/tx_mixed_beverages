@@ -52,6 +52,7 @@ slurp: ## Import downloaded CSVs
 	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
 	(head -n 1 data/Mixed_Beverage_Gross_Receipts.csv && tail -n +2 data/Mixed_Beverage_Gross_Receipts.csv | sort) > data/Mixed_Beverage_Gross_Receipts_sorted.csv
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
+	$(MANAGE) post_process
 
 process: ## Generate stats
 	./mixed_beverages/scripts/post_process.py
