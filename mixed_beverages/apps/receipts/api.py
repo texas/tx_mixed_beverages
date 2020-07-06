@@ -51,7 +51,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Location
-        fields = ("id", "receipts", "data")
+        fields = ("id", "receipts", "name", "data")
 
 
 class LocationViewSet(viewsets.ModelViewSet):
