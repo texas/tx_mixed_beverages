@@ -51,14 +51,14 @@ export async function showLocationPopup(marker) {
     return
   }
 
-  const data = locationCache[id]
-  if (!data) {
-    $.getJSON(`/location/${id}.json`, function (data) {
-      data.feature = marker.feature
-      locationCache[id] = data
-      setupPopup(data)
-    })
+  const cachedData = locationCache[id]
+  if (!cachedData) {
+    const resp = await fetch(`/location/${id}.json`)
+    const jsonData = await resp.json()
+    jsonData.feature = marker.feature
+    locationCache[id] = jsonData
+    setupPopup(jsonData)
   } else {
-    setupPopup(data)
+    setupPopup(cachedData)
   }
 }
