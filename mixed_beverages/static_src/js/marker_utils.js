@@ -22,7 +22,6 @@ function contentize(data) {
 
 const locationCache = new Map()
 export async function showLocationPopup(marker) {
-  const { id } = marker.feature
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
@@ -51,6 +50,7 @@ export async function showLocationPopup(marker) {
     return
   }
 
+  const { id } = marker.feature
   if (!locationCache.has(id)) {
     const resp = await fetch(`/location/${id}.json`)
     const jsonData = await resp.json()
