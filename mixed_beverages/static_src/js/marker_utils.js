@@ -21,9 +21,9 @@ function contentize(data) {
 }
 
 var locationCache = {}
-export function showLocationPopup(marker) {
-  var id = marker.feature.id
-  var map = marker._map || marker.__parent._group._map // HACK
+export async function showLocationPopup(marker) {
+  const { id } = marker.feature
+  const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
     if (!marker._map) {
@@ -51,7 +51,7 @@ export function showLocationPopup(marker) {
     return
   }
 
-  var data = locationCache[id]
+  const data = locationCache[id]
   if (!data) {
     $.getJSON(`/location/${id}.json`, function (data) {
       data.feature = marker.feature
