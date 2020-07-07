@@ -78,3 +78,4 @@ docker/run:
 site:
 	mkdir -p _site
 	cd _site && wget -r localhost:8000 --force-html -e robots=off -nH -nv --max-redirect 0 || true
+	$(MANAGE) site
