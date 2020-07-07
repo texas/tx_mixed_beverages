@@ -48,3 +48,12 @@ class MarkerList(GeoJSONLayerView):
     geometry_field = "coordinate"
     precision = 6
     properties = ("coordinate_quality", "data", "name")
+
+
+class MarkerDetail(GeoJSONLayerView):
+    queryset = models.Location.objects.filter(coordinate__isnull=False).exclude(
+        Q(data__avg_total="0") | Q(data__avg_total="0.00")
+    )
+    geometry_field = "coordinate"
+    precision = 6
+    properties = ("coordinate_quality", "data", "name")

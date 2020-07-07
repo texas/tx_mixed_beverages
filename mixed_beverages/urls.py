@@ -26,6 +26,11 @@ urlpatterns = [
         cache_control(max_age=ONE_WEEK, public=True)(views.MarkerList.as_view()),
         name="geo_list",
     ),
+    path(
+        "geo/<int:pk>.geojson",
+        cache_control(max_age=ONE_WEEK, public=True)(views.MarkerDetail.as_view()),
+        name="geo_detail",
+    ),
     url(r"^api/", include(router.urls)),
     path("admin/", admin.site.urls),
 ]
