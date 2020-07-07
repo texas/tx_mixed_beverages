@@ -53,7 +53,7 @@ export function showLocationPopup(marker) {
 
   var data = locationCache[id]
   if (!data) {
-    $.getJSON(URLS.location + id + "/", function (data) {
+    $.getJSON(`/location/${id}.json`, function (data) {
       data.feature = marker.feature
       locationCache[id] = data
       setupPopup(data)
