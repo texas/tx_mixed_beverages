@@ -53,4 +53,15 @@ class MarkerList(GeoJSONLayerView):
 
 def location_detail(request, pk):
     location = get_object_or_404(models.Location, pk=pk)
-    return JsonResponse({"id": location.id, "name": location.name, "data": location.data})
+    receipts = [
+        {"date": x.date, "total": x.total}
+        for x in location.receipts.all().order_by("-date")
+    ]
+    return JsonResponse(
+        {
+            "id": location.id,
+            "name": location.name,
+            "data": location.data,
+            "receipts": receipts,
+        }
+    )
