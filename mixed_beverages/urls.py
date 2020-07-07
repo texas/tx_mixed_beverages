@@ -5,8 +5,6 @@ from django.urls import path
 from django.views.decorators.cache import cache_control
 from django.views.generic import TemplateView
 
-from mixed_beverages.apps.receipts.api import router
-
 from .apps.lazy_geo import views
 
 ONE_DAY = 86400
@@ -31,6 +29,5 @@ urlpatterns = [
         cache_control(max_age=ONE_WEEK, public=True)(views.location_detail),
         name="location",
     ),
-    url(r"^api/", include(router.urls)),
     path("admin/", admin.site.urls),
 ]
