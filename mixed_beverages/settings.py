@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "mixed_beverages.apps.receipts",
     "mixed_beverages.apps.lazy_geo",
-    "rest_framework",
     # support
     "django_extensions",
 ]
@@ -135,9 +134,3 @@ LOGGING = {
 
 # App Config
 ALLOW_ANONYMOUS_CORRECTIONS = True
-
-
-REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [],
-    # "PAGE_SIZE": 100,
-}

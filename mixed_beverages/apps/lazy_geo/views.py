@@ -9,6 +9,7 @@ from django.http import (
     HttpResponseRedirect,
     HttpResponseForbidden,
 )
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
@@ -48,3 +49,19 @@ class MarkerList(GeoJSONLayerView):
     geometry_field = "coordinate"
     precision = 6
     properties = ("coordinate_quality", "data", "name")
+
+
+def location_detail(request, pk):
+    location = get_object_or_404(models.Location, pk=pk)
+    receipts = [
+        {"date": x.date, "total": x.total}
+        for x in location.receipts.all().order_by("-date")
+    ]
+    return JsonResponse(
+        {
+            "id": location.id,
+            "name": location.name,
+            "data": location.data,
+            "receipts": receipts,
+        }
+    )

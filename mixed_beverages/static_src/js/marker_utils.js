@@ -20,10 +20,10 @@ function contentize(data) {
   return $container[0]
 }
 
-var locationCache = {}
-export function showLocationPopup(marker) {
-  var id = marker.feature.id
-  var map = marker._map || marker.__parent._group._map // HACK
+const locationCache = new Map()
+export async function showLocationPopup(marker) {
+  const { id } = marker.feature
+  const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
     if (!marker._map) {
@@ -51,14 +51,12 @@ export function showLocationPopup(marker) {
     return
   }
 
-  var data = locationCache[id]
-  if (!data) {
-    $.getJSON(URLS.location + id + "/", function (data) {
-      data.feature = marker.feature
-      locationCache[id] = data
-      setupPopup(data)
-    })
-  } else {
-    setupPopup(data)
+  if (!locationCache.has(id)) {
+    const resp = await fetch(`/location/${id}.json`)
+    const jsonData = await resp.json()
+    jsonData.feature = marker.feature
+    locationCache.set(id, jsonData)
   }
+
+  setupPopup(locationCache.get(id))
 }
