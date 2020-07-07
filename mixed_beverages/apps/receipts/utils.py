@@ -10,9 +10,14 @@ from .models import Receipt, Business, Location
 
 
 def assign_businesses(show_progress=False):
+    """
+    Associates "Receipts" with businesses
+
+    The initial run over 2.4MM receipts will take 4 hours
+    """
     businesses_to_create = (
         Receipt.objects.filter(business=None)
-        .values("tax_number", "name")
+        .values("tax_number", "taxpayer_name")
         .order_by("tax_number")
         .annotate(Count("tax_number"))
     )
@@ -23,7 +28,7 @@ def assign_businesses(show_progress=False):
     for business_data in tqdm(businesses_to_create, disable=not show_progress):
         business, __ = Business.objects.get_or_create(
             tax_number=business_data["tax_number"],
-            defaults=dict(name=business_data["name"]),
+            defaults=dict(name=business_data["taxpayer_name"]),
         )
         Receipt.objects.filter(
             tax_number=business_data["tax_number"], business=None
@@ -33,8 +38,6 @@ def assign_businesses(show_progress=False):
 def set_location_data(show_progress=False):
     """
     Denormalizes receipt data into the `Location` model.
-
-    Location name is set in the "slurp" step.
 
     timing: real    2m50.342s
     """
@@ -50,7 +53,7 @@ def set_location_data(show_progress=False):
         )
         old_data = x.data or {}
         x.data = {
-            **old_data,  # Preserve "name"
+            **old_data,
             "avg_total": str(receipt_stats["total__avg"].quantize(Decimal(".01")))
             if receipt_stats["total__avg"]
             else "0",

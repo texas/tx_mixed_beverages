@@ -10,7 +10,7 @@ class ReceiptInline(admin.TabularInline):
     extra = 0
     model = models.Receipt
     fields = (
-        "name",
+        "location_name",
         "tabc_permit",
         "date",
         "total",
@@ -29,8 +29,9 @@ class BusinessAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(GeoModelAdmin):
-    list_display = ("street_address", "city", "state", "zip")
+    list_display = ("name", "street_address", "city", "state", "zip")
     list_filter = ("coordinate_quality",)
+    search_fields = ("name",)
 
     # Detail
     ########
@@ -39,19 +40,19 @@ class LocationAdmin(GeoModelAdmin):
         ReceiptInline,
     ]
     save_on_top = True
-    readonly_fields = ("street_address", "city", "state", "zip", "data", "businesses")
+    readonly_fields = ("street_address", "city", "state", "zip", "data")
 
 
 @admin.register(models.Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ("location_name", "name", "date", "total")
-    search_fields = ("name", "location_name")
+    list_display = ("location_name", "taxpayer_name", "date", "total")
+    search_fields = ("location_name", "taxpayer_name")
     fieldsets = (
         (
             None,
             {
                 "fields": (
-                    "name",
+                    "taxpayer_name",
                     "tax_number",
                     "tabc_permit",
                     "date",
@@ -72,7 +73,7 @@ class ReceiptAdmin(admin.ModelAdmin):
         ("Relations", {"fields": ("business",)}),
     )
     readonly_fields = (
-        "name",
+        "taxpayer_name",
         "tax_number",
         "tabc_permit",
         "date",

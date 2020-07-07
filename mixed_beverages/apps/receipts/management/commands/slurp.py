@@ -29,13 +29,13 @@ def Location_get(street_address, city, state, zip, name):
         city=city,
         state=state,
         zip=zip,
-        defaults=dict(data={"name": name}),
+        defaults=dict(name=name),
     )
     return location
 
 
 class Command(BaseCommand):
-    help = "Import a CSV file. Doing a full import over 2.3MM rows will take about 1.5 hours"
+    help = "Import a CSV file. Doing a full import over 2.4MM rows will take about 1.5 hours"
 
     def add_arguments(self, parser):
         parser.add_argument("csv")
@@ -57,11 +57,11 @@ class Command(BaseCommand):
                 )
                 receipt, created = obj_update_or_create(
                     Receipt,
-                    tax_number=row["Taxpayer Number"],
+                    tabc_permit=row["TABC Permit Number"],
                     date=date_fmt(row["Obligation End Date"]),
                     defaults=dict(
-                        name=row["Taxpayer Name"],
-                        tabc_permit=row["TABC Permit Number"],
+                        taxpayer_name=row["Taxpayer Name"],
+                        tax_number=row["Taxpayer Number"],
                         liquor=row["Liquor Receipts"],
                         wine=row["Wine Receipts"],
                         beer=row["Beer Receipts"],

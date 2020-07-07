@@ -17,14 +17,14 @@ import Legend from "./ui/Legend"
 
 var map, nav
 
-var markerStyle = function (feature) {
-  var style = {
+function markerStyle(feature) {
+  const style = {
     fillOpacity: 0.8,
     opacity: 0.9,
     radius: 7,
     weight: 1,
   }
-  var tax = parseInt(feature.properties.data.avg_tax, 10) // actually a float, but we don't care about cents
+  const tax = parseInt(feature.properties.data.avg_total, 10) // actually a float, but we don't care about cents
   if (tax === 0) {
     style.color = taxColorScale(tax)
     style.radius = 4
@@ -58,7 +58,7 @@ function _getJSON(data) {
     markers.eachLayer(function (marker) {
       if (bounds.contains(marker.getLatLng())) {
         data.markers.push(marker)
-        data.value += parseFloat(marker.feature.properties.data.avg_tax || 0)
+        data.value += parseFloat(marker.feature.properties.data.avg_total || 0)
       }
     })
     nav.showStatsFor(data)

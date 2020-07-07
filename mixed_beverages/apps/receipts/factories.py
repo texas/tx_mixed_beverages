@@ -34,7 +34,7 @@ class ReceiptFactory(factory.DjangoModelFactory):
 
     tax_number = factory.Faker("pyint")
     tabc_permit = FuzzyText(length=6, prefix="MB", chars=string.digits)
-    name = FuzzyText(length=30)
+    taxpayer_name = factory.Faker("company")
     date = FuzzyDate(start_date=date(1970, 1, 1))
     liquor = FuzzyDecimal(low=0, high=1000, precision=2)
     beer = FuzzyDecimal(low=0, high=1000, precision=2)
