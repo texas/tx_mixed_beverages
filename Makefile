@@ -74,3 +74,7 @@ docker/build:
 
 docker/run:
 	docker run --rm -p 8080:8080 crccheck/mixed_beverages
+
+site:
+	mkdir -p _site
+	cd _site && wget -r localhost:8000 --force-html -e robots=off -nH -nv --max-redirect 0 || true
