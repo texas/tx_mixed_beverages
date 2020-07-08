@@ -14,7 +14,7 @@ export default class {
   // Leaflet Control methods
 
   onAdd(map) {
-    var $container = $('<div class="nav leaflet-bar status-loading"/>')
+    const $container = $('<div class="nav leaflet-bar status-loading"/>')
     $container.append('<div class="loading">Loading...</div>')
     $container.append(`<div class="info">
         <div>
@@ -75,7 +75,7 @@ export default class {
   showMarkers(markers) {
     this.control.ui.top.empty()
     const center = this.map.getCenter()
-    for (var i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
+    for (let i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
       const markerData = markers[i].feature.properties
       const $li = $(
         `<li>
@@ -92,16 +92,14 @@ export default class {
   }
 
   showStatsFor(data) {
-    var sorted = _.sortBy(data.markers, function (x) {
-      return -parseFloat(x.feature.properties.data.avg_total)
-    })
+    const sorted = _.sortBy(data.markers, (x) => -parseFloat(x.feature.properties.data.avg_total))
     this.showMarkers(sorted)
     this.control.ui.markers.text(data.markers.length)
     this.control.ui.value.text(thousands(data.value))
   }
 
   _isLoaded() {
-    var $container = this.control.ui.container
+    const $container = this.control.ui.container
     $container.removeClass("status-loading").addClass("status-loaded")
   }
 
@@ -117,7 +115,7 @@ export default class {
       return
     }
     this.markers.eachLayer((marker) => {
-      var name = marker.feature.properties.name
+      const { name } = marker.feature.properties
       if (name) {
         this.searchIndex.push([name, marker])
       }
