@@ -48,7 +48,7 @@ export default class {
       }
       const needle = this.ui.search.val().toUpperCase()
       if (needle.length > 2) {
-        const searchIndex = this.nav.searchIndex
+        const { searchIndex } = this.nav
         for (let i = 0; i < searchIndex.length; ++i) {
           if (searchIndex[i][0].indexOf(needle) !== -1) {
             matches.push(searchIndex[i][1])
@@ -66,7 +66,7 @@ export default class {
     this.ui.search.one("keyup", this.nav.buildSearchIndex.bind(this.nav))
 
     this.ui.top.on("click", "li", function (evt) {
-      var marker = $(this).data("marker")
+      const marker = $(this).data("marker")
       showLocationPopup(marker)
       evt.stopPropagation() // keep click from closing the popup
     })
