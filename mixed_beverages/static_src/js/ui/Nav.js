@@ -26,9 +26,13 @@ export default class {
           <ol class="top-locations"></ol>
         </div>
       </div>`)
+    // $container.append(`<div class="Nav--range-picker">
+    //   <input type="range"/>
+    //   <input type="range"/>
+    // </div>`)
     this.ui = {
       container: $container,
-      search: $container.find("input"),
+      search: $container.find("input.search"),
       markers: $container.find("span.markers"),
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
@@ -36,7 +40,7 @@ export default class {
     map.nav = this
 
     // Event handlers
-    function _keyup(evt) {
+    const _keyup = (evt) => {
       const matches = []
       if (evt.which === 27) {
         this.ui.search.val("")
