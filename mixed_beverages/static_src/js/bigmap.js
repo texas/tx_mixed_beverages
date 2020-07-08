@@ -13,7 +13,7 @@ import { DECLUSTER_ZOOM } from "./settings"
 import { showLocationPopup } from "./marker_utils"
 import { taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
-import Legend from "./ui/Legend"
+import legendFactory from "./ui/legendFactory"
 
 var map, nav
 
@@ -102,10 +102,9 @@ export function render() {
     Cookies.set("returning", "1", { expires: 86400 * 30 * 3 })
     firstVisit()
   }
-  const legend = new Legend()
   nav = new Nav(map, showLocationPopup)
   map.addControl(new L.Control.GeoZoom())
-  map.addControl(legend.render())
+  map.addControl(legendFactory())
   map.addControl(nav.render())
   window.map = map // DEBUG
   new L.hash(map) // eslint-disable-line
