@@ -49,12 +49,12 @@ function _getJSON(data) {
     // console.log("marker", evt.layer, this); // DEBUG
     showLocationPopup(evt.layer)
   })
-  var updateNav = function () {
-    var data = {
+  function updateNav() {
+    const data = {
       value: 0,
       markers: [],
     }
-    var bounds = map.getBounds()
+    const bounds = map.getBounds()
     markers.eachLayer(function (marker) {
       if (bounds.contains(marker.getLatLng())) {
         data.markers.push(marker)

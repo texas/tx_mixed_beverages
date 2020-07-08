@@ -36,16 +36,16 @@ export default class {
     map.nav = this
 
     // Event handlers
-    var _keyup = (evt) => {
-      var matches = []
+    function _keyup(evt) {
+      const matches = []
       if (evt.which === 27) {
         this.ui.search.val("")
         return
       }
-      var needle = this.ui.search.val().toUpperCase()
+      const needle = this.ui.search.val().toUpperCase()
       if (needle.length > 2) {
-        var searchIndex = this.nav.searchIndex
-        for (var i = 0; i < searchIndex.length; ++i) {
+        const searchIndex = this.nav.searchIndex
+        for (let i = 0; i < searchIndex.length; ++i) {
           if (searchIndex[i][0].indexOf(needle) !== -1) {
             matches.push(searchIndex[i][1])
           }
@@ -125,7 +125,7 @@ export default class {
   }
 
   render() {
-    var NavControl = L.Control.extend({
+    const NavControl = L.Control.extend({
       options: {
         position: "topright",
       },
