@@ -14,7 +14,7 @@ export default class {
   // Leaflet Control methods
 
   onAdd(map) {
-    var $container = $('<div class="nav leaflet-bar status-loading"/>')
+    const $container = $('<div class="nav leaflet-bar status-loading"/>')
     $container.append('<div class="loading">Loading...</div>')
     $container.append(`<div class="info">
         <div>
@@ -26,9 +26,13 @@ export default class {
           <ol class="top-locations"></ol>
         </div>
       </div>`)
+    // $container.append(`<div class="Nav--range-picker">
+    //   <input type="range"/>
+    //   <input type="range"/>
+    // </div>`)
     this.ui = {
       container: $container,
-      search: $container.find("input"),
+      search: $container.find("input.search"),
       markers: $container.find("span.markers"),
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
@@ -36,16 +40,17 @@ export default class {
     map.nav = this
 
     // Event handlers
-    var _keyup = (evt) => {
-      var matches = []
+    const _keyup = (evt) => {
+      const matches = []
       if (evt.which === 27) {
         this.ui.search.val("")
+        // FIXME, reset markers
         return
       }
-      var needle = this.ui.search.val().toUpperCase()
+      const needle = this.ui.search.val().toUpperCase()
       if (needle.length > 2) {
-        var searchIndex = this.nav.searchIndex
-        for (var i = 0; i < searchIndex.length; ++i) {
+        const { searchIndex } = this.nav
+        for (let i = 0; i < searchIndex.length; ++i) {
           if (searchIndex[i][0].indexOf(needle) !== -1) {
             matches.push(searchIndex[i][1])
           }
@@ -62,7 +67,7 @@ export default class {
     this.ui.search.one("keyup", this.nav.buildSearchIndex.bind(this.nav))
 
     this.ui.top.on("click", "li", function (evt) {
-      var marker = $(this).data("marker")
+      const marker = $(this).data("marker")
       showLocationPopup(marker)
       evt.stopPropagation() // keep click from closing the popup
     })
@@ -75,7 +80,7 @@ export default class {
   showMarkers(markers) {
     this.control.ui.top.empty()
     const center = this.map.getCenter()
-    for (var i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
+    for (let i = 0; i < Math.min(markers.length, N_RESULTS); ++i) {
       const markerData = markers[i].feature.properties
       const $li = $(
         `<li>
@@ -92,16 +97,14 @@ export default class {
   }
 
   showStatsFor(data) {
-    var sorted = _.sortBy(data.markers, function (x) {
-      return -parseFloat(x.feature.properties.data.avg_total)
-    })
+    const sorted = _.sortBy(data.markers, (x) => -parseFloat(x.feature.properties.data.avg_total))
     this.showMarkers(sorted)
     this.control.ui.markers.text(data.markers.length)
     this.control.ui.value.text(thousands(data.value))
   }
 
   _isLoaded() {
-    var $container = this.control.ui.container
+    const $container = this.control.ui.container
     $container.removeClass("status-loading").addClass("status-loaded")
   }
 
@@ -117,7 +120,7 @@ export default class {
       return
     }
     this.markers.eachLayer((marker) => {
-      var name = marker.feature.properties.name
+      const { name } = marker.feature.properties
       if (name) {
         this.searchIndex.push([name, marker])
       }
@@ -125,7 +128,7 @@ export default class {
   }
 
   render() {
-    var NavControl = L.Control.extend({
+    const NavControl = L.Control.extend({
       options: {
         position: "topright",
       },
