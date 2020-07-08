@@ -102,7 +102,7 @@ export function render() {
     Cookies.set("returning", "1", { expires: 86400 * 30 * 3 })
     firstVisit()
   }
-  var legend = new Legend()
+  const legend = new Legend()
   nav = new Nav(map, showLocationPopup)
   map.addControl(new L.Control.GeoZoom())
   map.addControl(legend.render())
