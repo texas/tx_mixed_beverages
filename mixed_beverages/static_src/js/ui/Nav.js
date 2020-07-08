@@ -44,6 +44,7 @@ export default class {
       const matches = []
       if (evt.which === 27) {
         this.ui.search.val("")
+        // FIXME, reset markers
         return
       }
       const needle = this.ui.search.val().toUpperCase()
