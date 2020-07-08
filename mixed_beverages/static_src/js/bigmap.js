@@ -50,18 +50,18 @@ function _getJSON(data) {
     showLocationPopup(evt.layer)
   })
   function updateNav() {
-    const data = {
+    const navData = {
       value: 0,
       markers: [],
     }
     const bounds = map.getBounds()
     markers.eachLayer(function (marker) {
       if (bounds.contains(marker.getLatLng())) {
-        data.markers.push(marker)
-        data.value += parseFloat(marker.feature.properties.data.avg_total || 0)
+        navData.markers.push(marker)
+        navData.value += parseFloat(marker.feature.properties.data.avg_total || 0)
       }
     })
-    nav.showStatsFor(data)
+    nav.showStatsFor(navData)
   }
   updateNav() // initial hit
   map.on("move", _.debounce(updateNav, 500))
