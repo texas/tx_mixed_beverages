@@ -9,10 +9,10 @@ export default function legendFactory() {
     options: {
       position: "bottomleft",
     },
-    onAdd: function () {
+    onAdd() {
       const $container = $('<div class="legend leaflet-bar"/>')
       const $list = $("<dl>").appendTo($container)
-      $.each(taxColorScale.domain(), function (idx, level) {
+      Object.values(taxColorScale.domain()).forEach((level) => {
         const fill = taxColorScale(level)
         const border = d3.rgb(fill).darker(1)
         $list.append(`<dt>
