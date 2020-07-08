@@ -25,5 +25,10 @@
   {% endblock %}
   <script src="{% static 'app.js' %}"></script>
   {% block extra_script %}{% endblock %}
+  <div style="display: none;">
+    <a href="/robots.txt"></a>
+    <a href="{% url 'geo_list' %}"></a>
+    <a href="/about/"></a>
+  </div>
 </body>
 </html>

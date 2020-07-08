@@ -27,6 +27,7 @@ mixed_beverages/static/*.css
 
 
 # Randomly generated dirs
+_site
 .sass-cache/
 node_modules/
 package-lock.json
