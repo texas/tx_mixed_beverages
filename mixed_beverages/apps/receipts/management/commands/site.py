@@ -17,7 +17,7 @@ class Command(BaseCommand):
             .exclude(Q(data__avg_total="0") | Q(data__avg_total="0.00"))
             .prefetch_related("receipts")
         )
-
+        self.stdout.write("Generating location detail json")
         for location in tqdm(qs):
             res = location_detail(None, location.pk)
             with open(f"_site/location/{location.pk}.json", "wb") as fh:
