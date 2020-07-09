@@ -14,7 +14,7 @@ export default class {
   // Leaflet Control methods
 
   onAdd(map) {
-    const $container = $('<div class="nav leaflet-bar status-loading"/>')
+    const $container = $('<div class="Nav leaflet-bar status-loading"/>')
     $container.append('<div class="loading">Loading...</div>')
     $container.append(`<div class="info">
         <div>
@@ -26,10 +26,10 @@ export default class {
           <ol class="top-locations"></ol>
         </div>
       </div>`)
-    // $container.append(`<div class="Nav--range-picker">
-    //   <input type="range"/>
-    //   <input type="range"/>
-    // </div>`)
+    $container.append(`<div class="Nav--range-picker">
+      <input type="range"/>
+      <input type="range"/>
+    </div>`)
     this.ui = {
       container: $container,
       search: $container.find("input.search"),
