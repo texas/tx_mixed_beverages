@@ -103,16 +103,12 @@ export default class {
     this.control.ui.value.text(thousands(data.value))
   }
 
-  _isLoaded() {
-    const $container = this.control.ui.container
-    $container.removeClass("status-loading").addClass("status-loaded")
-  }
-
   // prep search index
   saveMarkers(markers) {
     this.markers = markers
     this.searchIndex = []
-    this._isLoaded()
+    const $container = this.control.ui.container
+    $container.removeClass("status-loading").addClass("status-loaded")
   }
 
   buildSearchIndex() {
