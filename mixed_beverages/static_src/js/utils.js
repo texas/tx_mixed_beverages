@@ -7,8 +7,8 @@ export const distance = d3.format(",.1f")
 export const taxColorScale = d3
   .scaleLinear()
   .clamp(true)
-  .domain([50000, 10000, 5000, 1000, 0])
-  .range(colorbrewer.Spectral[5])
+  .domain([100000, 25000, 10000, 5000, 1000, 0])
+  .range(colorbrewer.Spectral[6])
 
 export function extractLatLng(s) {
   var bits = s.match(/([-\d.]+),([-\d.]+)(,(\d+)z)?/)
