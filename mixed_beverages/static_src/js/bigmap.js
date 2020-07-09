@@ -3,7 +3,6 @@ import L from "leaflet"
 import "leaflet.markercluster"
 import "leaflet-hash"
 import "./ui/Control.GeoZoom"
-import $ from "jquery"
 import _ from "lodash"
 import * as d3 from "d3"
 import Cookies from "cookies-js"
@@ -91,7 +90,7 @@ function firstVisit() {
     .openOn(map)
 }
 
-export function render() {
+export async function render() {
   // map = L.map('map').setView([31.505, -98.09], 8)
   map = L.map("map", {
     center: [30.2655, -97.7426],
@@ -107,7 +106,7 @@ export function render() {
   map.addControl(legendFactory())
   map.addControl(nav.render())
   window.map = map // DEBUG
-  new L.hash(map) // eslint-disable-line
+  new L.hash(map)
 
   L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", {
     maxZoom: 18,
@@ -118,5 +117,7 @@ export function render() {
                   <a href="/about/">About</a> this site.`,
   }).addTo(map)
 
-  $.getJSON(URLS.geojson, _getJSON)
+  const res = await fetch(URLS.geojson)
+  const data = await res.json()
+  _getJSON(data)
 }
