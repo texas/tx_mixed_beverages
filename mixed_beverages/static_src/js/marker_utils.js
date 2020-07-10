@@ -3,6 +3,16 @@ const $ = require("jquery")
 import { DECLUSTER_ZOOM } from "./settings"
 
 import BarChart from "./d3/Chart"
+import { channel } from "./utils"
+
+const range = [12, 0]
+
+channel.on("change.rangeBegin", (msg) => {
+  range[0] = parseInt(msg, 10)j
+})
+channel.on("change.rangeEnd", (msg) => {
+  range[1] = parseInt(msg, 10)
+})
 
 /**
  * Render data

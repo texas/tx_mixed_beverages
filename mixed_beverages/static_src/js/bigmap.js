@@ -10,18 +10,9 @@ window.d3 = d3 // DEBUG
 
 import { DECLUSTER_ZOOM } from "./settings"
 import { showLocationPopup } from "./marker_utils"
-import { channel, taxColorScale } from "./utils"
+import { taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
-
-let rangeBegin, rangeEnd
-
-channel.on("change.rangeBegin", (msg) => {
-  rangeBegin = msg
-})
-channel.on("change.rangeEnd", (msg) => {
-  rangeEnd = msg
-})
 
 function markerStyle(feature) {
   const style = {
