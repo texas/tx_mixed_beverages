@@ -128,5 +128,7 @@ export default class {
       .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
       .append("title")
       .html((d) => `${d.date} - ${thousands(d.tax)}`)
+
+    selection.exit().remove()
   }
 }
