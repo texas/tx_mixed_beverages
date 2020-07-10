@@ -3,7 +3,7 @@ import $ from "jquery"
 import _ from "lodash"
 
 import { N_RESULTS } from "../settings"
-import { thousands, distance } from "../utils"
+import { channel, thousands, distance } from "../utils"
 import { showLocationPopup } from "../marker_utils"
 
 export default class {
@@ -28,9 +28,10 @@ export default class {
       </div>`)
     $container.append(`<div class="Nav--range-picker">
       <label for="id_range_begin">From</label>
-      <input type="range" id="id_range_begin" min="0" max="60" value="12"/>
+      <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="12"/>
       <label for="id_range_end">To</label>
-      <input type="range" id="id_range_end" min="0" max=60" value="0"/>
+      <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="0"/>
+
     </div>`)
     this.ui = {
       container: $container,
@@ -39,8 +40,8 @@ export default class {
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
     }
-    $container.find("input[range]").on("change", (evt) => {
-      console.log(evt)
+    $container.find("input[type=range]").on("change", (evt) => {
+      channel.emit(`change.${evt.target.name}`, evt.target.value)
     })
     map.nav = this
 

@@ -10,11 +10,11 @@ window.d3 = d3 // DEBUG
 
 import { DECLUSTER_ZOOM } from "./settings"
 import { showLocationPopup } from "./marker_utils"
-import { taxColorScale } from "./utils"
+import { channel, taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
 
-var map, nav
+var nav
 
 function markerStyle(feature) {
   const style = {
@@ -34,7 +34,7 @@ function markerStyle(feature) {
   return style
 }
 
-function _getJSON(data) {
+function addMarkersToMap(map, data) {
   const markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
@@ -66,7 +66,7 @@ function _getJSON(data) {
   map.on("move", _.debounce(updateNav, 500))
 }
 
-function firstVisit() {
+function firstVisit(map) {
   L.popup()
     .setLatLng(map.getCenter())
     .setContent(
@@ -92,14 +92,14 @@ function firstVisit() {
 
 export async function render() {
   // map = L.map('map').setView([31.505, -98.09], 8)
-  map = L.map("map", {
+  const map = L.map("map", {
     center: [30.2655, -97.7426],
     zoom: DECLUSTER_ZOOM,
     zoomControl: false,
   })
   if (Cookies.enabled && !Cookies.get("returning")) {
     Cookies.set("returning", "1", { expires: 86400 * 30 * 3 })
-    firstVisit()
+    firstVisit(map)
   }
   nav = new Nav(map, showLocationPopup)
   map.addControl(new L.Control.GeoZoom())
@@ -119,5 +119,5 @@ export async function render() {
 
   const res = await fetch(URLS.geojson)
   const data = await res.json()
-  _getJSON(data)
+  addMarkersToMap(map, data)
 }
