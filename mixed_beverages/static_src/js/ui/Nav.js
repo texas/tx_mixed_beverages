@@ -4,7 +4,7 @@ import _ from "lodash"
 
 import { N_RESULTS } from "../settings"
 import { channel, thousands, distance } from "../utils"
-import { showLocationPopup } from "../marker_utils"
+import { showLocationPopup } from "../markerUtils"
 
 export default class {
   constructor(map) {
