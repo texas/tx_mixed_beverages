@@ -68,8 +68,6 @@ export default class {
   }
 
   render() {
-    const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
-    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
     const svg = d3
       .select(this.elem)
       .append("svg")
@@ -82,20 +80,9 @@ export default class {
     const plot = svg
       .append("g")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-    plot
-      .selectAll("rect")
-      .data(this.data)
-      .enter()
-      .append("rect")
-      .style("stroke", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill-opacity", "0.5")
-      .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
-      .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`)
 
+    this.plot = plot
+    this.refresh()
     // axes
     // svg
     //   .append("g")
@@ -114,5 +101,23 @@ export default class {
       .attr("title", "tax")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
       .call(yAxis)
+  }
+
+  refresh() {
+    const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
+    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
+    this.plot
+      .selectAll("rect")
+      .data(this.data)
+      .enter()
+      .append("rect")
+      .style("stroke", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
+      .style("fill", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
+      .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .append("title")
+      .html((d) => `${d.date} - ${thousands(d.tax)}`)
   }
 }
