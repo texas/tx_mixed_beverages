@@ -51,6 +51,10 @@ export default class {
       const end = nowMonth - this.range[1]
       this.xScale.domain([start, end])
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
+      const maxTax = d3.max(this.data, (d) => d.tax)
+      if (maxTax) {
+        this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
+      }
       this.refresh()
     })
   }
