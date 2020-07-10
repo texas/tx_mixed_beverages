@@ -8,7 +8,7 @@ import { channel } from "./utils"
 const range = [12, 0]
 
 channel.on("change.rangeBegin", (msg) => {
-  range[0] = parseInt(msg, 10)j
+  range[0] = parseInt(msg, 10)
 })
 channel.on("change.rangeEnd", (msg) => {
   range[1] = parseInt(msg, 10)

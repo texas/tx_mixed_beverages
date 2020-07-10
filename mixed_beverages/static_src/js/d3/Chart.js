@@ -6,6 +6,7 @@ export default class {
   constructor(elem, data, options) {
     this.width = options.width
     this.height = options.height
+    this.range = options.range
     this.elem = elem
 
     // Add space for the axes
@@ -35,11 +36,17 @@ export default class {
     const maxTax = d3.max(this.data, (d) => d.tax)
     this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
 
-    const dates = d3.extent(this.data, (d) => d.month)
+    const now = new Date()
+    const nowMonth = now.getFullYear() * 12 + now.getMonth()
     this.xScale = d3
       .scaleLinear()
-      .domain([dates[0], dates[1] + 1])
+      .domain([nowMonth - this.range[0], nowMonth - this.range[1]])
       .range([0, this.plotWidth])
+    // const dates = d3.extent(this.data, (d) => d.month)
+    // this.xScale = d3
+    //   .scaleLinear()
+    //   .domain([dates[0], dates[1] + 1])
+    //   .range([0, this.plotWidth])
   }
 
   xAxis() {
