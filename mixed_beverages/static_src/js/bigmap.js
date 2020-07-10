@@ -14,6 +14,15 @@ import { channel, taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
 
+let rangeBegin, rangeEnd
+
+channel.on("change.rangeBegin", (msg) => {
+  rangeBegin = msg
+})
+channel.on("change.rangeEnd", (msg) => {
+  rangeEnd = msg
+})
+
 function markerStyle(feature) {
   const style = {
     fillOpacity: 0.8,

@@ -40,9 +40,12 @@ export default class {
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
     }
-    $container.find("input[type=range]").on("change", (evt) => {
-      channel.emit(`change.${evt.target.name}`, evt.target.value)
-    })
+    $container
+      .find("input[type=range]")
+      .on("change", (evt) => {
+        channel.emit(`change.${evt.target.name}`, evt.target.value)
+      })
+      .change()
     map.nav = this
 
     // Event handlers
