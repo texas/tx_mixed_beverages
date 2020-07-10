@@ -1,5 +1,6 @@
 @import typography
 @import chart
+@import ../js/ui/Nav.scss
 
 body
   font-family: sans-serif
@@ -18,26 +19,6 @@ body
   dd
     margin-left: 60px + 8px
     text-align: right
-
-
-.nav
-  background: rgba(255, 255, 255, 0.8)
-  padding: 0.5em
-  .loading
-    display: none
-  &.status-loading
-    > .loading
-      display: block
-    > .info
-      display: none
-  .help
-    color: gray
-    font-style: italic
-    margin: 0
-  &.leaflet-bar
-    // override .leaflet-bar styling
-    a
-      width: 100%
 
 
 .legend

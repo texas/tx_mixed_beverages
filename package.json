@@ -39,5 +39,8 @@
   "prettier": {
     "printWidth": 100,
     "semi": false
+  },
+  "dependencies": {
+    "@condenast/quick-bus": "^0.2.0"
   }
 }

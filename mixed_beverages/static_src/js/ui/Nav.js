@@ -3,7 +3,7 @@ import $ from "jquery"
 import _ from "lodash"
 
 import { N_RESULTS } from "../settings"
-import { thousands, distance } from "../utils"
+import { channel, thousands, distance } from "../utils"
 import { showLocationPopup } from "../marker_utils"
 
 export default class {
@@ -14,7 +14,7 @@ export default class {
   // Leaflet Control methods
 
   onAdd(map) {
-    const $container = $('<div class="nav leaflet-bar status-loading"/>')
+    const $container = $('<div class="Nav leaflet-bar status-loading"/>')
     $container.append('<div class="loading">Loading...</div>')
     $container.append(`<div class="info">
         <div>
@@ -26,10 +26,13 @@ export default class {
           <ol class="top-locations"></ol>
         </div>
       </div>`)
-    // $container.append(`<div class="Nav--range-picker">
-    //   <input type="range"/>
-    //   <input type="range"/>
-    // </div>`)
+    $container.append(`<div class="Nav--range-picker">
+      <label for="id_range_begin">From</label>
+      <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="12"/>
+      <label for="id_range_end">To</label>
+      <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="0"/>
+
+    </div>`)
     this.ui = {
       container: $container,
       search: $container.find("input.search"),
@@ -37,6 +40,12 @@ export default class {
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
     }
+    $container
+      .find("input[type=range]")
+      .on("change", (evt) => {
+        channel.emit(`change.${evt.target.name}`, evt.target.value)
+      })
+      .change()
     map.nav = this
 
     // Event handlers
@@ -103,16 +112,12 @@ export default class {
     this.control.ui.value.text(thousands(data.value))
   }
 
-  _isLoaded() {
-    const $container = this.control.ui.container
-    $container.removeClass("status-loading").addClass("status-loaded")
-  }
-
   // prep search index
   saveMarkers(markers) {
     this.markers = markers
     this.searchIndex = []
-    this._isLoaded()
+    const $container = this.control.ui.container
+    $container.removeClass("status-loading").addClass("status-loaded")
   }
 
   buildSearchIndex() {

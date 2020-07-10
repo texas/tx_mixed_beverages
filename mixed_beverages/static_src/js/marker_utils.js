@@ -2,7 +2,17 @@
 const $ = require("jquery")
 import { DECLUSTER_ZOOM } from "./settings"
 
-import BarChart from "./d3/Chart"
+import Chart from "./d3/Chart"
+import { channel } from "./utils"
+
+const range = [12, 0]
+
+channel.on("change.rangeBegin", (msg) => {
+  range[0] = parseInt(msg, 10)
+})
+channel.on("change.rangeEnd", (msg) => {
+  range[1] = parseInt(msg, 10)
+})
 
 /**
  * Render data
@@ -13,9 +23,10 @@ function contentize(data) {
   var quality = data.feature.properties.coordinate_quality
   var $container = $('<div class="location"/>')
   $container.append(`<span>${data.name}</span> `)
-  new BarChart($container[0], data.receipts, {
+  new Chart($container[0], data.receipts, {
     width: 300,
     height: 180,
+    range,
   })
   return $container[0]
 }
