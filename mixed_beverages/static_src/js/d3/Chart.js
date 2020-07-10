@@ -42,6 +42,11 @@ export default class {
       .scaleLinear()
       .domain([nowMonth - this.range[0], nowMonth - this.range[1]])
       .range([0, this.plotWidth])
+    channel.on("change.*", async (msg) => {
+      await Promise.resolve() // Wait for `range` to get updated
+      console.log("Range changed", this.range)
+      this.xScale.domain([nowMonth - this.range[0], nowMonth - this.range[1]])
+    })
     // const dates = d3.extent(this.data, (d) => d.month)
     // this.xScale = d3
     //   .scaleLinear()
