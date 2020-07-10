@@ -27,12 +27,16 @@ export default class {
         </div>
       </div>`)
     $container.append(`<div class="Nav--range-picker">
+      <div class="grid">
       <label for="id_range_begin">From</label>
       <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="12"/>
-      <span id="id_range_begin_txt"></span>
+      <span class="date-feedback" id="id_range_begin_txt"></span>
+      </div>
+      <div class="grid">
       <label for="id_range_end">To</label>
       <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="0"/>
-      <span id="id_range_end_txt"></span>
+      <span class="date-feedback" id="id_range_end_txt"></span>
+      </div>
 
     </div>`)
     this.ui = {
