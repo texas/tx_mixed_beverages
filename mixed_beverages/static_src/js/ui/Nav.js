@@ -39,6 +39,9 @@ export default class {
       value: $container.find("span.value"),
       top: $container.find("ol.top-locations"),
     }
+    $container.find("input[range]").on("change", (evt) => {
+      console.log(evt)
+    })
     map.nav = this
 
     // Event handlers

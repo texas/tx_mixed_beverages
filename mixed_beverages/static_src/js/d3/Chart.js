@@ -1,6 +1,6 @@
 import * as d3 from "d3"
 import _ from "lodash"
-import { thousands, taxColorScale } from "../utils"
+import { channel, thousands, taxColorScale } from "../utils"
 
 export default class {
   constructor(elem, data, options) {
