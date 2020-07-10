@@ -78,15 +78,12 @@ export default class {
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
     this.plot = plot
     this.xAxisContainer = svg.append("g").attr("class", "x axis").attr("title", "date")
-    this.refresh()
-
-    const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"))
-    svg
+    this.yAxisContainer = svg
       .append("g")
       .attr("class", "y axis")
       .attr("title", "tax")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-      .call(yAxis)
+    this.refresh()
   }
 
   refresh() {
@@ -123,5 +120,7 @@ export default class {
         `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
       )
       .call(this.xAxis())
+    const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"))
+    this.yAxisContainer.call(yAxis)
   }
 }
