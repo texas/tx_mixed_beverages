@@ -73,25 +73,12 @@ export default class {
       .attr("viewbox", `0 0 ${this.width} ${this.height}`)
       .attr("preserveAspectRatio", "xMinYMin meet")
 
-    // Plot
     const plot = svg
       .append("g")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-
     this.plot = plot
+    this.xAxisContainer = svg.append("g").attr("class", "x axis").attr("title", "date")
     this.refresh()
-    // axes
-    const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
-    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
-    svg
-      .append("g")
-      .attr("class", "x axis")
-      .attr("title", "date")
-      .attr(
-        "transform",
-        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
-      )
-      .call(this.xAxis())
 
     const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"))
     svg
@@ -128,5 +115,13 @@ export default class {
       .html((d) => `${d.date} - ${thousands(d.tax)}`)
 
     selection.exit().remove()
+
+    this.xAxisContainer
+      .attr(
+        // Shift to center w/ bar
+        "transform",
+        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
+      )
+      .call(this.xAxis())
   }
 }
