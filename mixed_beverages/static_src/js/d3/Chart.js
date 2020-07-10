@@ -2,6 +2,8 @@ import * as d3 from "d3"
 import _ from "lodash"
 import { channel, thousands, taxColorScale } from "../utils"
 
+const MONTHS = "JFMAMJJASOND"
+
 export default class {
   constructor(elem, data, options) {
     this.width = options.width
@@ -51,24 +53,15 @@ export default class {
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
       this.refresh()
     })
-    // const dates = d3.extent(this.data, (d) => d.month)
-    // this.xScale = d3
-    //   .scaleLinear()
-    //   .domain([dates[0], dates[1] + 1])
-    //   .range([0, this.plotWidth])
   }
 
   xAxis() {
-    var months = "JFMAMJJASOND"
-    var xAxisFormat = (value) => months[value % 12]
-    var _xDomain = this.xScale.domain()
-    return d3.svg
-      .axis()
-      .orient("bottom")
-      .scale(this.xScale)
+    const _xDomain = this.xScale.domain()
+    return d3
+      .axisBottom(this.xScale)
       .ticks(_xDomain[1] - _xDomain[0]) // only make ticks at months
       .tickSize(4, 0)
-      .tickFormat(xAxisFormat)
+      .tickFormat((value) => MONTHS[value % 12])
   }
 
   render() {
@@ -88,15 +81,17 @@ export default class {
     this.plot = plot
     this.refresh()
     // axes
-    // svg
-    //   .append("g")
-    //   .attr("class", "x axis")
-    //   .attr("title", "date")
-    //   .attr(
-    //     "transform",
-    //     `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
-    //   )
-    //   .call(this.xAxis());
+    const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
+    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
+    svg
+      .append("g")
+      .attr("class", "x axis")
+      .attr("title", "date")
+      .attr(
+        "transform",
+        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
+      )
+      .call(this.xAxis())
 
     const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"))
     svg
