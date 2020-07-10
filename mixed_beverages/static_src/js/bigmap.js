@@ -14,8 +14,6 @@ import { channel, taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
 
-var nav
-
 function markerStyle(feature) {
   const style = {
     fillOpacity: 0.8,
@@ -34,7 +32,7 @@ function markerStyle(feature) {
   return style
 }
 
-function addMarkersToMap(map, data) {
+function addMarkersToMap(map, nav, data) {
   const markers = new L.MarkerClusterGroup({
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
@@ -101,7 +99,7 @@ export async function render() {
     Cookies.set("returning", "1", { expires: 86400 * 30 * 3 })
     firstVisit(map)
   }
-  nav = new Nav(map, showLocationPopup)
+  const nav = new Nav(map, showLocationPopup)
   map.addControl(new L.Control.GeoZoom())
   map.addControl(legendFactory())
   map.addControl(nav.render())
@@ -119,5 +117,5 @@ export async function render() {
 
   const res = await fetch(URLS.geojson)
   const data = await res.json()
-  addMarkersToMap(map, data)
+  addMarkersToMap(map, nav, data)
 }
