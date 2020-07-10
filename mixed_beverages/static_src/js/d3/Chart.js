@@ -46,6 +46,7 @@ export default class {
       await Promise.resolve() // Wait for `range` to get updated
       console.log("Range changed", this.range)
       this.xScale.domain([nowMonth - this.range[0], nowMonth - this.range[1]])
+      this.refresh()
     })
     // const dates = d3.extent(this.data, (d) => d.month)
     // this.xScale = d3
@@ -106,14 +107,22 @@ export default class {
   refresh() {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
     const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
-    this.plot
-      .selectAll("rect")
-      .data(this.data)
+
+    const selection = this.plot.selectAll("rect").data(this.data)
+
+    selection
       .enter()
       .append("rect")
       .style("stroke", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
       .style("fill", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
       .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .append("title")
+      .html((d) => `${d.date} - ${thousands(d.tax)}`)
+
+    selection
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
       .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
