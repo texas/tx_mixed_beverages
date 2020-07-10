@@ -16,7 +16,8 @@ export default class {
       bottom: 15,
       left: 28,
     }
-    this.data = this.transformData(data)
+    this.fullData = this.transformData(data)
+    this.data = [...this.fullData]
     this.plotHeight = this.height - this.margin.top - this.margin.bottom
     this.plotWidth = this.width - this.margin.left - this.margin.right
     this.findBounds()
@@ -38,14 +39,16 @@ export default class {
 
     const now = new Date()
     const nowMonth = now.getFullYear() * 12 + now.getMonth()
-    this.xScale = d3
-      .scaleLinear()
-      .domain([nowMonth - this.range[0], nowMonth - this.range[1]])
-      .range([0, this.plotWidth])
+    const start = nowMonth - this.range[0]
+    const end = nowMonth - this.range[1]
+    this.xScale = d3.scaleLinear().domain([start, end]).range([0, this.plotWidth])
+    this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
     channel.on("change.*", async (msg) => {
       await Promise.resolve() // Wait for `range` to get updated
-      console.log("Range changed", this.range)
-      this.xScale.domain([nowMonth - this.range[0], nowMonth - this.range[1]])
+      const start = nowMonth - this.range[0]
+      const end = nowMonth - this.range[1]
+      this.xScale.domain([start, end])
+      this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
       this.refresh()
     })
     // const dates = d3.extent(this.data, (d) => d.month)
