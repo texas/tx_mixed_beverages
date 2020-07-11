@@ -9,7 +9,7 @@ import Cookies from "cookies-js"
 window.d3 = d3 // DEBUG
 
 import { DECLUSTER_ZOOM } from "./settings"
-import { showLocationPopup } from "./marker_utils"
+import { showLocationPopup } from "./markerUtils"
 import { taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"

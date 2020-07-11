@@ -4,7 +4,7 @@ import _ from "lodash"
 
 import { N_RESULTS } from "../settings"
 import { channel, thousands, distance } from "../utils"
-import { showLocationPopup } from "../marker_utils"
+import { showLocationPopup } from "../markerUtils"
 
 export default class {
   constructor(map) {
@@ -27,10 +27,16 @@ export default class {
         </div>
       </div>`)
     $container.append(`<div class="Nav--range-picker">
+      <div class="grid">
       <label for="id_range_begin">From</label>
       <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="12"/>
+      <span class="date-feedback" id="id_range_begin_txt"></span>
+      </div>
+      <div class="grid">
       <label for="id_range_end">To</label>
       <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="0"/>
+      <span class="date-feedback" id="id_range_end_txt"></span>
+      </div>
 
     </div>`)
     this.ui = {
@@ -44,6 +50,15 @@ export default class {
       .find("input[type=range]")
       .on("change", (evt) => {
         channel.emit(`change.${evt.target.name}`, evt.target.value)
+        const now = new Date()
+        const targetMonth = now.getFullYear() * 12 + now.getMonth() - parseInt(evt.target.value, 10)
+        $(evt.target)
+          .next()
+          .text(
+            `${Math.floor(targetMonth / 12)}-${((targetMonth % 12) + 1)
+              .toString()
+              .padStart(2, "0")}`
+          )
       })
       .change()
     map.nav = this

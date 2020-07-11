@@ -30,7 +30,25 @@
 }
 
 .Nav--range-picker {
-  > * {
-    vertical-align: top;
+  display: flex;
+
+  input[type="range"] {
+    width: 100px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+
+    label {
+      align-self: center;
+      grid-column-start: 1;
+      grid-row-start: 1;
+      grid-row-end: span 2;
+    }
+
+    .date-feedback {
+      justify-self: center;
+    }
   }
 }
