@@ -7,23 +7,22 @@ import L from "leaflet"
 // https://github.com/alanshaw/leaflet-zoom-min/blob/master/L.Control.ZoomMin.js
 L.Control.GeoZoom = L.Control.Zoom.extend({
   onAdd(map) {
-    const zoomName = "leaflet-control-zoom",
-      container = L.DomUtil.create("div", `${zoomName} leaflet-bar`),
-      options = this.options
+    const zoomName = "leaflet-control-zoom"
+    const container = L.DomUtil.create("div", `${zoomName} leaflet-bar`)
 
     this._map = map
 
     this._zoomInButton = this._createButton(
-      options.zoomInText,
-      options.zoomInTitle,
+      this.options.zoomInText,
+      this.options.zoomInTitle,
       `${zoomName}-in`,
       container,
       this._zoomIn,
       this
     )
     this._zoomOutButton = this._createButton(
-      options.zoomOutText,
-      options.zoomOutTitle,
+      this.options.zoomOutText,
+      this.options.zoomOutTitle,
       `${zoomName}-out`,
       container,
       this._zoomOut,
