@@ -1,6 +1,9 @@
 import { max as d3Max } from "d3-array"
+import { axisBottom as d3AxisBottom, axisLeft as d3AxisLeft } from "d3-axis"
 import { rgb as d3Rgb } from "d3-color"
+import { format as d3Format } from "d3-format"
 import { scaleLinear as d3ScaleLinear } from "d3-scale"
+import { select as d3Select } from "d3-selection"
 import { timeParse as d3TimeParse } from "d3-time-format"
 import _ from "lodash"
 import { channel, thousands, taxColorScale } from "../utils"
@@ -64,16 +67,14 @@ export default class {
 
   xAxis() {
     const _xDomain = this.xScale.domain()
-    return d3
-      .axisBottom(this.xScale)
+    return d3AxisBottom(this.xScale)
       .ticks(_xDomain[1] - _xDomain[0]) // only make ticks at months
       .tickSize(4, 0)
       .tickFormat((value) => MONTHS[value % 12])
   }
 
   render() {
-    const svg = d3
-      .select(this.elem)
+    const svg = d3Select(this.elem)
       .append("svg")
       .attr("width", this.width)
       .attr("height", this.height)
@@ -127,7 +128,7 @@ export default class {
         `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
       )
       .call(this.xAxis())
-    const yAxis = d3.axisLeft(this.yScale).tickSize(4, 0).tickFormat(d3.format("~s"))
+    const yAxis = d3AxisLeft(this.yScale).tickSize(4, 0).tickFormat(d3Format("~s"))
     this.yAxisContainer.call(yAxis)
   }
 }
