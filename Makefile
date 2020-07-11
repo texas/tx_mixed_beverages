@@ -24,6 +24,7 @@ tdd: ## Run tests with a watcher
 
 lint: ## Run lint check
 	black --check .
+	npm run lint
 
 resetmigrations:
 	find . -name "0001_initial.py" -delete
