@@ -1,5 +1,5 @@
-import * as d3 from "d3"
 import { max as d3Max } from "d3-array"
+import { rgb as d3Rgb } from "d3-color"
 import { scaleLinear as d3ScaleLinear } from "d3-scale"
 import { timeParse as d3TimeParse } from "d3-time-format"
 import _ from "lodash"
@@ -102,8 +102,8 @@ export default class {
     selection
       .enter()
       .append("rect")
-      .style("stroke", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill", (d) => d3.rgb(taxColorScale(d.tax)).darker(1))
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
+      .style("fill", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
       .style("fill-opacity", "0.5")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
