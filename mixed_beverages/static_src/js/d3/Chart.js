@@ -1,4 +1,5 @@
 import * as d3 from "d3"
+import { scaleLinear as d3ScaleLinear } from "d3-scale"
 import { timeParse as d3TimeParse } from "d3-time-format"
 import _ from "lodash"
 import { channel, thousands, taxColorScale } from "../utils"
@@ -38,13 +39,13 @@ export default class {
 
   findBounds() {
     const maxTax = d3.max(this.data, (d) => d.tax)
-    this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
+    this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
 
     const now = new Date()
     const nowMonth = now.getFullYear() * 12 + now.getMonth()
     const start = nowMonth - this.range[0]
     const end = nowMonth - this.range[1]
-    this.xScale = d3.scaleLinear().domain([start, end]).range([0, this.plotWidth])
+    this.xScale = d3ScaleLinear().domain([start, end]).range([0, this.plotWidth])
     this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
     channel.on("change.*", async (msg) => {
       await Promise.resolve() // Wait for `range` to get updated
@@ -54,7 +55,7 @@ export default class {
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
       const maxTax = d3.max(this.data, (d) => d.tax)
       if (maxTax) {
-        this.yScale = d3.scaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
+        this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
       }
       this.refresh()
     })
