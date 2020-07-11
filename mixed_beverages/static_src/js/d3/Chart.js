@@ -1,4 +1,5 @@
 import * as d3 from "d3"
+import { timeParse as d3TimeParse } from "d3-time-format"
 import _ from "lodash"
 import { channel, thousands, taxColorScale } from "../utils"
 
@@ -27,7 +28,7 @@ export default class {
   }
 
   transformData(data) {
-    const parseTime = d3.timeParse("%Y-%m-%d")
+    const parseTime = d3TimeParse("%Y-%m-%d")
     return data.map((x) => {
       const date = parseTime(x.date)
       const month = date.getFullYear() * 12 + date.getMonth()
