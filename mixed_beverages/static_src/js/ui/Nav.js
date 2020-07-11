@@ -1,8 +1,7 @@
+/* global $: false */
 import L from "leaflet"
-import $ from "jquery"
 import debounce from "lodash/debounce"
 import sortBy from "lodash/sortBy"
-
 import { N_RESULTS } from "../settings"
 import { channel, thousands, distance } from "../utils"
 import { showLocationPopup } from "../markerUtils"

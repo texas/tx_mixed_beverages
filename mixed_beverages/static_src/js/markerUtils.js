@@ -1,5 +1,4 @@
 /* global URLS: false */
-import $ from "jquery"
 import { DECLUSTER_ZOOM } from "./settings"
 
 import Chart from "./d3/Chart"
@@ -20,15 +19,19 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
-  var quality = data.feature.properties.coordinate_quality
-  var $container = $('<div class="location"/>')
-  $container.append(`<span>${data.name}</span> `)
-  new Chart($container[0], data.receipts, {
+  const quality = data.feature.properties.coordinate_quality
+  const $container = document.createElement("div")
+  $container.className = "location"
+  const $name = document.createElement("span")
+  $name.className = "name"
+  $name.appendChild(document.createTextNode(data.name))
+  $container.appendChild($name)
+  new Chart($container, data.receipts, {
     width: 300,
     height: 180,
     range,
   })
-  return $container[0]
+  return $container
 }
 
 const locationCache = new Map()
