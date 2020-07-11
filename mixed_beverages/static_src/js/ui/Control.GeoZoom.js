@@ -6,9 +6,9 @@ import L from "leaflet"
 // https://github.com/Leaflet/Leaflet/blob/master/src/control/Control.Zoom.js
 // https://github.com/alanshaw/leaflet-zoom-min/blob/master/L.Control.ZoomMin.js
 L.Control.GeoZoom = L.Control.Zoom.extend({
-  onAdd: function (map) {
-    var zoomName = "leaflet-control-zoom",
-      container = L.DomUtil.create("div", zoomName + " leaflet-bar"),
+  onAdd(map) {
+    const zoomName = "leaflet-control-zoom",
+      container = L.DomUtil.create("div", `${zoomName} leaflet-bar`),
       options = this.options
 
     this._map = map
@@ -16,7 +16,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
     this._zoomInButton = this._createButton(
       options.zoomInText,
       options.zoomInTitle,
-      zoomName + "-in",
+      `${zoomName}-in`,
       container,
       this._zoomIn,
       this
@@ -24,7 +24,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
     this._zoomOutButton = this._createButton(
       options.zoomOutText,
       options.zoomOutTitle,
-      zoomName + "-out",
+      `${zoomName}-out`,
       container,
       this._zoomOut,
       this
@@ -32,8 +32,8 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
     if ("geolocation" in navigator) {
       this._locateButton = this._createButton(
         "&#x2693;",
-        "locate me",
-        zoomName + "-locate",
+        "Locate me",
+        `${zoomName}-locate`,
         container,
         this._locate,
         this
@@ -45,10 +45,9 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
 
     return container
   },
-  _locate: function () {
-    var self = this
-    navigator.geolocation.getCurrentPosition(function (position) {
-      self._map.panTo([position.coords.latitude, position.coords.longitude])
+  _locate() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this._map.panTo([position.coords.latitude, position.coords.longitude])
     })
   },
 })
