@@ -50,7 +50,7 @@ export default class {
     const end = nowMonth - this.range[1]
     this.xScale = d3ScaleLinear().domain([start, end]).range([0, this.plotWidth])
     this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
-    channel.on("change.*", async (msg) => {
+    channel.on("change.*", async (/* msg */) => {
       await Promise.resolve() // Wait for `range` to get updated
       const start = nowMonth - this.range[0]
       const end = nowMonth - this.range[1]
