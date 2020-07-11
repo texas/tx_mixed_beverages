@@ -4,15 +4,15 @@
   "description": "",
   "scripts": {
     "build:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css",
-    "build:js": "browserify mixed_beverages/static_src/js/app.js -o mixed_beverages/static/app.js -t babelify",
+    "build:js": "rollup -c",
     "build": "npm run build:css && npm run build:js",
     "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
-    "watch:js": "watchify mixed_beverages/static_src/js/app.js -o mixed_beverages/static/app.js -t babelify --debug",
+    "watch:js": "rollup -c -m inline --watch",
     "django": "./manage.py runserver",
     "dev": "concurrently --kill-others 'npm:watch:*' 'npm:django'"
   },
   "author": "",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/texas/tx_mixed_beverages.git"
@@ -21,26 +21,32 @@
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
-    "babelify": "^10.0.0",
-    "browserify": "^16.5.1",
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
     "colorbrewer": "^1.0.0",
     "concurrently": "^5.2.0",
     "cookies-js": "^1.2.1",
-    "d3": "^5.16.0",
     "jquery": "^3.5.1",
     "leaflet": "^1.6.0",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^1.4.1",
     "lodash": "^4.17.19",
     "prettier": "^2.0.5",
-    "sass": "^1.26.10",
-    "watchify": "^3.11.1"
+    "rollup": "^2.21.0",
+    "sass": "^1.26.10"
   },
   "prettier": {
     "printWidth": 100,
     "semi": false
   },
   "dependencies": {
-    "@condenast/quick-bus": "^0.2.0"
+    "@condenast/quick-bus": "^0.2.0",
+    "d3-array": "^2.4.0",
+    "d3-axis": "^1.0.12",
+    "d3-color": "^1.4.1",
+    "d3-format": "^1.4.4",
+    "d3-scale": "^3.2.1",
+    "d3-selection": "^1.4.1",
+    "d3-time-format": "^2.2.3"
   }
 }
