@@ -31,7 +31,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
     )
     if ("geolocation" in navigator) {
       this._locateButton = this._createButton(
-        "&#x2693;",
+        "&#x1F30E;",
         "Locate me",
         `${zoomName}-locate`,
         container,
