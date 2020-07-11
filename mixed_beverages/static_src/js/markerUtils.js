@@ -1,5 +1,5 @@
 /* global URLS: false */
-const $ = require("jquery")
+import $ from "jquery"
 import { DECLUSTER_ZOOM } from "./settings"
 
 import Chart from "./d3/Chart"

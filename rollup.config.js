@@ -6,7 +6,7 @@ export default {
   output: {
     // directory: "mixed_beverages/static",
     file: "mixed_beverages/static/app.bundle.js",
-    format: "es",
+    format: "iife",
   },
   plugins: [resolve(), commonjs()],
 }
