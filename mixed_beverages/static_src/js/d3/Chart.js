@@ -1,4 +1,5 @@
 import * as d3 from "d3"
+import { max as d3Max } from "d3-array"
 import { scaleLinear as d3ScaleLinear } from "d3-scale"
 import { timeParse as d3TimeParse } from "d3-time-format"
 import _ from "lodash"
@@ -38,7 +39,7 @@ export default class {
   }
 
   findBounds() {
-    const maxTax = d3.max(this.data, (d) => d.tax)
+    const maxTax = d3Max(this.data, (d) => d.tax)
     this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
 
     const now = new Date()
@@ -53,7 +54,7 @@ export default class {
       const end = nowMonth - this.range[1]
       this.xScale.domain([start, end])
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
-      const maxTax = d3.max(this.data, (d) => d.tax)
+      const maxTax = d3Max(this.data, (d) => d.tax)
       if (maxTax) {
         this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
       }
