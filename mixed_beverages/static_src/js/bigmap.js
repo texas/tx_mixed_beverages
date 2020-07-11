@@ -4,9 +4,8 @@ import "leaflet.markercluster"
 import "leaflet-hash"
 import "./ui/Control.GeoZoom"
 import _ from "lodash"
-import * as d3 from "d3"
+import { rgb } from "d3-color"
 import Cookies from "cookies-js"
-window.d3 = d3 // DEBUG
 
 import { DECLUSTER_ZOOM } from "./settings"
 import { showLocationPopup } from "./markerUtils"
@@ -27,7 +26,7 @@ function markerStyle(feature) {
     style.radius = 4
   } else {
     style.fillColor = taxColorScale(tax)
-    style.color = d3.rgb(style.fillColor).darker(1)
+    style.color = rgb(style.fillColor).darker(1)
   }
   return style
 }
