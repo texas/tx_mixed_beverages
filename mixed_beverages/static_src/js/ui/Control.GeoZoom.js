@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L from "leaflet"
 
 // Extend the Control.Zoom UI to add a "Geolocate" button
 //
@@ -6,49 +6,47 @@ import L from "leaflet";
 // https://github.com/Leaflet/Leaflet/blob/master/src/control/Control.Zoom.js
 // https://github.com/alanshaw/leaflet-zoom-min/blob/master/L.Control.ZoomMin.js
 L.Control.GeoZoom = L.Control.Zoom.extend({
-  onAdd: function (map) {
-    var zoomName = "leaflet-control-zoom",
-      container = L.DomUtil.create("div", zoomName + " leaflet-bar"),
-      options = this.options;
+  onAdd(map) {
+    const zoomName = "leaflet-control-zoom"
+    const container = L.DomUtil.create("div", `${zoomName} leaflet-bar`)
 
-    this._map = map;
+    this._map = map
 
     this._zoomInButton = this._createButton(
-      options.zoomInText,
-      options.zoomInTitle,
-      zoomName + "-in",
+      this.options.zoomInText,
+      this.options.zoomInTitle,
+      `${zoomName}-in`,
       container,
       this._zoomIn,
       this
-    );
+    )
     this._zoomOutButton = this._createButton(
-      options.zoomOutText,
-      options.zoomOutTitle,
-      zoomName + "-out",
+      this.options.zoomOutText,
+      this.options.zoomOutTitle,
+      `${zoomName}-out`,
       container,
       this._zoomOut,
       this
-    );
+    )
     if ("geolocation" in navigator) {
       this._locateButton = this._createButton(
-        "&#x2693;",
-        "locate me",
-        zoomName + "-locate",
+        "&#x1F30E;",
+        "Locate me",
+        `${zoomName}-locate`,
         container,
         this._locate,
         this
-      );
+      )
     }
 
-    this._updateDisabled();
-    map.on("zoomend zoomlevelschange", this._updateDisabled, this);
+    this._updateDisabled()
+    map.on("zoomend zoomlevelschange", this._updateDisabled, this)
 
-    return container;
+    return container
   },
-  _locate: function () {
-    var self = this;
-    navigator.geolocation.getCurrentPosition(function (position) {
-      self._map.panTo([position.coords.latitude, position.coords.longitude]);
-    });
+  _locate() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this._map.panTo([position.coords.latitude, position.coords.longitude])
+    })
   },
-});
+})
