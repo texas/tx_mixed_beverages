@@ -1,4 +1,3 @@
-/* global URLS: false */
 import { DECLUSTER_ZOOM } from "./settings"
 
 import Chart from "./d3/Chart"
@@ -19,7 +18,6 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
-  const quality = data.feature.properties.coordinate_quality
   const $container = document.createElement("div")
   $container.className = "location"
   const $name = document.createElement("span")

@@ -8,6 +8,7 @@
     "build": "npm run build:css && npm run build:js",
     "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
     "watch:js": "rollup -c -m inline --watch",
+    "lint": "eslint .",
     "django": "./manage.py runserver",
     "dev": "concurrently --kill-others 'npm:watch:*' 'npm:django'"
   },
@@ -26,6 +27,7 @@
     "colorbrewer": "^1.0.0",
     "concurrently": "^5.2.0",
     "cookies-js": "^1.2.1",
+    "eslint": "^7.4.0",
     "jquery": "^3.5.1",
     "leaflet": "^1.6.0",
     "leaflet-hash": "^0.2.1",
