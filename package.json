@@ -12,7 +12,7 @@
     "dev": "concurrently --kill-others 'npm:watch:*' 'npm:django'"
   },
   "author": "",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/texas/tx_mixed_beverages.git"
