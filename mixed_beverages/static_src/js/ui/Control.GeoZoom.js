@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L from "leaflet"
 
 // Extend the Control.Zoom UI to add a "Geolocate" button
 //
@@ -9,9 +9,9 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
   onAdd: function (map) {
     var zoomName = "leaflet-control-zoom",
       container = L.DomUtil.create("div", zoomName + " leaflet-bar"),
-      options = this.options;
+      options = this.options
 
-    this._map = map;
+    this._map = map
 
     this._zoomInButton = this._createButton(
       options.zoomInText,
@@ -20,7 +20,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
       container,
       this._zoomIn,
       this
-    );
+    )
     this._zoomOutButton = this._createButton(
       options.zoomOutText,
       options.zoomOutTitle,
@@ -28,7 +28,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
       container,
       this._zoomOut,
       this
-    );
+    )
     if ("geolocation" in navigator) {
       this._locateButton = this._createButton(
         "&#x2693;",
@@ -37,18 +37,18 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
         container,
         this._locate,
         this
-      );
+      )
     }
 
-    this._updateDisabled();
-    map.on("zoomend zoomlevelschange", this._updateDisabled, this);
+    this._updateDisabled()
+    map.on("zoomend zoomlevelschange", this._updateDisabled, this)
 
-    return container;
+    return container
   },
   _locate: function () {
-    var self = this;
+    var self = this
     navigator.geolocation.getCurrentPosition(function (position) {
-      self._map.panTo([position.coords.latitude, position.coords.longitude]);
-    });
+      self._map.panTo([position.coords.latitude, position.coords.longitude])
+    })
   },
-});
+})
