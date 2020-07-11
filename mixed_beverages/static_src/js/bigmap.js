@@ -3,7 +3,7 @@ import L from "leaflet"
 import "leaflet.markercluster"
 import "leaflet-hash"
 import "./ui/Control.GeoZoom"
-import _ from "lodash"
+import debounce from "lodash/debounce"
 import { rgb as d3Rgb } from "d3-color"
 import Cookies from "cookies-js"
 
@@ -60,7 +60,7 @@ function addMarkersToMap(map, nav, data) {
     nav.showStatsFor(navData)
   }
   updateNav() // initial hit
-  map.on("move", _.debounce(updateNav, 500))
+  map.on("move", debounce(updateNav, 500))
 }
 
 function firstVisit(map) {

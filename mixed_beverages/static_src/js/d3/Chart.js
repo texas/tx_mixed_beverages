@@ -5,7 +5,6 @@ import { format as d3Format } from "d3-format"
 import { scaleLinear as d3ScaleLinear } from "d3-scale"
 import { select as d3Select } from "d3-selection"
 import { timeParse as d3TimeParse } from "d3-time-format"
-import _ from "lodash"
 import { channel, thousands, taxColorScale } from "../utils"
 
 const MONTHS = "JFMAMJJASOND"

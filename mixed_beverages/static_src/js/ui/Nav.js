@@ -1,6 +1,7 @@
 import L from "leaflet"
 import $ from "jquery"
-import _ from "lodash"
+import debounce from "lodash/debounce"
+import sortBy from "lodash/sortBy"
 
 import { N_RESULTS } from "../settings"
 import { channel, thousands, distance } from "../utils"
@@ -86,7 +87,7 @@ export default class {
       this.nav.showMarkers(matches)
     }
 
-    this.ui.search.on("keyup", _.debounce(_keyup, 200))
+    this.ui.search.on("keyup", debounce(_keyup, 200))
     // don't build the search index until someone starts typing
     this.ui.search.one("keyup", this.nav.buildSearchIndex.bind(this.nav))
 
@@ -121,7 +122,7 @@ export default class {
   }
 
   showStatsFor(data) {
-    const sorted = _.sortBy(data.markers, (x) => -parseFloat(x.feature.properties.data.avg_total))
+    const sorted = sortBy(data.markers, (x) => -parseFloat(x.feature.properties.data.avg_total))
     this.showMarkers(sorted)
     this.control.ui.markers.text(data.markers.length)
     this.control.ui.value.text(thousands(data.value))
