@@ -21,9 +21,9 @@ channel.on("change.rangeEnd", (msg) => {
 function contentize(data) {
   const quality = data.feature.properties.coordinate_quality
   const $container = document.createElement("div")
-  $container.classList.add("location")
+  $container.className = "location"
   const $name = document.createElement("span")
-  $name.classList.add("name")
+  $name.className = "name"
   $name.appendChild(document.createTextNode(data.name))
   $container.appendChild($name)
   new Chart($container, data.receipts, {

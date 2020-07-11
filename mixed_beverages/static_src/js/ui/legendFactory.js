@@ -1,5 +1,4 @@
 import L from "leaflet"
-import $ from "jquery"
 import { rgb as d3Rgb } from "d3-color"
 
 import { thousands, taxColorScale } from "../utils"
@@ -10,17 +9,25 @@ export default function legendFactory() {
       position: "bottomleft",
     },
     onAdd() {
-      const $container = $('<div class="legend leaflet-bar"/>')
-      const $list = $("<dl>").appendTo($container)
+      const $container = document.createElement("div")
+      $container.className = "legend leaflet-bar"
+      const $dl = document.createElement("dl")
       Object.values(taxColorScale.domain()).forEach((level) => {
         const fill = taxColorScale(level)
         const border = d3Rgb(fill).darker(1)
-        $list.append(`<dt>
-          <span style="background: ${fill}; border: 1px solid ${border};">&nbsp;</span>
-          </dt>`)
-        $list.append(`<dd>${thousands(level)}</dd>`)
+        const $dt = document.createElement("dt")
+        const $dtSpan = document.createElement("span")
+        $dtSpan.appendChild(document.createTextNode(" "))
+        $dtSpan.style.backgroundColor = fill
+        $dtSpan.style.border = `1px solid ${border}`
+        $dt.appendChild($dtSpan)
+        $dl.appendChild($dt)
+        const $dd = document.createElement("dd")
+        $dd.appendChild(document.createTextNode(thousands(level)))
+        $dl.appendChild($dd)
       })
-      return $container[0]
+      $container.appendChild($dl)
+      return $container
     },
   })
   return new Legend()
