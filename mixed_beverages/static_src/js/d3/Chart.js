@@ -105,82 +105,71 @@ export default class {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
     const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
 
-    const selection = this.plot.selectAll("rect").data(this.data)
-
-    // ENTER
-    selection
+    const selection = this.plot
+      .selectAll(".bar-group")
+      .data(this.data)
       .enter()
+      .append("g")
+      .attr("class", "bar-group")
+      .attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
+    selection
       .append("rect")
-      .attr("class", "bar-total")
-      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
+      .attr("class", "bar bar-total")
+      .style("stroke", (d) => console.log("rect stroke") || d3Rgb(taxColorScale(d.total)).darker(1))
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.total))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.total)})`)
       .append("title")
       .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
     selection
-      .enter()
       .append("rect")
-      .attr("class", "bar-liquor")
+      .attr("class", "bar bar-liquor")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor)})`)
       .append("title")
       .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
     selection
-      .enter()
       .append("rect")
-      .attr("class", "bar-wine")
+      .attr("class", "bar bar-wine")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.wine))
-      .attr(
-        "transform",
-        (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine)})`
-      )
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine)})`)
       .append("title")
       .html((d) => `Wine: ${d.date} - ${thousands(d.wine)}`)
     selection
-      .enter()
       .append("rect")
-      .attr("class", "bar-beer")
+      .attr("class", "bar bar-beer")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.beer))
-      .attr(
-        "transform",
-        (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine + d.beer)})`
-      )
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer)})`)
       .append("title")
       .html((d) => `Beer: ${d.date} - ${thousands(d.beer)}`)
     selection
-      .enter()
       .append("rect")
-      .attr("class", "bar-cover")
+      .attr("class", "bar bar-cover")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.cover))
-      .attr(
-        "transform",
-        (d) =>
-          `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine + d.beer + d.cover)})`
-      )
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer + d.cover)})`)
       .append("title")
       .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
 
     // UPDATE
-    selection
-      .selectAll(".bar-total")
-      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
-      .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.total))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
-      .append("title")
-      .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
-    selection
-      .selectAll(".bar-liquor")
-      .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
-      .append("title")
-      .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
+    // selection
+    //   .selectAll(".bar-total")
+    //   .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
+    //   .attr("width", barWidth)
+    //   .attr("height", (d) => this.plotHeight - this.yScale(d.total))
+    //   .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
+    //   .append("title")
+    //   .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
+    // selection
+    //   .selectAll(".bar-liquor")
+    //   .attr("width", barWidth)
+    //   .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
+    //   .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
+    //   .append("title")
+    //   .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
 
     // EXIT
     selection.exit().remove()
