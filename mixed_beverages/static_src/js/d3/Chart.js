@@ -167,11 +167,20 @@ export default class {
 
     // UPDATE
     selection
+      .selectAll(".bar-total")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.total))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
+      .append("title")
+      .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
+    selection
+      .selectAll(".bar-liquor")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
       .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
       .append("title")
-      .html((d) => `${d.date} - ${thousands(d.liquor)}`)
+      .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
 
     // EXIT
     selection.exit().remove()
