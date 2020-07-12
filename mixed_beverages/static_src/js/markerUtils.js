@@ -37,6 +37,8 @@ export async function showLocationPopup(marker) {
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
+    // TODO set location
+    // TODO set ga pageview
     if (!marker._map) {
       map.panTo(marker.getLatLng())
       if (map.getZoom() < DECLUSTER_ZOOM) {
