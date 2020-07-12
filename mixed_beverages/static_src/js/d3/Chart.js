@@ -155,23 +155,10 @@ export default class {
       .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
 
     // UPDATE
-    selection.attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
-
-    // selection
-    //   .selectAll(".bar-total")
-    //   .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
-    //   .attr("width", barWidth)
-    //   .attr("height", (d) => this.plotHeight - this.yScale(d.total))
-    //   .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
-    //   .append("title")
-    //   .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
-    // selection
-    //   .selectAll(".bar-liquor")
-    //   .attr("width", barWidth)
-    //   .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
-    //   .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
-    //   .append("title")
-    //   .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
+    selection
+      .attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
+      .selectAll(".bar")
+      .attr("width", barWidth)
 
     // EXIT
     selection.exit().remove()
