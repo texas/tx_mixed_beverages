@@ -9,3 +9,26 @@
     stroke: black;
   }
 }
+
+svg {
+  .bar-liquor {
+    fill: #f0a957bd;
+    fill-opacity: 0.4;
+    stroke: darken(#f0a957bd, 0.1);
+  }
+  .bar-wine {
+    fill: #6a3d9a;
+    fill-opacity: 0.4;
+    stroke: darken(#6a3d9a, 0.1);
+  }
+  .bar-beer {
+    fill: #899a3d;
+    fill-opacity: 0.4;
+    stroke: darken(#899a3d, 0.1);
+  }
+  .bar-cover {
+    fill: #25cc2d;
+    fill-opacity: 0.4;
+    stroke: darken(#25cc2d, 0.1);
+  }
+}
