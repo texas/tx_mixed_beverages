@@ -105,14 +105,14 @@ export default class {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
     const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
 
-    const selection = this.plot
-      .selectAll(".bar-group")
-      .data(this.data)
+    const selection = this.plot.selectAll(".bar-group").data(this.data)
+
+    const barGroups = selection
       .enter()
       .append("g")
       .attr("class", "bar-group")
       .attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
-    selection
+    barGroups
       .append("rect")
       .attr("class", "bar bar-total")
       .style("stroke", (d) => console.log("rect stroke") || d3Rgb(taxColorScale(d.total)).darker(1))
@@ -121,7 +121,7 @@ export default class {
       .attr("transform", (d) => `translate(0 ${this.yScale(d.total)})`)
       .append("title")
       .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
-    selection
+    barGroups
       .append("rect")
       .attr("class", "bar bar-liquor")
       .attr("width", barWidth)
@@ -129,7 +129,7 @@ export default class {
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor)})`)
       .append("title")
       .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
-    selection
+    barGroups
       .append("rect")
       .attr("class", "bar bar-wine")
       .attr("width", barWidth)
@@ -137,7 +137,7 @@ export default class {
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine)})`)
       .append("title")
       .html((d) => `Wine: ${d.date} - ${thousands(d.wine)}`)
-    selection
+    barGroups
       .append("rect")
       .attr("class", "bar bar-beer")
       .attr("width", barWidth)
@@ -145,7 +145,7 @@ export default class {
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer)})`)
       .append("title")
       .html((d) => `Beer: ${d.date} - ${thousands(d.beer)}`)
-    selection
+    barGroups
       .append("rect")
       .attr("class", "bar bar-cover")
       .attr("width", barWidth)
@@ -155,6 +155,8 @@ export default class {
       .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
 
     // UPDATE
+    selection.attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
+
     // selection
     //   .selectAll(".bar-total")
     //   .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
