@@ -125,7 +125,7 @@ export default class {
       .append("rect")
       .attr("class", "bar-wine")
       .style("stroke", (d) => d3Rgb(taxColorScale(d.wine)).darker(1))
-      .style("fill", (d) => d3Rgb(taxColorScale(d.wine)).darker(1))
+      .style("fill", "#6A3D9A")
       .style("fill-opacity", "0.5")
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.wine))
