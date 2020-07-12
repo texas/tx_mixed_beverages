@@ -43,13 +43,13 @@ export default class {
         wine: parseFloat(x.wine),
         beer: parseFloat(x.beer),
         cover: parseFloat(x.cover),
-        tax: parseFloat(x.total),
+        total: parseFloat(x.total),
       }
     })
   }
 
   findBounds() {
-    const maxTax = d3Max(this.data, (d) => d.tax)
+    const maxTax = d3Max(this.data, (d) => d.total)
     this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
 
     const now = new Date()
@@ -64,7 +64,7 @@ export default class {
       const end = nowMonth - this.range[1]
       this.xScale.domain([start, end])
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
-      const maxTax = d3Max(this.data, (d) => d.tax)
+      const maxTax = d3Max(this.data, (d) => d.total)
       if (maxTax) {
         this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
       }
@@ -108,6 +108,16 @@ export default class {
     const selection = this.plot.selectAll("rect").data(this.data)
 
     // ENTER
+    selection
+      .enter()
+      .append("rect")
+      .attr("class", "bar-total")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.total))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.total)})`)
+      .append("title")
+      .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
     selection
       .enter()
       .append("rect")
