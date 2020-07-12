@@ -107,25 +107,75 @@ export default class {
 
     const selection = this.plot.selectAll("rect").data(this.data)
 
+    // ENTER
     selection
       .enter()
       .append("rect")
-      .style("stroke", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
+      .attr("class", "bar-liquor")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.liquor)).darker(1))
+      .style("fill", (d) => d3Rgb(taxColorScale(d.liquor)).darker(1))
       .style("fill-opacity", "0.5")
       .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
       .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`)
+      .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
+    selection
+      .enter()
+      .append("rect")
+      .attr("class", "bar-wine")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.wine)).darker(1))
+      .style("fill", (d) => d3Rgb(taxColorScale(d.wine)).darker(1))
+      .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.wine))
+      .attr(
+        "transform",
+        (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine)})`
+      )
+      .append("title")
+      .html((d) => `Wine: ${d.date} - ${thousands(d.wine)}`)
+    selection
+      .enter()
+      .append("rect")
+      .attr("class", "bar-beer")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.beer)).darker(1))
+      .style("fill", (d) => d3Rgb(taxColorScale(d.beer)).darker(1))
+      .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.beer))
+      .attr(
+        "transform",
+        (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine + d.beer)})`
+      )
+      .append("title")
+      .html((d) => `Beer: ${d.date} - ${thousands(d.beer)}`)
+    selection
+      .enter()
+      .append("rect")
+      .attr("class", "bar-cover")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.cover)).darker(1))
+      .style("fill", (d) => d3Rgb(taxColorScale(d.cover)).darker(1))
+      .style("fill-opacity", "0.5")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.cover))
+      .attr(
+        "transform",
+        (d) =>
+          `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor + d.wine + d.beer + d.cover)})`
+      )
+      .append("title")
+      .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
 
+    // UPDATE
     selection
       .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
+      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.liquor)})`)
       .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`)
+      .html((d) => `${d.date} - ${thousands(d.liquor)}`)
 
+    // EXIT
     selection.exit().remove()
 
     this.xAxisContainer
