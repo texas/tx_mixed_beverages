@@ -12,23 +12,19 @@
 
 svg {
   .bar-liquor {
-    fill: #f0a957bd;
-    fill-opacity: 0.4;
-    stroke: darken(#f0a957bd, 0.1);
+    fill: #856f5f;
+    stroke: darken(#856f5f, 0.2);
   }
   .bar-wine {
-    fill: #6a3d9a;
-    fill-opacity: 0.4;
-    stroke: darken(#6a3d9a, 0.1);
+    fill: #813545;
+    stroke: darken(#813545, 0.1);
   }
   .bar-beer {
-    fill: #899a3d;
-    fill-opacity: 0.4;
-    stroke: darken(#899a3d, 0.1);
+    fill: #f28e1c;
+    stroke: darken(#f28e1c, 0.2);
   }
   .bar-cover {
-    fill: #25cc2d;
-    fill-opacity: 0.4;
-    stroke: darken(#25cc2d, 0.1);
+    fill: #7b9a6d;
+    stroke: darken(#7b9a6d, 0.3);
   }
 }
