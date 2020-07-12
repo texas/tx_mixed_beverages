@@ -36,7 +36,15 @@ export default class {
     return data.map((x) => {
       const date = parseTime(x.date)
       const month = date.getFullYear() * 12 + date.getMonth()
-      return { tax: parseFloat(x.total), month, date: x.date }
+      return {
+        month,
+        date: x.date,
+        liquor: parseFloat(x.liquor),
+        wine: parseFloat(x.wine),
+        beer: parseFloat(x.beer),
+        cover: parseFloat(x.cover),
+        tax: parseFloat(x.total),
+      }
     })
   }
 
