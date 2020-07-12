@@ -35,8 +35,8 @@ class Location(BaseLocation):
 
     def __str__(self):
         bits = []
-        if self.data:
-            bits.append(self.data["name"])
+        if self.name:
+            bits.append(self.name)
         if self.coordinate_quality:
             bits.append("({0.y},{0.x})".format(self.coordinate))
             bits.append(self.coordinate_quality)
