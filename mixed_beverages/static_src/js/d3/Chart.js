@@ -90,14 +90,14 @@ export default class {
 
     const plot = svg
       .append("g")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .attr("transform", `translate(${this.margin.left} ${this.margin.top})`)
     this.plot = plot
     this.xAxisContainer = svg.append("g").attr("class", "x axis").attr("title", "date")
     this.yAxisContainer = svg
       .append("g")
       .attr("class", "y axis")
       .attr("title", "tax")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .attr("transform", `translate(${this.margin.left} ${this.margin.top})`)
     this.refresh()
   }
 
@@ -115,7 +115,7 @@ export default class {
     barGroups
       .append("rect")
       .attr("class", "bar bar-total")
-      .style("stroke", (d) => console.log("rect stroke") || d3Rgb(taxColorScale(d.total)).darker(1))
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
       .attr("width", barWidth)
       .attr("height", (d) => this.plotHeight - this.yScale(d.total))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.total)})`)
@@ -167,7 +167,7 @@ export default class {
       .attr(
         // Shift to center w/ bar
         "transform",
-        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
+        `translate(${(barWidth >> 1) + this.margin.left} ${this.height - this.margin.bottom})`
       )
       .call(this.xAxis())
     const yAxis = d3AxisLeft(this.yScale).tickSize(4, 0).tickFormat(d3Format("~s"))
