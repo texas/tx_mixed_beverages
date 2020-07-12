@@ -1,0 +1,33 @@
+.axis {
+  font-size: 0.75em;
+
+  path,
+  line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke-width: 1;
+    stroke: black;
+  }
+}
+
+svg {
+  .bar-liquor {
+    fill: #856f5f;
+    stroke: darken(#856f5f, 0.2);
+  }
+  .bar-wine {
+    fill: #813545;
+    stroke: darken(#813545, 0.1);
+  }
+  .bar-beer {
+    fill: #f28e1c;
+    stroke: darken(#f28e1c, 0.2);
+  }
+  .bar-cover {
+    fill: #7b9a6d;
+    stroke: darken(#7b9a6d, 0.3);
+  }
+  .bar-total {
+    fill: none;
+  }
+}

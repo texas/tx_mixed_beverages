@@ -36,12 +36,20 @@ export default class {
     return data.map((x) => {
       const date = parseTime(x.date)
       const month = date.getFullYear() * 12 + date.getMonth()
-      return { tax: parseFloat(x.total), month, date: x.date }
+      return {
+        month,
+        date: x.date,
+        liquor: parseFloat(x.liquor),
+        wine: parseFloat(x.wine),
+        beer: parseFloat(x.beer),
+        cover: parseFloat(x.cover),
+        total: parseFloat(x.total),
+      }
     })
   }
 
   findBounds() {
-    const maxTax = d3Max(this.data, (d) => d.tax)
+    const maxTax = d3Max(this.data, (d) => d.total)
     this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
 
     const now = new Date()
@@ -56,7 +64,7 @@ export default class {
       const end = nowMonth - this.range[1]
       this.xScale.domain([start, end])
       this.data = this.fullData.filter((x) => x.month >= start && x.month <= end)
-      const maxTax = d3Max(this.data, (d) => d.tax)
+      const maxTax = d3Max(this.data, (d) => d.total)
       if (maxTax) {
         this.yScale = d3ScaleLinear().domain([0, maxTax]).range([this.plotHeight, 0])
       }
@@ -82,49 +90,84 @@ export default class {
 
     const plot = svg
       .append("g")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .attr("transform", `translate(${this.margin.left} ${this.margin.top})`)
     this.plot = plot
     this.xAxisContainer = svg.append("g").attr("class", "x axis").attr("title", "date")
     this.yAxisContainer = svg
       .append("g")
       .attr("class", "y axis")
       .attr("title", "tax")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .attr("transform", `translate(${this.margin.left} ${this.margin.top})`)
     this.refresh()
   }
 
   refresh() {
     const barSpacing = this.xScale(this.xScale.domain()[0] + 1)
-    const barWidth = Math.max(Math.floor(barSpacing) - 3, 1)
+    const barWidth = Math.max(Math.floor(barSpacing) - 2, 1)
 
-    const selection = this.plot.selectAll("rect").data(this.data)
+    const selection = this.plot.selectAll(".bar-group").data(this.data)
 
-    selection
+    const barGroups = selection
       .enter()
+      .append("g")
+      .attr("class", "bar-group")
+      .attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
+    barGroups
       .append("rect")
-      .style("stroke", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill", (d) => d3Rgb(taxColorScale(d.tax)).darker(1))
-      .style("fill-opacity", "0.5")
+      .attr("class", "bar bar-total")
+      .style("stroke", (d) => d3Rgb(taxColorScale(d.total)).darker(1))
       .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.total))
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.total)})`)
       .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`)
+      .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
+    barGroups
+      .append("rect")
+      .attr("class", "bar bar-liquor")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor)})`)
+      .append("title")
+      .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
+    barGroups
+      .append("rect")
+      .attr("class", "bar bar-wine")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.wine))
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine)})`)
+      .append("title")
+      .html((d) => `Wine: ${d.date} - ${thousands(d.wine)}`)
+    barGroups
+      .append("rect")
+      .attr("class", "bar bar-beer")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.beer))
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer)})`)
+      .append("title")
+      .html((d) => `Beer: ${d.date} - ${thousands(d.beer)}`)
+    barGroups
+      .append("rect")
+      .attr("class", "bar bar-cover")
+      .attr("width", barWidth)
+      .attr("height", (d) => this.plotHeight - this.yScale(d.cover))
+      .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer + d.cover)})`)
+      .append("title")
+      .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
 
+    // UPDATE
     selection
+      .attr("transform", (d) => `translate(${this.xScale(d.month)} 0)`)
+      .selectAll(".bar")
       .attr("width", barWidth)
-      .attr("height", (d) => this.plotHeight - this.yScale(d.tax))
-      .attr("transform", (d) => `translate(${this.xScale(d.month)}, ${this.yScale(d.tax)})`)
-      .append("title")
-      .html((d) => `${d.date} - ${thousands(d.tax)}`)
 
+    // EXIT
     selection.exit().remove()
 
     this.xAxisContainer
       .attr(
         // Shift to center w/ bar
         "transform",
-        `translate(${(barWidth >> 1) + this.margin.left}, ${this.height - this.margin.bottom})`
+        `translate(${(barWidth >> 1) + this.margin.left} ${this.height - this.margin.bottom})`
       )
       .call(this.xAxis())
     const yAxis = d3AxisLeft(this.yScale).tickSize(4, 0).tickFormat(d3Format("~s"))
