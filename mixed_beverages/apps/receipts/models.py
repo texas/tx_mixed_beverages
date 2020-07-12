@@ -120,6 +120,7 @@ class Receipt(models.Model):
     cover = models.DecimalField(
         "cover charge receipts", max_digits=13, decimal_places=2
     )
+    # NOTE: total isn't always the sum. See LEGGER COCKTAILS
     total = models.DecimalField("total receipts", max_digits=13, decimal_places=2)
     # location fields
     location_name = models.CharField(max_length=100)
