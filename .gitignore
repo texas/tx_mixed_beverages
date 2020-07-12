@@ -16,8 +16,7 @@ env-*
 
 
 # Compiled
-mixed_beverages/static/*.js
-mixed_beverages/static/*.css
+mixed_beverages/static/*
 
 
 # Randomly generated files

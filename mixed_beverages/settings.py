@@ -16,6 +16,7 @@ BASE_DIR = os.path.dirname(__file__)
 import dj_database_url
 from project_runpy import env
 
+GA_ID = env.get("GOOGLE_TRACKING_ID")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get("SECRET_KEY", "Rotom")
@@ -130,7 +131,3 @@ LOGGING = {
         "factory": {"level": "ERROR", "propagate": False,},
     },
 }
-
-
-# App Config
-ALLOW_ANONYMOUS_CORRECTIONS = True
