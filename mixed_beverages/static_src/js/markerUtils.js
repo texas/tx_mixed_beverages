@@ -28,13 +28,15 @@ function contentize(data) {
       lastName = receipt.name
     }
   }
-  console.log(nameHistory)
+  const nameHistoryStr = nameHistory
+    .map(([date, name]) => `${name} (${date.substr(0, 7)})`)
+    .join(", ")
 
   const $container = document.createElement("div")
   $container.className = "location"
   const $name = document.createElement("span")
   $name.className = "name"
-  $name.appendChild(document.createTextNode(data.name))
+  $name.appendChild(document.createTextNode(nameHistoryStr))
   $container.appendChild($name)
   new Chart($container, data.receipts, {
     width: 300,
