@@ -33,7 +33,7 @@ function markerStyle(feature) {
 
 function addMarkersToMap(map, nav, data) {
   const markers = new L.MarkerClusterGroup({
-    disableClusteringAtZoom: 1,
+    disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
   })
   L.geoJson(data, {
