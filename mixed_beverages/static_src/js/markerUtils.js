@@ -21,12 +21,13 @@ channel.on("change.rangeEnd", (msg) => {
 function contentize(data) {
   // Get name history
   const nameHistory = []
-  let lastName
-  for (let receipt of sortBy(data.receipts, ['date']) {
-    if (receipt.name !== lastName) {
-      nameHistory.push([receipt.date, receipt.name])
-      lastName = receipt.name
+  const namesListed = new Set()
+  for (let receipt of sortBy(data.receipts, ["date"])) {
+    if (namesListed.has(receipt.name)) {
+      continue
     }
+    nameHistory.push([receipt.date, receipt.name])
+    namesListed.add(receipt.name)
   }
   const nameHistoryStr = nameHistory
     .map(([date, name]) => `${name} (${date.substr(0, 7)})`)
