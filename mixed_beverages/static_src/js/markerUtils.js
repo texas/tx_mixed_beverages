@@ -37,17 +37,20 @@ export async function showLocationPopup(marker) {
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
-    if (!marker._map) {
-      map.panTo(marker.getLatLng())
-      if (map.getZoom() < DECLUSTER_ZOOM) {
-        map.setZoom(DECLUSTER_ZOOM)
-      }
-      marker.once("add", function () {
-        marker.openPopup()
-      })
+    // TODO set document.location
+    // TODO set ga pageview
+    if (marker._map) {
+      marker.openPopup()
       return
     }
-    marker.openPopup()
+
+    map.panTo(marker.getLatLng())
+    if (map.getZoom() < DECLUSTER_ZOOM) {
+      map.setZoom(DECLUSTER_ZOOM)
+    }
+    marker.once("add", function () {
+      marker.openPopup()
+    })
   }
 
   function setupPopup(data) {
