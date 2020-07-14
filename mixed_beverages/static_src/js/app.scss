@@ -1,80 +1,105 @@
-@import ../js/d3/Chart.scss
-@import ../js/ui/Nav.scss
+@import "../js/d3/Chart.scss";
+@import "../js/ui/Nav.scss";
 
-blockquote
-  background: lightcyan
-  border-left: 4px solid aquamarine
-  margin-left: 1.5em
-  padding-left: 0.5em
+blockquote {
+  background: lightcyan;
+  border-left: 4px solid aquamarine;
+  margin-left: 1.5em;
+  padding-left: 0.5em;
+}
 
-body
-  font-family: sans-serif
-  margin: 0
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
 
-.map
-  height: 100vh
+.map {
+  height: 100vh;
+}
 
 // my lists are shorter
-.dl-horizontal
-  dt
-    width: 60px
-  dt
-    clear: left
-    float: left
-  dd
-    margin-left: 60px + 8px
-    text-align: right
+.dl-horizontal {
+  dt {
+    width: 60px;
+  }
+  dt {
+    clear: left;
+    float: left;
+  }
+  dd {
+    margin-left: 60px + 8px;
+    text-align: right;
+  }
+}
 
+.legend {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.5em;
+  dl {
+    margin: 0;
+  }
+  dt {
+    clear: left;
+    float: left;
+  }
+  span {
+    border-radius: 1em;
+    display: inline-block;
+    height: 1em;
+    vertical-align: sub;
+    width: 1em;
+  }
+  dd {
+    margin-left: 1.5em;
+  }
+}
 
-.legend
-  background: rgba(255, 255, 255, 0.8)
-  padding: 0.5em
-  dl
-    margin: 0
-  dt
-    clear: left
-    float: left
-  span
-    border-radius: 1em
-    display: inline-block
-    height: 1em
-    vertical-align: sub
-    width: 1em
-  dd
-    margin-left: 1.5em
+.top-locations {
+  margin: 0;
+  padding-left: 1.5em;
+  .distance {
+    font-style: italic;
+  }
+  .tax {
+    text-align: right;
+  }
+}
 
-
-.top-locations
-  margin: 0
-  padding-left: 1.5em
-  .distance
-    font-style: italic
-  .tax
-    text-align: right
-
-
-.location
+.location {
   // color code the quality of the geocoding
-  .q-me
-    background: darkorchid
-  .q-00, .q-01, .q-02, .q-03
-    background: green
-  .q-09, .q-10
-    background: gold
-  .q-11
-    background: red
-  .q-98, .q-99
-    background: black
+  .q-me {
+    background: darkorchid;
+  }
+  .q-00,
+  .q-01,
+  .q-02,
+  .q-03 {
+    background: green;
+  }
+  .q-09,
+  .q-10 {
+    background: gold;
+  }
+  .q-11 {
+    background: red;
+  }
+  .q-98,
+  .q-99 {
+    background: black;
+  }
+}
 
+.location--ind {
+  border-radius: 1em;
+  display: inline-block;
+  height: 0.7em;
+  text-decoration: none;
+  width: 0.7em;
+}
 
-.location--ind
-  border-radius: 1em
-  display: inline-block
-  height: 0.7em
-  text-decoration: none
-  width: 0.7em
-
-
-@media (max-device-width: 480px)
-  .leaflet-control-attribution, .top-locations .distance
-    display: none
+@media (max-device-width: 480px) {
+  .leaflet-control-attribution,
+  .top-locations .distance {
+    display: none;
+  }
+}
