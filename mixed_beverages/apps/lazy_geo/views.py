@@ -55,6 +55,7 @@ def location_detail(request, pk):
     location = get_object_or_404(models.Location, pk=pk)
     receipts = [
         {
+            "name": x.location_name,
             "date": x.date,
             "liquor": x.liquor,
             "wine": x.wine,

@@ -17,6 +17,7 @@ class ReceiptInline(admin.TabularInline):
         "location",
     )
     readonly_fields = fields
+    show_change_link = True
 
 
 @admin.register(models.Business)

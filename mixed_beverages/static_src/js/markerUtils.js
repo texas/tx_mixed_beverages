@@ -1,5 +1,6 @@
-import { DECLUSTER_ZOOM } from "./settings"
+import sortBy from "lodash/sortBy"
 
+import { DECLUSTER_ZOOM } from "./settings"
 import Chart from "./d3/Chart"
 import { channel } from "./utils"
 
@@ -18,11 +19,26 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
+  // Get name history
+  const nameHistory = []
+  const namesListed = new Set()
+  for (let receipt of sortBy(data.receipts, ["date"])) {
+    if (namesListed.has(receipt.name)) {
+      continue
+    }
+    nameHistory.push([receipt.date, receipt.name])
+    namesListed.add(receipt.name)
+  }
+  const nameHistoryStr = nameHistory
+    .map(([date, name]) => `${name} (${date.substr(0, 7)})`)
+    .join(", ")
+
   const $container = document.createElement("div")
   $container.className = "location"
   const $name = document.createElement("span")
   $name.className = "name"
-  $name.appendChild(document.createTextNode(data.name))
+  // WISHLIST better markup for this list of names
+  $name.appendChild(document.createTextNode(nameHistoryStr))
   $container.appendChild($name)
   new Chart($container, data.receipts, {
     width: 300,
