@@ -38,6 +38,7 @@ export default class {
       const month = date.getFullYear() * 12 + date.getMonth()
       return {
         month,
+        name: x.name,
         date: x.date,
         liquor: parseFloat(x.liquor),
         wine: parseFloat(x.wine),
@@ -120,7 +121,7 @@ export default class {
       .attr("height", (d) => this.plotHeight - this.yScale(d.total))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.total)})`)
       .append("title")
-      .html((d) => `Total: ${d.date} - ${thousands(d.total)}`)
+      .html((d) => `${d.name} Total: ${d.date} - ${thousands(d.total)}`)
     barGroups
       .append("rect")
       .attr("class", "bar bar-liquor")
@@ -128,7 +129,7 @@ export default class {
       .attr("height", (d) => this.plotHeight - this.yScale(d.liquor))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor)})`)
       .append("title")
-      .html((d) => `Liquor: ${d.date} - ${thousands(d.liquor)}`)
+      .html((d) => `${d.name} Liquor: ${d.date} - ${thousands(d.liquor)}`)
     barGroups
       .append("rect")
       .attr("class", "bar bar-wine")
@@ -136,7 +137,7 @@ export default class {
       .attr("height", (d) => this.plotHeight - this.yScale(d.wine))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine)})`)
       .append("title")
-      .html((d) => `Wine: ${d.date} - ${thousands(d.wine)}`)
+      .html((d) => `${d.name} Wine: ${d.date} - ${thousands(d.wine)}`)
     barGroups
       .append("rect")
       .attr("class", "bar bar-beer")
@@ -144,7 +145,7 @@ export default class {
       .attr("height", (d) => this.plotHeight - this.yScale(d.beer))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer)})`)
       .append("title")
-      .html((d) => `Beer: ${d.date} - ${thousands(d.beer)}`)
+      .html((d) => `${d.name} Beer: ${d.date} - ${thousands(d.beer)}`)
     barGroups
       .append("rect")
       .attr("class", "bar bar-cover")
@@ -152,7 +153,7 @@ export default class {
       .attr("height", (d) => this.plotHeight - this.yScale(d.cover))
       .attr("transform", (d) => `translate(0 ${this.yScale(d.liquor + d.wine + d.beer + d.cover)})`)
       .append("title")
-      .html((d) => `Cover: ${d.date} - ${thousands(d.cover)}`)
+      .html((d) => `${d.name} Cover: ${d.date} - ${thousands(d.cover)}`)
 
     // UPDATE
     selection
