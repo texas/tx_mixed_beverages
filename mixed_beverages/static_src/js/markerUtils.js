@@ -37,6 +37,7 @@ function contentize(data) {
   $container.className = "location"
   const $name = document.createElement("span")
   $name.className = "name"
+  // WISHLIST better markup for this list of names
   $name.appendChild(document.createTextNode(nameHistoryStr))
   $container.appendChild($name)
   new Chart($container, data.receipts, {
