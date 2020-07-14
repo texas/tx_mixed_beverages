@@ -110,7 +110,7 @@ export async function render() {
                   under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
                   Data by <a href="https://openstreetmap.org">OpenStreetMap</a>,
                   under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
-                  <a href="/about/">About</a> this site.`,
+                  <a href="/about/">About this site</a>.`,
   }).addTo(map)
 
   const res = await fetch(URLS.geojson)

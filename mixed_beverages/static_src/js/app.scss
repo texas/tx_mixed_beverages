@@ -3,14 +3,23 @@
 
 blockquote {
   background: lightcyan;
-  border-left: 4px solid aquamarine;
-  margin-left: 1.5em;
-  padding-left: 0.5em;
+  border-left: 0.25em solid aquamarine;
+  color: #555;
+  margin-left: 1em;
+  padding: 0.25em 0.5em;
 }
 
 body {
   font-family: sans-serif;
   margin: 0;
+}
+
+.page-about {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 1em auto;
+  max-width: 60em;
 }
 
 .map {
@@ -102,9 +111,4 @@ body {
   .top-locations .distance {
     display: none;
   }
-}
-
-.page-about {
-  margin: 1em auto;
-  max-width: 60em;
 }
