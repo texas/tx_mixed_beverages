@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css",
+    "build:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css",
     "build:js": "rollup -c",
     "build": "npm run build:css && npm run build:js",
-    "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
+    "watch:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css --embed-source-map --watch",
     "watch:js": "rollup -c -m inline --watch",
     "lint": "eslint .",
     "django": "./manage.py runserver",
