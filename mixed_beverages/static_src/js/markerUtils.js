@@ -22,7 +22,7 @@ function contentize(data) {
   // Get name history
   const nameHistory = []
   let lastName
-  for (let receipt of sortBy(data.receipts, (x) => x.date)) {
+  for (let receipt of sortBy(data.receipts, ['date']) {
     if (receipt.name !== lastName) {
       nameHistory.push([receipt.date, receipt.name])
       lastName = receipt.name
