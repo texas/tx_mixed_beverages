@@ -1,5 +1,6 @@
-import { DECLUSTER_ZOOM } from "./settings"
+import sortBy from "lodash/sortBy"
 
+import { DECLUSTER_ZOOM } from "./settings"
 import Chart from "./d3/Chart"
 import { channel } from "./utils"
 
@@ -18,6 +19,17 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
+  // Get name history
+  const nameHistory = []
+  let lastName
+  for (let receipt of sortBy(data.receipts, (x) => x.date)) {
+    if (receipt.name !== lastName) {
+      nameHistory.push([receipt.date, receipt.name])
+      lastName = receipt.name
+    }
+  }
+  console.log(nameHistory)
+
   const $container = document.createElement("div")
   $container.className = "location"
   const $name = document.createElement("span")
