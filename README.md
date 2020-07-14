@@ -24,13 +24,3 @@ Setup your environment:
 
     DJANGO_SETTINGS_MODULE=mixed_beverages.settings
     DEBUG=1
-
-#### Pull data
-
-**NOTE:** The data format and process has changed so this is out of date
-
-First, you have to get the [csvs](https://www.comptroller.texas.gov/transparency/open-data/search-datasets/).
-
-Then:
-
-    make import

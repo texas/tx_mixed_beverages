@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 
+{% block head_title %}About this site{% endblock %}
+{% block body_class %}page-about{% endblock %}
+
 
 {% block content %}
+  <h2>About the data</h2>
+  <blockquote>
+  It’s important to note that the “Total Receipts” field does <em>not</em> represent the amount of tax due by the taxpayer. Rather, it represents the gross receipts reported for beer, wine and liquor. The current MBGRT rate is 6.7% of the total receipts.
+  </blockquote>
+  <p><a href="https://data.texas.gov/stories/s/tj7s-7tc8">data.texas.gov/stories/s/tj7s-7tc8</a></p>
+
+  <h3>Data quality</h3>
+  <ul>
+    <li>The "total" is not always the sum. Sometimes, you'll see an empty rectangle for a month.</li>
+    <li>Map markers location precision varies widly depending on what I got back from the geocoding service.</li>
+  </ul>
+
   <h2>References</h2>
-  <p>
-    Stories:
-  </p>
+  <h3>Stories</h3>
   <ul>
     <li><a href="http://www.texastribune.org/2014/01/01/new-law-could-mean-higher-prices-on-mixed-/">New State Law Could Mean Higher Prices for Mixed Drinks</a></li>
     <li><a href="http://www.texastribune.org/2013/07/30/state-implement-sales-tax-mixed-drinks/">Mixed Views on Increased Beverage Tax</a></li>
@@ -50,4 +63,8 @@
       </a>
     </li>
   </ul>
+
+  <p>
+    Date scraped: {% now "DATE_FORMAT" %}
+  </p>
 {% endblock %}

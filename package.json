@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css",
+    "build:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css",
     "build:js": "rollup -c",
     "build": "npm run build:css && npm run build:js",
-    "watch:css": "sass mixed_beverages/static_src/sass/app.sass:mixed_beverages/static/app.css --embed-source-map --watch",
+    "watch:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css --embed-source-map --watch",
     "watch:js": "rollup -c -m inline --watch",
     "lint": "eslint .",
     "django": "./manage.py runserver",
@@ -22,8 +22,8 @@
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
-    "@rollup/plugin-commonjs": "^13.0.0",
-    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
     "colorbrewer": "^1.0.0",
     "concurrently": "^5.2.0",
     "cookies-js": "^1.2.1",
