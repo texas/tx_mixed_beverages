@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block head_title %}{% endblock %}</title>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:title" content="Texas Alcohol Receipts Map" />
+  <meta property="og:description" content="This map helps explore the mixed beverage gross receipts taxes collected by the Texas Comptroller." />
+  <meta property="og:image" content="https://txbarmap.lazymanual.com{% static 'barmaps-thumb-1200px.png' %}" />
+  <meta property="og:type" content="website" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
    crossorigin=""/>
@@ -30,6 +35,7 @@
     <a href="/robots.txt"></a>
     <a href="{% url 'geo_list' %}" rel="nofollow"></a>
     <a href="/about/"></a>
+    <img src="{% static 'barmaps-thumb-1200px.png' %}">
   </div>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6535799-12"></script>

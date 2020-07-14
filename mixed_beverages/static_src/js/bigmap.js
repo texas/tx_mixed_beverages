@@ -70,7 +70,7 @@ function firstVisit(map) {
       `<div>
     <h2>Welcome</h2>
     <p>
-      This map helps explore mixed beverage gross receipts taxes collected by
+      This map helps explore the mixed beverage gross receipts taxes collected by
       the <a href="https://comptroller.texas.gov/taxes/mixed-beverage/sales.php"
       target="_blank">Texas
       Comptroller</a>.
