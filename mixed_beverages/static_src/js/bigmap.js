@@ -70,14 +70,13 @@ function firstVisit(map) {
       `<div>
     <h2>Welcome</h2>
     <p>
-
       This map helps explore mixed beverage gross receipts taxes collected by
-      the <a href="http://www.window.state.tx.us/taxinfo/mixbev/"
+      the <a href="https://comptroller.texas.gov/taxes/mixed-beverage/sales.php"
       target="_blank">Texas
-      Comptroller</a>. This is <em>separate</em> from the
-      regular sales tax collected and does not apply to beer/wine/liquor sales
-      (since they are not mixed drinks).
+      Comptroller</a>.
 
+      The amounts you see are the gross receipts for each location reported to
+      the State.
     </p>
     <p>
       For more information, see <a href="/about/">about this site</a>.
