@@ -55,7 +55,6 @@ export async function showLocationPopup(marker) {
   function showPopup() {
     // TODO set document.location
     // TODO set ga pageview
-    // history.pushState({}, '')
     if (marker._map) {
       marker.openPopup()
       return
@@ -86,5 +85,10 @@ export async function showLocationPopup(marker) {
   if (!marker._popup) {
     marker.bindPopup(contentize(locationCache.get(id)))
   }
+  history.pushState(
+    {},
+    "",
+    `?id=${id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+  )
   showPopup()
 }
