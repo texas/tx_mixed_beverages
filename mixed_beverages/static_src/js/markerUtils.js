@@ -55,6 +55,7 @@ export async function showLocationPopup(marker) {
   function showPopup() {
     // TODO set document.location
     // TODO set ga pageview
+    // history.pushState({}, '')
     if (marker._map) {
       marker.openPopup()
       return
@@ -67,13 +68,6 @@ export async function showLocationPopup(marker) {
     marker.once("add", function () {
       marker.openPopup()
     })
-  }
-
-  function setupPopup(data) {
-    if (!marker._popup) {
-      marker.bindPopup(contentize(data))
-    }
-    showPopup()
   }
 
   if (marker._popup) {
@@ -89,5 +83,8 @@ export async function showLocationPopup(marker) {
     locationCache.set(id, jsonData)
   }
 
-  setupPopup(locationCache.get(id))
+  if (!marker._popup) {
+    marker.bindPopup(contentize(locationCache.get(id)))
+  }
+  showPopup()
 }
