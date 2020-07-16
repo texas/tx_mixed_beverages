@@ -40,10 +40,6 @@ function addMarkersToMap(map, nav, data) {
   L.geoJson(data, {
     pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature)),
   }).addTo(markers)
-  const pkToLayer = new Map()
-  markers.eachLayer((marker) => {
-    pkToLayer.set(marker.feature.id, marker._leaflet_id)
-  })
   nav.saveMarkers(markers)
   markers.addTo(map)
   markers.on("click", function (evt) {
