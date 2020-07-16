@@ -36,9 +36,14 @@ function addMarkersToMap(map, nav, data) {
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
   })
+  window.markers = markers // DEBUG
   L.geoJson(data, {
     pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature)),
   }).addTo(markers)
+  const pkToLayer = new Map()
+  markers.eachLayer((marker) => {
+    pkToLayer.set(marker.feature.id, marker._leaflet_id)
+  })
   nav.saveMarkers(markers)
   markers.addTo(map)
   markers.on("click", function (evt) {
