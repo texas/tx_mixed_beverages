@@ -52,7 +52,7 @@ function addMarkersToMap(map, nav, data) {
     showLocationPopup(evt.layer)
   })
   window.onpopstate = (evt) => {
-    if (!evt.state.id) {
+    if (!evt.state || !evt.state.id) {
       return
     }
 
@@ -60,7 +60,8 @@ function addMarkersToMap(map, nav, data) {
     layer && showLocationPopup(layer)
   }
   const locationId = parseInt(new URLSearchParams(location.search).get("id"), 10)
-  if (locationId) {
+  if (locationId && idToLayerMap.has(locationId)) {
+    history.replaceState({ id: locationId }, "") // Enable back button back to initial state
     const layer = idToLayerMap.get(locationId)
     layer && showLocationPopup(layer)
   }
