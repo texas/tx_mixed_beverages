@@ -43,8 +43,6 @@ function addMarkersToMap(map, nav, data) {
     pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature)),
   }).addTo(markers)
   nav.saveMarkers(markers)
-  // WISHLIST can we assign an ID to a layer?
-  // https://github.com/Leaflet/Leaflet/blob/9b0d7c2a7023e6a83222d96febaee74880601ad8/src/core/Util.js#L52-L59
   idToLayerMap = new Map(markers.getLayers().map((x) => [x.feature.id, x]))
   markers.addTo(map)
   markers.on("click", function (evt) {
