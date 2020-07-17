@@ -13,19 +13,8 @@ import { taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
 
-var lastId = 0
-// https://github.com/Leaflet/Leaflet/blob/9b0d7c2a7023e6a83222d96febaee74880601ad8/src/core/Util.js#L52-L59
-L.Util.stamp = (obj) => {
-  if (obj.feature && obj.feature.id) {
-    obj._leaflet_id = obj._leaflet_id || obj.feature.id
-    lastId = obj.feature.id + 1
-    return obj._leaflet_id
-  }
+let idToLayerMap = new Map()
 
-  console.log("non-location layer")
-  obj._leaflet_id = obj._leaflet_id || ++lastId
-  return obj._leaflet_id
-}
 function markerStyle(feature) {
   const style = {
     fillOpacity: 0.8,
@@ -56,6 +45,7 @@ function addMarkersToMap(map, nav, data) {
   nav.saveMarkers(markers)
   // WISHLIST can we assign an ID to a layer?
   // https://github.com/Leaflet/Leaflet/blob/9b0d7c2a7023e6a83222d96febaee74880601ad8/src/core/Util.js#L52-L59
+  idToLayerMap = new Map(markers.getLayers().map((x) => [x.feature.id, x]))
   markers.addTo(map)
   markers.on("click", function (evt) {
     // console.log("marker", evt.layer, this); // DEBUG
