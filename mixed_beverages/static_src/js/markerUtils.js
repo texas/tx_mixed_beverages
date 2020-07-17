@@ -86,9 +86,9 @@ export async function showLocationPopup(marker) {
     marker.bindPopup(contentize(locationCache.get(id)))
   }
   history.pushState(
-    { id: marker._leaflet_id },
+    { id: marker.feature.id },
     "",
-    `?id=${marker._leaflet_id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
   )
   showPopup()
 }

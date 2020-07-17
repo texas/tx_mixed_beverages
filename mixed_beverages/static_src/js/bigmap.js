@@ -56,12 +56,12 @@ function addMarkersToMap(map, nav, data) {
       return
     }
 
-    const layer = markers.getLayer(evt.state.id)
+    const layer = idToLayerMap.get(evt.state.id)
     layer && showLocationPopup(layer)
   }
-  const layerId = new URLSearchParams(location.search).get("id")
-  if (layerId) {
-    const layer = markers.getLayer(layerId)
+  const locationId = parseInt(new URLSearchParams(location.search).get("id"), 10)
+  if (locationId) {
+    const layer = idToLayerMap.get(locationId)
     layer && showLocationPopup(layer)
   }
   function updateNav() {
