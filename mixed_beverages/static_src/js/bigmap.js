@@ -19,8 +19,10 @@ L.Util.stamp = (obj) => {
   if (obj.feature && obj.feature.id) {
     obj._leaflet_id = obj._leaflet_id || obj.feature.id
     lastId = obj.feature.id + 1
+    return obj._leaflet_id
   }
 
+  console.log("non-location layer")
   obj._leaflet_id = obj._leaflet_id || ++lastId
   return obj._leaflet_id
 }
