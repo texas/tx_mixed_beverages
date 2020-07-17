@@ -13,6 +13,8 @@ import { taxColorScale } from "./utils"
 import Nav from "./ui/Nav"
 import legendFactory from "./ui/legendFactory"
 
+let idToLayerMap = new Map()
+
 function markerStyle(feature) {
   const style = {
     fillOpacity: 0.8,
@@ -36,15 +38,33 @@ function addMarkersToMap(map, nav, data) {
     disableClusteringAtZoom: DECLUSTER_ZOOM,
     maxClusterRadius: 50,
   })
+  window.markers = markers // DEBUG
   L.geoJson(data, {
     pointToLayer: (feature, latlng) => L.circleMarker(latlng, markerStyle(feature)),
   }).addTo(markers)
   nav.saveMarkers(markers)
+  // WISHLIST can we assign an ID to a layer?
+  // https://github.com/Leaflet/Leaflet/blob/9b0d7c2a7023e6a83222d96febaee74880601ad8/src/core/Util.js#L52-L59
+  idToLayerMap = new Map(markers.getLayers().map((x) => [x.feature.id, x]))
   markers.addTo(map)
   markers.on("click", function (evt) {
     // console.log("marker", evt.layer, this); // DEBUG
     showLocationPopup(evt.layer)
   })
+  window.onpopstate = (evt) => {
+    if (!evt.state || !evt.state.id) {
+      return
+    }
+
+    const layer = idToLayerMap.get(evt.state.id)
+    layer && showLocationPopup(layer)
+  }
+  const locationId = parseInt(new URLSearchParams(location.search).get("id"), 10)
+  if (locationId && idToLayerMap.has(locationId)) {
+    history.replaceState({ id: locationId }, "") // Enable back button back to initial state
+    const layer = idToLayerMap.get(locationId)
+    layer && showLocationPopup(layer)
+  }
   function updateNav() {
     const navData = {
       value: 0,

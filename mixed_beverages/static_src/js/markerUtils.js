@@ -69,13 +69,6 @@ export async function showLocationPopup(marker) {
     })
   }
 
-  function setupPopup(data) {
-    if (!marker._popup) {
-      marker.bindPopup(contentize(data))
-    }
-    showPopup()
-  }
-
   if (marker._popup) {
     showPopup()
     return
@@ -89,5 +82,13 @@ export async function showLocationPopup(marker) {
     locationCache.set(id, jsonData)
   }
 
-  setupPopup(locationCache.get(id))
+  if (!marker._popup) {
+    marker.bindPopup(contentize(locationCache.get(id)))
+  }
+  history.pushState(
+    { id: marker.feature.id },
+    "",
+    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+  )
+  showPopup()
 }
