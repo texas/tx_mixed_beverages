@@ -78,7 +78,7 @@ export async function showLocationPopup(marker) {
   if (!locationCache.has(id)) {
     const resp = await fetch(`/location/${id}.json`)
     const jsonData = await resp.json()
-    jsonData.feature = marker.feature
+    // jsonData.feature = marker.feature
     locationCache.set(id, jsonData)
   }
 
