@@ -69,6 +69,9 @@ export async function showLocationPopup(marker) {
   }
 
   document.title = marker.feature.properties.name
+  // Twitter requires og:title even though we already have <title>
+  document.querySelector('meta[property="og:title"]').content = document.title
+
   if (marker._popup) {
     showPopup()
     return
