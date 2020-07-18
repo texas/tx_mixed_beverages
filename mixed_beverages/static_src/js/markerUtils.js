@@ -53,7 +53,6 @@ export async function showLocationPopup(marker) {
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
-    // TODO set document.location
     // TODO set ga pageview
     if (marker._map) {
       marker.openPopup()
@@ -78,7 +77,6 @@ export async function showLocationPopup(marker) {
   if (!locationCache.has(id)) {
     const resp = await fetch(`/location/${id}.json`)
     const jsonData = await resp.json()
-    // jsonData.feature = marker.feature
     locationCache.set(id, jsonData)
   }
 
