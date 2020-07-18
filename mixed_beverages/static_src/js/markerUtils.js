@@ -68,6 +68,7 @@ export async function showLocationPopup(marker) {
     })
   }
 
+  document.title = marker.feature.properties.name
   if (marker._popup) {
     showPopup()
     return
