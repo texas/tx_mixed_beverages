@@ -19,7 +19,6 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
-  // Get name history
   const nameHistory = []
   const namesListed = new Set()
   for (let receipt of sortBy(data.receipts, ["date"])) {
@@ -48,12 +47,10 @@ function contentize(data) {
   return $container
 }
 
-const locationCache = new Map()
 export async function showLocationPopup(marker) {
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
-    // TODO set ga pageview
     if (marker._map) {
       marker.openPopup()
       return
@@ -72,25 +69,24 @@ export async function showLocationPopup(marker) {
   // Twitter requires og:title even though we already have <title>
   document.querySelector('meta[property="og:title"]').content = document.title
 
+  history.pushState(
+    { id: marker.feature.id },
+    "",
+    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+  )
+  if (window.gtag) {
+    window.gtag("config", "UA-6535799-12", {
+      page_path: `${window.location.pathname}${window.location.search}`,
+    })
+  }
   if (marker._popup) {
     showPopup()
     return
   }
 
   const { id } = marker.feature
-  if (!locationCache.has(id)) {
-    const resp = await fetch(`/location/${id}.json`)
-    const jsonData = await resp.json()
-    locationCache.set(id, jsonData)
-  }
-
-  if (!marker._popup) {
-    marker.bindPopup(contentize(locationCache.get(id)))
-  }
-  history.pushState(
-    { id: marker.feature.id },
-    "",
-    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
-  )
+  const resp = await fetch(`/location/${id}.json`)
+  const jsonData = await resp.json()
+  marker.bindPopup(contentize(jsonData))
   showPopup()
 }

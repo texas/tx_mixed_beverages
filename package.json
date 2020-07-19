@@ -27,14 +27,14 @@
     "colorbrewer": "^1.0.0",
     "concurrently": "^5.2.0",
     "cookies-js": "^1.2.1",
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "jquery": "^3.5.1",
     "leaflet": "^1.6.0",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^1.4.1",
     "lodash": "^4.17.19",
     "prettier": "^2.0.5",
-    "rollup": "^2.22.0",
+    "rollup": "^2.22.1",
     "sass": "^1.26.10"
   },
   "prettier": {
