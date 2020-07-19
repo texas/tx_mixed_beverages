@@ -74,6 +74,11 @@ export async function showLocationPopup(marker) {
     "",
     `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
   )
+  if (window.gtag) {
+    window.gtag("config", "UA-6535799-12", {
+      page_path: `${window.location.pathname}${window.location.search}`,
+    })
+  }
   if (marker._popup) {
     showPopup()
     return
