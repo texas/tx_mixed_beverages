@@ -69,6 +69,11 @@ export async function showLocationPopup(marker) {
   // Twitter requires og:title even though we already have <title>
   document.querySelector('meta[property="og:title"]').content = document.title
 
+  history.pushState(
+    { id: marker.feature.id },
+    "",
+    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+  )
   if (marker._popup) {
     showPopup()
     return
@@ -77,14 +82,6 @@ export async function showLocationPopup(marker) {
   const { id } = marker.feature
   const resp = await fetch(`/location/${id}.json`)
   const jsonData = await resp.json()
-
-  if (!marker._popup) {
-    marker.bindPopup(contentize(jsonData))
-  }
-  history.pushState(
-    { id: marker.feature.id },
-    "",
-    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
-  )
+  marker.bindPopup(contentize(jsonData))
   showPopup()
 }
