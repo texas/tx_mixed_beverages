@@ -19,7 +19,6 @@ channel.on("change.rangeEnd", (msg) => {
  * @returns DOMNode
  */
 function contentize(data) {
-  // Get name history
   const nameHistory = []
   const namesListed = new Set()
   for (let receipt of sortBy(data.receipts, ["date"])) {
@@ -48,12 +47,10 @@ function contentize(data) {
   return $container
 }
 
-const locationCache = new Map()
 export async function showLocationPopup(marker) {
   const map = marker._map || marker.__parent._group._map // HACK
 
   function showPopup() {
-    // TODO set ga pageview
     if (marker._map) {
       marker.openPopup()
       return
@@ -78,14 +75,11 @@ export async function showLocationPopup(marker) {
   }
 
   const { id } = marker.feature
-  if (!locationCache.has(id)) {
-    const resp = await fetch(`/location/${id}.json`)
-    const jsonData = await resp.json()
-    locationCache.set(id, jsonData)
-  }
+  const resp = await fetch(`/location/${id}.json`)
+  const jsonData = await resp.json()
 
   if (!marker._popup) {
-    marker.bindPopup(contentize(locationCache.get(id)))
+    marker.bindPopup(contentize(jsonData))
   }
   history.pushState(
     { id: marker.feature.id },
