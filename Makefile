@@ -51,11 +51,10 @@ admin: ## Set up a local admin/admin account
 slurp: ## Import downloaded CSVs
 	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
 	(head -n 1 data/Mixed_Beverage_Gross_Receipts.csv && tail -n +2 data/Mixed_Beverage_Gross_Receipts.csv | sort) > data/Mixed_Beverage_Gross_Receipts_sorted.csv
-	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
-	$(MANAGE) post_process
 
 process: ## Generate stats
-	./mixed_beverages/scripts/post_process.py
+	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
+	$(MANAGE) post_process
 
 import: ## Shortcut for 'make slurp process'
 import: slurp process
@@ -75,8 +74,8 @@ docker/build:
 docker/run:
 	docker run --rm -p 8080:8080 crccheck/mixed_beverages
 
-site:
+site: ## Create a static site version of the app
 	npm run build
 	mkdir -p _site
 	cd _site && wget -r localhost:8000 --force-html -e robots=off -nH -nv --max-redirect 0 || true
-	$(MANAGE) site
+	$(MANAGE) site --overwrite
