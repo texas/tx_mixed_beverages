@@ -46,18 +46,21 @@ admin: ## Set up a local admin/admin account
 	  User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \
 	  python manage.py shell
 
-# TODO use the json api to do incremental updates
-# Sort because it's too large for csvsort. Takes 53s but saves 6 hours to import
-slurp: ## Import downloaded CSVs
+.PHONY: data
+data:
 	wget 'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' -O data/Mixed_Beverage_Gross_Receipts.csv
 	(head -n 1 data/Mixed_Beverage_Gross_Receipts.csv && tail -n +2 data/Mixed_Beverage_Gross_Receipts.csv | sort) > data/Mixed_Beverage_Gross_Receipts_sorted.csv
 
-process: ## Generate stats
+# TODO use the json api to do incremental updates
+# Sort because it's too large for csvsort. Takes 53s but saves 6 hours to import
+slurp: ## Import downloaded CSVs
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
+
+process: ## Generate stats
 	$(MANAGE) post_process
 
-import: ## Shortcut for 'make slurp process'
-import: slurp process
+import: ## Shortcut for 'make data slurp process'
+import: data slurp process
 
 
 # use these tasks to transfer geocoding data from one database to another
