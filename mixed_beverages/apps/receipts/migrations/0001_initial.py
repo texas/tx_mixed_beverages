@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                     models.CharField(max_length=50, primary_key=True, serialize=False),
                 ),
             ],
-            options={"verbose_name_plural": "businesses",},
+            options={"verbose_name_plural": "businesses"},
         ),
         migrations.CreateModel(
             name="Location",
@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"abstract": False,},
+            options={"abstract": False},
         ),
         migrations.CreateModel(
             name="Receipt",

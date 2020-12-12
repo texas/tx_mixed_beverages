@@ -109,9 +109,9 @@ LOGGING = {
         "handlers": ["console"],
     },
     "filters": {
-        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse",},
-        "require_debug_true": {"()": "django.utils.log.RequireDebugTrue",},
-        "readable_sql": {"()": "project_runpy.ReadableSqlFilter",},
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+        "require_debug_true": {"()": "django.utils.log.RequireDebugTrue"},
+        "readable_sql": {"()": "project_runpy.ReadableSqlFilter"},
     },
     "handlers": {
         "console": {
@@ -126,6 +126,6 @@ LOGGING = {
             "filters": ["require_debug_true", "readable_sql"],
             "propagate": False,
         },
-        "factory": {"level": "ERROR", "propagate": False,},
+        "factory": {"level": "ERROR", "propagate": False},
     },
 }
