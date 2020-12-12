@@ -2,7 +2,6 @@ import logging
 
 from django.db import models
 from django.contrib.gis.geos import Point
-from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseLocation
@@ -29,7 +28,7 @@ class Location(BaseLocation):
     state = models.CharField(max_length=20)
     zip = models.CharField(max_length=15)
 
-    data = JSONField(
+    data = models.JSONField(
         null=True, blank=True, help_text="denormalized data to help generate map data"
     )
 

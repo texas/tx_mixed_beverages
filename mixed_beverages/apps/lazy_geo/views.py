@@ -51,7 +51,7 @@ class MarkerList(GeoJSONLayerView):
     properties = ("coordinate_quality", "data", "name")
 
 
-def location_detail(request, pk):
+def location_detail(request, pk: str):
     location = get_object_or_404(models.Location, pk=pk)
     receipts = [
         {
