@@ -3,7 +3,7 @@ name: Lint-Check
 on: push
 
 jobs:
-  lint:
+  lint-py:
     name: Lint Python
     runs-on: ubuntu-latest
     steps:
@@ -16,3 +16,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install black
           black --check .
+  lint-js:
+    name: Lint JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Eslint check
+        run: |
+          npm install eslint
+          npm run lint
