@@ -1,7 +1,5 @@
 # Mixed Beverages
 
-[![Build Status](https://travis-ci.org/texas/tx_mixed_beverages.svg?branch=master)](https://travis-ci.org/texas/tx_mixed_beverages)
-
 This map helps explore the mixed beverage gross receipts taxes collected by the
 [Texas Comptroller](https://comptroller.texas.gov/taxes/mixed-beverage/sales.php)
 
