@@ -1,4 +1,4 @@
-name: Lint-Check
+name: tx_mixed_beverages
 
 on: push
 
@@ -50,8 +50,6 @@ jobs:
           pip install poetry
           poetry install -v
       - name: Run tests
-        run: |
-          poetry shell
-          make test
+        run: poetry run make test
         env:
           SYSTEM_ENV: GITHUB_WORKFLOW
