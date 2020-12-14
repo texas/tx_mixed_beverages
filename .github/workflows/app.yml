@@ -46,10 +46,11 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
+      - run: sudo apt-get install -y libgeos-dev gdal-bin
       - run: |
           pip install poetry
           poetry install -v
       - name: Run tests
         run: poetry run make test
         env:
-          SYSTEM_ENV: GITHUB_WORKFLOW
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1/github_actions
