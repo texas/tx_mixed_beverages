@@ -44,11 +44,11 @@
   "dependencies": {
     "@condenast/quick-bus": "^0.2.0",
     "d3-array": "^2.9.1",
-    "d3-axis": "^1.0.12",
-    "d3-color": "^1.4.1",
-    "d3-format": "^1.4.4",
+    "d3-axis": "^2.0.0",
+    "d3-color": "^2.0.0",
+    "d3-format": "^2.0.0",
     "d3-scale": "^3.2.3",
     "d3-selection": "^1.4.2",
-    "d3-time-format": "^2.2.3"
+    "d3-time-format": "^3.0.0"
   }
 }
