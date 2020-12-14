@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       db:
-        image: postgres:12.3-alpine
+        image: postgis/postgis:10-2.5
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
