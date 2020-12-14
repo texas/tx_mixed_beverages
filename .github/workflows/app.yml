@@ -48,8 +48,10 @@ jobs:
           python-version: 3.8
       - run: |
           pip install poetry
-          poetry install
+          poetry install -v
       - name: Run tests
-        run: make test
+        run: |
+          poetry shell
+          make test
         env:
           SYSTEM_ENV: GITHUB_WORKFLOW
