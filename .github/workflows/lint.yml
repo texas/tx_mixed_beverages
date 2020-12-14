@@ -42,17 +42,14 @@ jobs:
           - 5432:5432
         options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
-          ref: "refs/heads/develop"
-      - name: Set up Python 3.8.5
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8.5
-      - name: Install dependencies
-        run: pip install -r app/requirements.txt
+          python-version: 3.8
+      - run: |
+          pip install poetry
+          poetry install
       - name: Run tests
-        run: python app/manage.py test app/
+        run: make test
         env:
           SYSTEM_ENV: GITHUB_WORKFLOW
