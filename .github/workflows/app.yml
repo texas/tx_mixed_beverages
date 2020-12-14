@@ -53,4 +53,4 @@ jobs:
       - name: Run tests
         run: poetry run make test
         env:
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1/github_actions
+          DATABASE_URL: postgis://postgres:postgres@127.0.0.1/github_actions
