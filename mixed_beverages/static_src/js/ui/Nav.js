@@ -4,7 +4,7 @@ import debounce from "lodash/debounce"
 import sortBy from "lodash/sortBy"
 import { N_RESULTS } from "../settings"
 import { channel, thousands, distance } from "../utils"
-import { showLocationPopup } from "../markerUtils"
+import { DEFAULT_RANGE, showLocationPopup } from "../markerUtils"
 
 export default class {
   constructor(map) {
@@ -29,12 +29,12 @@ export default class {
     $container.append(`<div class="Nav--range-picker">
       <div class="grid">
       <label for="id_range_begin">From</label>
-      <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="12"/>
+      <input type="range" id="id_range_begin" name="rangeBegin" min="0" max="60" value="${DEFAULT_RANGE[0]}"/>
       <span class="date-feedback" id="id_range_begin_txt"></span>
       </div>
       <div class="grid">
       <label for="id_range_end">To</label>
-      <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="0"/>
+      <input type="range" id="id_range_end" name="rangeEnd" min="0" max=60" value="${DEFAULT_RANGE[1]}"/>
       <span class="date-feedback" id="id_range_end_txt"></span>
       </div>
 

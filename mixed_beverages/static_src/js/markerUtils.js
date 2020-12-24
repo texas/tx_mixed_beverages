@@ -4,7 +4,9 @@ import { DECLUSTER_ZOOM } from "./settings"
 import Chart from "./d3/Chart"
 import { channel } from "./utils"
 
-const range = [12, 0]
+// Display data from x months ago to y months ago
+export const DEFAULT_RANGE = [24, 0]
+const range = [...DEFAULT_RANGE]
 
 channel.on("change.rangeBegin", (msg) => {
   range[0] = parseInt(msg, 10)
