@@ -9,16 +9,6 @@ from tqdm import tqdm
 from ...models import Location, Receipt
 
 
-def date_fmt(date: str):
-    """Convert m/d/y to Y-M-D"""
-    try:
-        month, day, year = date.split("/")
-        return f"{year}-{month}-{day}"
-
-    except:
-        return None
-
-
 @lru_cache(maxsize=512)
 def Location_get(street_address, city, state, zip, name):
     """
@@ -38,6 +28,7 @@ class Command(BaseCommand):
     help = "Import from Socrata API"
 
     def handle(self, *args, **options):
+        # TODO pagination
         res = requests.get(
             "https://data.texas.gov/resource/naix-2893.json",
             # What the params do:
@@ -46,6 +37,7 @@ class Command(BaseCommand):
         )
         data = res.json()
         print(len(data))
+        created_count = 0
         for row in data:
             location = Location_get(
                 street_address=row["taxpayer_address"],
@@ -54,21 +46,24 @@ class Command(BaseCommand):
                 zip=row["location_zip"],
                 name=row["location_name"],
             )
-        #         receipt, created = obj_update_or_create(
-        #             Receipt,
-        #             tabc_permit=row["TABC Permit Number"],
-        #             date=date_fmt(row["Obligation End Date"]),
-        #             defaults=dict(
-        #                 taxpayer_name=row["Taxpayer Name"],
-        #                 tax_number=row["Taxpayer Number"],
-        #                 liquor=row["Liquor Receipts"],
-        #                 wine=row["Wine Receipts"],
-        #                 beer=row["Beer Receipts"],
-        #                 cover=row["Cover Charge Receipts"],
-        #                 total=row["Total Receipts"],
-        #                 location_name=row["Location Name"],
-        #                 location_number=row["Location Number"],
-        #                 county_code=row["Location County"],
-        #                 location=location,
-        #             ),
-        #         )
+            receipt, created = obj_update_or_create(
+                Receipt,
+                tabc_permit=row["tabc_permit_number"],
+                date=row["obligation_end_date_yyyymmdd"].split("T")[0],
+                defaults=dict(
+                    taxpayer_name=row["taxpayer_name"],
+                    tax_number=row["taxpayer_number"],
+                    liquor=row["liquor_receipts"],
+                    wine=row["wine_receipts"],
+                    beer=row["beer_receipts"],
+                    cover=row["cover_charge_receipts"],
+                    total=row["total_receipts"],
+                    location_name=row["location_name"],
+                    location_number=row["location_number"],
+                    county_code=row["location_county"],
+                    location=location,
+                ),
+            )
+            if created:
+                created_count + 1
+        print(f"Created: {created_count}")
