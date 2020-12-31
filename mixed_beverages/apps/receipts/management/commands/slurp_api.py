@@ -36,7 +36,10 @@ class Command(BaseCommand):
             params={"$order": "obligation_end_date_yyyymmdd desc"},
         )
         data = res.json()
-        print(len(data))
+        print(f"Total rows: {len(data)}")
+        print(
+            f'Date range: {data[0]["obligation_end_date_yyyymmdd"]} - {data[-1]["obligation_end_date_yyyymmdd"]}'
+        )
         created_count = 0
         for row in data:
             location = Location_get(
@@ -66,4 +69,4 @@ class Command(BaseCommand):
             )
             if created:
                 created_count + 1
-        print(f"Created: {created_count}")
+        print(f"Created   : {created_count}")
