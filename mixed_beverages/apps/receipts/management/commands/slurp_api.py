@@ -1,5 +1,7 @@
 import os.path
 from functools import lru_cache
+from typing import Tuple
+
 import requests
 
 from django.core.management.base import BaseCommand
@@ -10,18 +12,17 @@ from ...models import Location, Receipt
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, name):
+def Location_get(street_address, city, state, zip, name) -> Tuple[Location, bool]:
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
-    location, __ = Location.objects.get_or_create(
+    return Location.objects.get_or_create(
         street_address=street_address,
         city=city,
         state=state,
         zip=zip,
         defaults=dict(name=name),
     )
-    return location
 
 
 class Command(BaseCommand):
@@ -46,13 +47,15 @@ class Command(BaseCommand):
             )
             created_count = 0
             for row in data:
-                location = Location_get(
+                location, location_created = Location_get(
                     street_address=row["taxpayer_address"],
                     city=row["location_city"],
                     state=row["location_state"],
                     zip=row["location_zip"],
                     name=row["location_name"],
                 )
+                if location_created:
+                    print(f"Created Location: {location}")
                 receipt, created = obj_update_or_create(
                     Receipt,
                     tabc_permit=row["tabc_permit_number"],
