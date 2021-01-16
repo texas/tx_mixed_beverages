@@ -38,6 +38,7 @@ class Command(BaseCommand):
                 params={
                     "$order": "obligation_end_date_yyyymmdd desc",
                     "$offset": offset,
+                    "$limit": 2000,  # Default: 1000
                 },
             )
             data = res.json()
