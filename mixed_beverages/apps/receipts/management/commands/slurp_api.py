@@ -81,7 +81,7 @@ class Command(BaseCommand):
             print(
                 f'Date range: {data[0]["obligation_end_date_yyyymmdd"]} - {data[-1]["obligation_end_date_yyyymmdd"]}'
             )
-            created_acount = import_data_from_api(data)
+            created_count = import_data_from_api(data)
             print(f"Created   : {created_count}")
             if created_count:
                 offset += len(data)
