@@ -56,7 +56,7 @@ def import_data_from_api(data: List[dict]) -> int:
             ),
         )
         if created:
-            created_count + 1
+            created_count += 1
     return created_count
 
 
