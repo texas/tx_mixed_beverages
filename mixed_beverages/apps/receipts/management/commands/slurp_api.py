@@ -36,7 +36,7 @@ def import_data_from_api(data: List[dict]) -> int:
             name=row["location_name"],
         )
         if location_created:
-            print(f"Created Location: {location}")
+            print(f"Created Location: {location.pk} - {location}")
         receipt, created = obj_update_or_create(
             Receipt,
             tabc_permit=row["tabc_permit_number"],
