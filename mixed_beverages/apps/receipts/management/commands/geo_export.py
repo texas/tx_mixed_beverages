@@ -11,7 +11,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--limit", type=int, help="Only export up to this many locations"
+            "--limit",
+            type=int,
+            default=2500,
+            help="Only export up to this many locations (default: 2500)",
         )
 
     def handle(self, limit, *args, **options):
