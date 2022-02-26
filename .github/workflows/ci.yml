@@ -52,6 +52,6 @@ jobs:
           poetry install -v
         env:
           POETRY_VIRTUALENVS_IN_PROJECT: true
-      - run: poetry run make test
+      - run: make test
         env:
           DATABASE_URL: postgis://postgres:postgres@127.0.0.1/github_actions

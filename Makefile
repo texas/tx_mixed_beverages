@@ -1,4 +1,4 @@
-MANAGE=python manage.py
+MANAGE=poetry run python manage.py
 
 help: ## Shows this help
 	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"

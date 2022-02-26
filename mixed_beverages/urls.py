@@ -1,7 +1,5 @@
-from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.views.decorators.cache import cache_control
 from django.views.generic import TemplateView
 
@@ -12,12 +10,12 @@ ONE_WEEK = ONE_DAY * 7
 
 
 urlpatterns = [
-    url(
-        r"^robots.txt$",
+    path(
+        "robots.txt",
         TemplateView.as_view(content_type="text/plain", template_name="robots.txt"),
     ),
-    url(
-        r"", include("mixed_beverages.apps.receipts.urls", namespace="mixed_beverages")
+    path(
+        "", include("mixed_beverages.apps.receipts.urls", namespace="mixed_beverages")
     ),
     path(
         "location/all.geojson",
