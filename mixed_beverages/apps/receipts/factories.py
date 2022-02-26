@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from datetime import date
 import string
 
@@ -9,7 +7,7 @@ from factory.fuzzy import FuzzyDate, FuzzyDecimal, FuzzyText
 from . import models
 
 
-class LocationFactory(factory.DjangoModelFactory):
+class LocationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Location
 
@@ -28,7 +26,7 @@ class LocationFactory(factory.DjangoModelFactory):
                 self.receipts.add(receipt)
 
 
-class ReceiptFactory(factory.DjangoModelFactory):
+class ReceiptFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Receipt
 

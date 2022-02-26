@@ -61,6 +61,7 @@ WSGI_APPLICATION = "mixed_beverages.wsgi.application"
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {"default": dj_database_url.config(default="postgis:///mixed_beverages")}
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
