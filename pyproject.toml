@@ -19,9 +19,7 @@ dj-obj-update = "^0.5.1"
 [tool.poetry.dev-dependencies]
 factory-boy = "^2.12.0"
 tqdm = "^4.46.1"
-# black = "^19.10b0"
 ipdb = "^0.13.3"
-# mypy = "^0.790"
 black = "^22.1.0"
 mypy = "^0.931"
 
