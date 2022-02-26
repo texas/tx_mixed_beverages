@@ -5,7 +5,6 @@ from django.contrib.gis.geos import Point
 from django.urls import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseLocation
-from mixed_beverages.apps.lazy_geo.utils import geocode_address
 
 
 class Business(models.Model):
@@ -49,26 +48,6 @@ class Location(BaseLocation):
     @property
     def address(self):
         return f"{self.street_address}\n{self.city}, {self.state} {self.zip}"
-
-    def geocode(self, force=False):
-        logger = logging.getLogger("geocode")
-        if self.coordinate and not force:
-            logger.info("{} already geocoded".format(self))
-            return
-
-        data = geocode_address(
-            {
-                "address": self.address,
-                "city": self.city,
-                "state": self.state,
-                "zipcode": self.zip,
-            }
-        )
-        self.coordinate = Point(x=float(data["Longitude"]), y=float(data["Latitude"]))
-        self.coordinate_quality = data["NAACCRGISCoordinateQualityCode"]
-        self.save()
-        logger.debug(data)
-        logger.info("%s", self)
 
 
 class Receipt(models.Model):
