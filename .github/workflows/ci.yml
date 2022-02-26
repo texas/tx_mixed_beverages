@@ -1,35 +1,35 @@
 name: tx_mixed_beverages
 
-on: push
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   lint-py:
-    name: Lint Python
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Black check
         run: |
-          python -m pip install --upgrade pip
           pip install black
           black --check .
   lint-js:
-    name: Lint JavaScript
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: "16.x"
       - name: Eslint check
         run: |
           npm install eslint
           npm run lint
-  test-py:
-    name: Django tests
+  test:
     runs-on: ubuntu-latest
     services:
       db:
@@ -45,12 +45,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - run: sudo apt-get install -y libpq-dev libgeos-dev gdal-bin
       - run: |
           pip install poetry
           poetry install -v
-      - name: Run tests
-        run: poetry run make test
+        env:
+          POETRY_VIRTUALENVS_IN_PROJECT: true
+      - run: poetry run make test
         env:
           DATABASE_URL: postgis://postgres:postgres@127.0.0.1/github_actions
