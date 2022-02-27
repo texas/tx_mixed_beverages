@@ -89,3 +89,6 @@ site: ## Create a static site version of the app
 	mkdir -p _site
 	cd _site && wget -r localhost:8000 --force-html -e robots=off -nH -nv --max-redirect 0 || true
 	$(MANAGE) site --overwrite
+
+site-preview: ## Preview static site
+	cd _site && python -m http.server
