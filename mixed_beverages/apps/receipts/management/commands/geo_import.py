@@ -40,15 +40,18 @@ class Command(BaseCommand):
             fh.seek(0)
             reader = DictReader(fh)
             for row in tqdm(reader, total=row_count - 1):
-                if ignore_pk:
-                    location = Location.objects.get(
-                        street_address=row["street_address"],
-                        city=row["city"],
-                        state=row["state"],
-                        zip=row["zip"],
-                    )
-                else:
-                    location = Location.objects.get(pk=row["pk"])
+                try:
+                    if ignore_pk:
+                        location = Location.objects.get(
+                            street_address=row["street_address"],
+                            city=row["city"],
+                            state=row["state"],
+                            zip=row["zip"],
+                        )
+                    else:
+                        location = Location.objects.get(pk=row["pk"])
+                except:
+                    continue
                 location.coordinate = Point(
                     x=float(row["Longitude"]), y=float(row["Latitude"])
                 )
