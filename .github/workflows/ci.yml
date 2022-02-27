@@ -14,9 +14,8 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.10"
-      - name: Black check
-        run: pip install black
-        run: black --check .
+      - run: pip install black
+      - run: black --check .
   lint-js:
     runs-on: ubuntu-latest
     steps:
@@ -24,10 +23,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-      - name: Eslint check
-        run: |
-          npm install eslint
-          npm run lint
+      - run: npm install eslint
+      - run: npm run lint
   test:
     runs-on: ubuntu-latest
     services:
