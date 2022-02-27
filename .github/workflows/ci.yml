@@ -15,9 +15,8 @@ jobs:
         with:
           python-version: "3.10"
       - name: Black check
-        run: |
-          pip install black
-          black --check .
+        run: pip install black
+        run: black --check .
   lint-js:
     runs-on: ubuntu-latest
     steps:
