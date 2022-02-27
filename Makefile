@@ -53,22 +53,29 @@ data:
 
 # TODO use the json api to do incremental updates
 # Sort because it's too large for csvsort. Takes 53s but saves 6 hours to import
+# Takes 25m to run from scratch
 slurp: ## Import downloaded CSVs
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
 
+# Takes 1h34m to run from scratch
 process: ## Generate stats
 	$(MANAGE) post_process
 
 import: ## Shortcut for 'make data slurp process'
 import: data slurp process
 
+# To mass import these, run:
+# $ find ~/Downloads -name "geo_export_geo*" -exec ./manage.py geo_import --ignore-pk {} \;
+.PHONY: geo_export.csv
+geo_export.csv:
+	$(MANAGE) geo_export
 
 # use these tasks to transfer geocoding data from one database to another
 # say... between `resetdb` calls
 dump_geo:
-	$(MANAGE) dump_geo > data/geo_data.blob
+	$(MANAGE) dump_geo > data/geo_data.jsonl
 load_geo:
-	$(MANAGE) load_geo data/geo_data.blob
+	$(MANAGE) load_geo data/geo_data.jsonl
 
 
 docker/build:

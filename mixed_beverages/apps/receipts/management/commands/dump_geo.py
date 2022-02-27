@@ -6,23 +6,19 @@ from mixed_beverages.apps.receipts.models import Location
 
 
 class Command(BaseCommand):
-    help = "Create a backup of geo data to stdout"
+    help = "Create a backup of address -> geolocation data to stdout"
 
     def handle(self, *args, **options):
-        """
-        I hate csv right now.
-        """
         for location in Location.objects.exclude(coordinate=None):
-            latest = location.get_latest()
             self.stdout.write(
                 json.dumps(
                     {
-                        "streetAddress": latest.address,
-                        "city": latest.city,
-                        "state": latest.state,
-                        "zip": latest.zip,
+                        "streetAddress": location.address,
+                        "city": location.city,
+                        "state": location.state,
+                        "zip": location.zip,
                         "coordinate": str(location.coordinate),
-                        "coordinate_quality": location.coordinate_quality,
+                        "coordinate_quality": str(location.coordinate_quality),
                     }
                 )
             )
