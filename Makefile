@@ -64,6 +64,11 @@ process: ## Generate stats
 import: ## Shortcut for 'make data slurp process'
 import: data slurp process
 
+# To mass import these, run:
+# $ find ~/Downloads -name "geo_export_geo*" -exec ./manage.py geo_import --ignore-pk {} \;
+.PHONY: geo_export.csv
+geo_export.csv:
+	$(MANAGE) geo_export
 
 # use these tasks to transfer geocoding data from one database to another
 # say... between `resetdb` calls

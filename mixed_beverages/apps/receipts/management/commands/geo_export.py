@@ -6,7 +6,8 @@ from mixed_beverages.apps.receipts.models import Location
 
 class Command(BaseCommand):
     help = """
-    Helper to make a CSV for batch geocoding. See https://www.geocod.io/guides/preparing-your-spreadsheet/
+    Helper to make a CSV for batch geocoding. Writes to "geo_export.csv"
+    See https://www.geocod.io/guides/preparing-your-spreadsheet/
     """
 
     def add_arguments(self, parser):
