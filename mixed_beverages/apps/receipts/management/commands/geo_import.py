@@ -9,18 +9,6 @@ from tqdm import tqdm
 from mixed_beverages.apps.receipts.models import Location
 
 
-def get_coordinate_quality(accuracy: str) -> str:
-    # https://www.geocod.io/guides/accuracy-types-scores/
-    if accuracy == "1":
-        return "00"
-
-    accuracy_value = float(accuracy)
-    if accuracy_value > 0.8:
-        return "01"
-
-    return "98"
-
-
 class Command(BaseCommand):
     help = (
         "Import batch geocoding results from Geocodio. Overwrites existing coordinates."
@@ -55,7 +43,5 @@ class Command(BaseCommand):
                 location.coordinate = Point(
                     x=float(row["Longitude"]), y=float(row["Latitude"])
                 )
-                location.coordinate_quality = get_coordinate_quality(
-                    row["Accuracy Score"]
-                )
+                location.coordinate_quality = row["Accuracy Score"]
                 location.save()
