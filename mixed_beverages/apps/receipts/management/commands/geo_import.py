@@ -37,7 +37,7 @@ class Command(BaseCommand):
                         )
                     else:
                         location = Location.objects.get(pk=row["pk"])
-                except:
+                except Exception:
                     continue
                 location.coordinate = Point(
                     x=float(row["Longitude"]), y=float(row["Latitude"])

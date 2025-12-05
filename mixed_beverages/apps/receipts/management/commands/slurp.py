@@ -15,7 +15,7 @@ def date_fmt(date: str):
         month, day, year = date.split("/")
         return f"{year}-{month}-{day}"
 
-    except:
+    except Exception:
         return None
 
 
@@ -35,7 +35,8 @@ def Location_get(street_address, city, state, zip, name):
 
 
 class Command(BaseCommand):
-    help = "Import a CSV file. Doing a full import over 2.4MM rows will take about 1.5 hours"
+    help = "Import a CSV file. Doing a full import over 2.4MM rows will take "
+    "about 1.5 hours"
 
     def add_arguments(self, parser):
         parser.add_argument("csv")

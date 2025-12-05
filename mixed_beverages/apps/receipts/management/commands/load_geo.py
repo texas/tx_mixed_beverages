@@ -1,4 +1,3 @@
-
 import json
 import os
 
@@ -37,7 +36,7 @@ class Command(BaseCommand):
                 try:
                     location = receipt.location
                 except Location.DoesNotExist:
-                    raise CommandError("run `make process` first")
+                    raise CommandError("run `make process` first") from None
                 if not location:
                     raise CommandError("No location set, run `make process` first")
                 if location.coordinate:

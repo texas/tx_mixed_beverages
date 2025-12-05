@@ -75,7 +75,8 @@ class Command(BaseCommand):
             data = res.json()
             print(f"Total rows: {len(data)}")
             print(
-                f'Date range: {data[0]["obligation_end_date_yyyymmdd"]} - {data[-1]["obligation_end_date_yyyymmdd"]}'
+                f"Date range: {data[0]['obligation_end_date_yyyymmdd']} - "
+                f"{data[-1]['obligation_end_date_yyyymmdd']}"
             )
             created_count = import_data_from_api(data)
             print(f"Created   : {created_count}")

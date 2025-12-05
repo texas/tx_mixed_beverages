@@ -56,7 +56,9 @@ class BaseGeocodioLocation(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="1 is most accuracy, 0.8 is pretty close, anything less than 0.6 is bad",
+        help_text=(
+            "1 is most accuracy, 0.8 is pretty close, anything less than 0.6 is bad"
+        ),
     )
 
     class Meta:
