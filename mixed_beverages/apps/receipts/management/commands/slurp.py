@@ -29,7 +29,7 @@ def Location_get(street_address, city, state, zip, name):
         city=city,
         state=state,
         zip=zip,
-        defaults=dict(name=name),
+        defaults={"name": name},
     )
     return location
 
@@ -59,17 +59,17 @@ class Command(BaseCommand):
                     Receipt,
                     tabc_permit=row["TABC Permit Number"],
                     date=date_fmt(row["Obligation End Date"]),
-                    defaults=dict(
-                        taxpayer_name=row["Taxpayer Name"],
-                        tax_number=row["Taxpayer Number"],
-                        liquor=row["Liquor Receipts"],
-                        wine=row["Wine Receipts"],
-                        beer=row["Beer Receipts"],
-                        cover=row["Cover Charge Receipts"],
-                        total=row["Total Receipts"],
-                        location_name=row["Location Name"],
-                        location_number=row["Location Number"],
-                        county_code=row["Location County"],
-                        location=location,
-                    ),
+                    defaults={
+                        "taxpayer_name": row["Taxpayer Name"],
+                        "tax_number": row["Taxpayer Number"],
+                        "liquor": row["Liquor Receipts"],
+                        "wine": row["Wine Receipts"],
+                        "beer": row["Beer Receipts"],
+                        "cover": row["Cover Charge Receipts"],
+                        "total": row["Total Receipts"],
+                        "location_name": row["Location Name"],
+                        "location_number": row["Location Number"],
+                        "county_code": row["Location County"],
+                        "location": location,
+                    },
                 )

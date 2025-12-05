@@ -17,7 +17,7 @@ def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool
         city=city,
         state=state,
         zip=zip,
-        defaults=dict(name=name),
+        defaults={"name": name},
     )
 
 
@@ -37,19 +37,19 @@ def import_data_from_api(data: list[dict]) -> int:
             Receipt,
             tabc_permit=row["tabc_permit_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],
-            defaults=dict(
-                taxpayer_name=row["taxpayer_name"],
-                tax_number=row["taxpayer_number"],
-                liquor=row["liquor_receipts"],
-                wine=row["wine_receipts"],
-                beer=row["beer_receipts"],
-                cover=row["cover_charge_receipts"],
-                total=row["total_receipts"],
-                location_name=row["location_name"],
-                location_number=row["location_number"],
-                county_code=row["location_county"],
-                location=location,
-            ),
+            defaults={
+                "taxpayer_name": row["taxpayer_name"],
+                "tax_number": row["taxpayer_number"],
+                "liquor": row["liquor_receipts"],
+                "wine": row["wine_receipts"],
+                "beer": row["beer_receipts"],
+                "cover": row["cover_charge_receipts"],
+                "total": row["total_receipts"],
+                "location_name": row["location_name"],
+                "location_number": row["location_number"],
+                "county_code": row["location_county"],
+                "location": location,
+            },
         )
         if created:
             created_count += 1
