@@ -1,12 +1,10 @@
-import csv
 import datetime
-import os
 from decimal import Decimal
 
-from django.db.models import Count, Avg
+from django.db.models import Avg, Count
 from tqdm import tqdm
 
-from .models import Receipt, Business, Location
+from .models import Business, Location, Receipt
 
 
 def assign_businesses(show_progress=False):

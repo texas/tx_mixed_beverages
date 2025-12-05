@@ -1,11 +1,10 @@
-from __future__ import unicode_literals
 
 import json
 import os
 
 from django.core.management.base import BaseCommand, CommandError
 
-from mixed_beverages.apps.receipts.models import Receipt, Location
+from mixed_beverages.apps.receipts.models import Location, Receipt
 
 
 class Command(BaseCommand):
@@ -20,9 +19,9 @@ class Command(BaseCommand):
         """
         infile = options["infile"][0]
         if not os.path.isfile(infile):
-            raise CommandError("{} is not a file".format(infile))
+            raise CommandError(f"{infile} is not a file")
 
-        with open(infile, "r") as fh:
+        with open(infile) as fh:
             for line in fh:
                 data = json.loads(line)
                 try:

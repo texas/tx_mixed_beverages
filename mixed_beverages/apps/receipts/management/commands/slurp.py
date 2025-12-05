@@ -1,5 +1,5 @@
-import os.path
 import csv as csv_lib
+import os.path
 from functools import lru_cache
 
 from django.core.management.base import BaseCommand
@@ -43,7 +43,7 @@ class Command(BaseCommand):
     def handle(self, csv, *args, **options):
         assert os.path.isfile(csv)
 
-        with open(csv, "r", encoding="windows-1252") as fh:
+        with open(csv, encoding="windows-1252") as fh:
             row_count = sum(1 for row in fh) - 1
             fh.seek(0)
             reader = csv_lib.DictReader(fh)

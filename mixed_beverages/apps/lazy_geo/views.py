@@ -1,18 +1,11 @@
-import json
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.urls import reverse
 from django.db.models import Q
 from django.http import (
-    HttpResponseBadRequest,
     JsonResponse,
-    HttpResponseRedirect,
-    HttpResponseForbidden,
 )
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.generic import DetailView
 from djgeojson.views import GeoJSONLayerView
+
 from mixed_beverages.apps.receipts import models
 
 

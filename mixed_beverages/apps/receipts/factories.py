@@ -1,5 +1,5 @@
-from datetime import date
 import string
+from datetime import date
 
 import factory
 from factory.fuzzy import FuzzyDate, FuzzyDecimal, FuzzyText

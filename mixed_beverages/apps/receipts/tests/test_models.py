@@ -1,7 +1,7 @@
-from django.test import TestCase
-from unittest.mock import patch
 
-from ..factories import LocationFactory, ReceiptFactory
+from django.test import TestCase
+
+from ..factories import LocationFactory
 
 
 class LocationTests(TestCase):

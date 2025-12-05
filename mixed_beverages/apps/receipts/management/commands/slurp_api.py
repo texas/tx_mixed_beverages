@@ -1,18 +1,14 @@
-import os.path
 from functools import lru_cache
-from typing import List, Tuple
 
 import requests
-
 from django.core.management.base import BaseCommand
 from obj_update import obj_update_or_create
-from tqdm import tqdm
 
 from ...models import Location, Receipt
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, name) -> Tuple[Location, bool]:
+def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool]:
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
@@ -25,7 +21,7 @@ def Location_get(street_address, city, state, zip, name) -> Tuple[Location, bool
     )
 
 
-def import_data_from_api(data: List[dict]) -> int:
+def import_data_from_api(data: list[dict]) -> int:
     created_count = 0
     for row in data:
         location, location_created = Location_get(

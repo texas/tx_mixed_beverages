@@ -1,9 +1,4 @@
-from django.conf import settings
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import Point
-from django.core.exceptions import SuspiciousOperation
-from django.urls import reverse
-from django.utils import timezone
 
 
 class BaseTAMULocation(models.Model):
