@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("receipts", "0002_auto_20200809_0329"),
     ]
@@ -16,7 +15,10 @@ class Migration(migrations.Migration):
             field=models.DecimalField(
                 blank=True,
                 decimal_places=2,
-                help_text="1 is most accuracy, 0.8 is pretty close, anything less than 0.6 is bad",
+                help_text=(
+                    "1 is most accuracy, 0.8 is pretty close, "
+                    "anything less than 0.6 is bad"
+                ),
                 max_digits=4,
                 null=True,
             ),

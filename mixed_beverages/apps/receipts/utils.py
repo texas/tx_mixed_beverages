@@ -1,12 +1,10 @@
-import csv
 import datetime
-import os
 from decimal import Decimal
 
-from django.db.models import Count, Avg
+from django.db.models import Avg, Count
 from tqdm import tqdm
 
-from .models import Receipt, Business, Location
+from .models import Business, Location, Receipt
 
 
 def assign_businesses(show_progress=False):
@@ -28,7 +26,7 @@ def assign_businesses(show_progress=False):
     for business_data in tqdm(businesses_to_create, disable=not show_progress):
         business, __ = Business.objects.get_or_create(
             tax_number=business_data["tax_number"],
-            defaults=dict(name=business_data["taxpayer_name"]),
+            defaults={"name": business_data["taxpayer_name"]},
         )
         Receipt.objects.filter(
             tax_number=business_data["tax_number"], business=None

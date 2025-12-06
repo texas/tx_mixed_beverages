@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.gis.admin import GeoModelAdmin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
@@ -29,7 +28,7 @@ class BusinessAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Location)
-class LocationAdmin(GeoModelAdmin):
+class LocationAdmin(admin.ModelAdmin):
     list_display = ("name", "street_address", "city", "state", "zip")
     list_filter = ("coordinate_quality",)
     search_fields = ("name",)
@@ -90,10 +89,9 @@ class ReceiptAdmin(admin.ModelAdmin):
         "location_link",
     )
 
+    @admin.display(description="location")
     def location_link(self, obj):
         url = reverse("admin:receipts_location_change", args=(obj.location.pk,))
         return mark_safe(
             f'<a href="{url}">{obj.location}<br>{obj.location.address}</a>'
         )
-
-    location_link.short_description = "location"  # type: ignore

@@ -1,9 +1,4 @@
-from django.conf import settings
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import Point
-from django.core.exceptions import SuspiciousOperation
-from django.urls import reverse
-from django.utils import timezone
 
 
 class BaseTAMULocation(models.Model):
@@ -61,7 +56,9 @@ class BaseGeocodioLocation(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="1 is most accuracy, 0.8 is pretty close, anything less than 0.6 is bad",
+        help_text=(
+            "1 is most accuracy, 0.8 is pretty close, anything less than 0.6 is bad"
+        ),
     )
 
     class Meta:

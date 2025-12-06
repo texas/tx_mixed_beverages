@@ -1,6 +1,4 @@
 from django.core.management.base import BaseCommand
-from obj_update import obj_update_or_create
-from tqdm import tqdm
 
 from ...utils import assign_businesses, set_location_data
 

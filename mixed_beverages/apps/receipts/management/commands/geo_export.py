@@ -1,5 +1,6 @@
-from django.core.management.base import BaseCommand
 from csv import DictWriter
+
+from django.core.management.base import BaseCommand
 
 from mixed_beverages.apps.receipts.models import Location
 

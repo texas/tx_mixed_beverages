@@ -1,28 +1,42 @@
-[tool.poetry]
+[project]
 name = "tx_mixed_beverages"
 version = "0.0.0"
 description = "Texas Mixed Beverage Gross Receipts Tax data"
 authors = []
-license = "Apache-2.0"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "Django>=4.0.2",
+    "dj-database-url>=0.5.0",
+    "psycopg2-binary>=2.8.5",
+    "project-runpy>=1.0.1",
+    "django-extensions>=3.1.5",
+    "requests>=2.24.0",
+    "django-geojson>=3.0.0",
+    "dj-obj-update>=0.6.0",
+    "python-dotenv>=1.2.1",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-Django = "^4.0.2"
-dj-database-url = "^0.5.0"
-psycopg2 = "^2.8.5"
-project-runpy = "^1.0.1"
-django-extensions = "^3.1.5"
-requests = "^2.24.0"
-django-geojson = "^3.0.0"
-dj-obj-update = "^0.6.0"
+[project.optional-dependencies]
+dev = [
+    "factory-boy>=3.2.1",
+    "tqdm>=4.46.1",
+    "ipdb>=0.13.3",
+    "ruff>=0.8.0",
+    "mypy>=0.931",
+]
 
-[tool.poetry.dev-dependencies]
-factory-boy = "^3.2.1"
-tqdm = "^4.46.1"
-ipdb = "^0.13.3"
-black = "^22.1.0"
-mypy = "^0.931"
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = []
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.mypy]
+warn_unused_ignores = true

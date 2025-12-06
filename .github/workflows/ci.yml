@@ -10,17 +10,17 @@ jobs:
   lint-py:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-      - run: pip install black
-      - run: black --check .
+      - uses: actions/checkout@v6
+      # https://github.com/astral-sh/setup-uv/releases
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --all-extras
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
   lint-js:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "16.x"
       - run: npm install eslint
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       db:
-        image: postgis/postgis:12-3.0-alpine
+        image: postgis/postgis:16-3.5-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -38,16 +38,11 @@ jobs:
           - 5432:5432
         options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
+      - uses: actions/checkout@v6
+      # https://github.com/astral-sh/setup-uv/releases
+      - uses: astral-sh/setup-uv@v7
       - run: sudo apt-get install -y libpq-dev libgeos-dev gdal-bin
-      - run: |
-          pip install poetry
-          poetry install -v
-        env:
-          POETRY_VIRTUALENVS_IN_PROJECT: true
+      - run: uv sync --all-extras
       - run: make test
         env:
           DATABASE_URL: postgis://postgres:postgres@127.0.0.1/github_actions

@@ -1,18 +1,14 @@
-import os.path
 from functools import lru_cache
-from typing import List, Tuple
 
 import requests
-
 from django.core.management.base import BaseCommand
 from obj_update import obj_update_or_create
-from tqdm import tqdm
 
 from ...models import Location, Receipt
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, name) -> Tuple[Location, bool]:
+def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool]:
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
@@ -21,11 +17,11 @@ def Location_get(street_address, city, state, zip, name) -> Tuple[Location, bool
         city=city,
         state=state,
         zip=zip,
-        defaults=dict(name=name),
+        defaults={"name": name},
     )
 
 
-def import_data_from_api(data: List[dict]) -> int:
+def import_data_from_api(data: list[dict]) -> int:
     created_count = 0
     for row in data:
         location, location_created = Location_get(
@@ -41,19 +37,19 @@ def import_data_from_api(data: List[dict]) -> int:
             Receipt,
             tabc_permit=row["tabc_permit_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],
-            defaults=dict(
-                taxpayer_name=row["taxpayer_name"],
-                tax_number=row["taxpayer_number"],
-                liquor=row["liquor_receipts"],
-                wine=row["wine_receipts"],
-                beer=row["beer_receipts"],
-                cover=row["cover_charge_receipts"],
-                total=row["total_receipts"],
-                location_name=row["location_name"],
-                location_number=row["location_number"],
-                county_code=row["location_county"],
-                location=location,
-            ),
+            defaults={
+                "taxpayer_name": row["taxpayer_name"],
+                "tax_number": row["taxpayer_number"],
+                "liquor": row["liquor_receipts"],
+                "wine": row["wine_receipts"],
+                "beer": row["beer_receipts"],
+                "cover": row["cover_charge_receipts"],
+                "total": row["total_receipts"],
+                "location_name": row["location_name"],
+                "location_number": row["location_number"],
+                "county_code": row["location_county"],
+                "location": location,
+            },
         )
         if created:
             created_count += 1
@@ -79,7 +75,8 @@ class Command(BaseCommand):
             data = res.json()
             print(f"Total rows: {len(data)}")
             print(
-                f'Date range: {data[0]["obligation_end_date_yyyymmdd"]} - {data[-1]["obligation_end_date_yyyymmdd"]}'
+                f"Date range: {data[0]['obligation_end_date_yyyymmdd']} - "
+                f"{data[-1]['obligation_end_date_yyyymmdd']}"
             )
             created_count = import_data_from_api(data)
             print(f"Created   : {created_count}")

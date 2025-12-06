@@ -1,9 +1,8 @@
 import os.path
-
 from csv import DictReader
+
 from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
-from obj_update import obj_update_or_create
 from tqdm import tqdm
 
 from mixed_beverages.apps.receipts.models import Location
@@ -23,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, csv: str, ignore_pk: bool, *args, **options):
         assert os.path.isfile(csv)
 
-        with open(csv, "r") as fh:
+        with open(csv) as fh:
             row_count = sum(1 for row in fh)
             fh.seek(0)
             reader = DictReader(fh)
@@ -38,7 +37,7 @@ class Command(BaseCommand):
                         )
                     else:
                         location = Location.objects.get(pk=row["pk"])
-                except:
+                except Exception:
                     continue
                 location.coordinate = Point(
                     x=float(row["Longitude"]), y=float(row["Latitude"])

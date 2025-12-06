@@ -8,13 +8,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+import dj_database_url
+from dotenv import load_dotenv
+from project_runpy import env
+
+load_dotenv()
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(__file__)
 
-import dj_database_url
-from project_runpy import env
+# GDAL/GEOS configuration
+if env.get("GDAL_LIBRARY_PATH"):
+    GDAL_LIBRARY_PATH = env.get("GDAL_LIBRARY_PATH")
+if env.get("GEOS_LIBRARY_PATH"):
+    GEOS_LIBRARY_PATH = env.get("GEOS_LIBRARY_PATH")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get("SECRET_KEY", "Rotom")

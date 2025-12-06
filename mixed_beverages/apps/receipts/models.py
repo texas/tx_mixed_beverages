@@ -1,7 +1,4 @@
-import logging
-
 from django.db import models
-from django.contrib.gis.geos import Point
 from django.urls import reverse
 
 from mixed_beverages.apps.lazy_geo.models import BaseGeocodioLocation as BaseLocation
@@ -36,7 +33,7 @@ class Location(BaseLocation):
         if self.name:
             bits.append(self.name)
         if self.coordinate_quality:
-            bits.append("({0.y},{0.x})".format(self.coordinate))
+            bits.append(f"({self.coordinate.y},{self.coordinate.x})")
             bits.append(self.coordinate_quality)
         return " ".join(bits)
 

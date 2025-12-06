@@ -1,10 +1,10 @@
-MANAGE=poetry run python manage.py
+MANAGE=uv run python manage.py
 
 help: ## Shows this help
 	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
 
 install: ## Install requirements
-	poetry install
+	uv sync --upgrade --all-extras
 	npm install
 
 clean: ## Remove temporary files
@@ -23,12 +23,13 @@ tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
 
 lint: ## Run lint check
-	black --check .
+	uv run ruff check .
+	uv run ruff format --check .
 
 resetmigrations:
 	find . -name "0001_initial.py" -delete
 	$(MANAGE) makemigrations receipts lazy_geo
-	black .
+	uv run ruff format .
 
 resetdb: ## Delete and recreate the database
 	-phd dropdb

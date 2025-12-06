@@ -1,5 +1,5 @@
-import os.path
 import csv as csv_lib
+import os.path
 from functools import lru_cache
 
 from django.core.management.base import BaseCommand
@@ -15,7 +15,7 @@ def date_fmt(date: str):
         month, day, year = date.split("/")
         return f"{year}-{month}-{day}"
 
-    except:
+    except Exception:
         return None
 
 
@@ -29,13 +29,14 @@ def Location_get(street_address, city, state, zip, name):
         city=city,
         state=state,
         zip=zip,
-        defaults=dict(name=name),
+        defaults={"name": name},
     )
     return location
 
 
 class Command(BaseCommand):
-    help = "Import a CSV file. Doing a full import over 2.4MM rows will take about 1.5 hours"
+    help = "Import a CSV file. Doing a full import over 2.4MM rows will take "
+    "about 1.5 hours"
 
     def add_arguments(self, parser):
         parser.add_argument("csv")
@@ -43,7 +44,7 @@ class Command(BaseCommand):
     def handle(self, csv, *args, **options):
         assert os.path.isfile(csv)
 
-        with open(csv, "r", encoding="windows-1252") as fh:
+        with open(csv, encoding="windows-1252") as fh:
             row_count = sum(1 for row in fh) - 1
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
@@ -59,17 +60,17 @@ class Command(BaseCommand):
                     Receipt,
                     tabc_permit=row["TABC Permit Number"],
                     date=date_fmt(row["Obligation End Date"]),
-                    defaults=dict(
-                        taxpayer_name=row["Taxpayer Name"],
-                        tax_number=row["Taxpayer Number"],
-                        liquor=row["Liquor Receipts"],
-                        wine=row["Wine Receipts"],
-                        beer=row["Beer Receipts"],
-                        cover=row["Cover Charge Receipts"],
-                        total=row["Total Receipts"],
-                        location_name=row["Location Name"],
-                        location_number=row["Location Number"],
-                        county_code=row["Location County"],
-                        location=location,
-                    ),
+                    defaults={
+                        "taxpayer_name": row["Taxpayer Name"],
+                        "tax_number": row["Taxpayer Number"],
+                        "liquor": row["Liquor Receipts"],
+                        "wine": row["Wine Receipts"],
+                        "beer": row["Beer Receipts"],
+                        "cover": row["Cover Charge Receipts"],
+                        "total": row["Total Receipts"],
+                        "location_name": row["Location Name"],
+                        "location_number": row["Location Number"],
+                        "county_code": row["Location County"],
+                        "location": location,
+                    },
                 )
