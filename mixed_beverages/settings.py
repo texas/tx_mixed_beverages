@@ -20,8 +20,6 @@ load_dotenv()
 BASE_DIR = os.path.dirname(__file__)
 
 # GDAL/GEOS configuration
-# Only set library paths if explicitly provided via environment variables
-# On Linux, Django will auto-detect; on macOS, set GDAL_LIBRARY_PATH and GEOS_LIBRARY_PATH
 if env.get("GDAL_LIBRARY_PATH"):
     GDAL_LIBRARY_PATH = env.get("GDAL_LIBRARY_PATH")
 if env.get("GEOS_LIBRARY_PATH"):
