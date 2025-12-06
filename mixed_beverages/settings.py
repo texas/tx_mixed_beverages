@@ -17,8 +17,12 @@ from project_runpy import env
 BASE_DIR = os.path.dirname(__file__)
 
 # GDAL/GEOS configuration
-GDAL_LIBRARY_PATH = env.get("GDAL_LIBRARY_PATH", "/opt/homebrew/lib/libgdal.dylib")
-GEOS_LIBRARY_PATH = env.get("GEOS_LIBRARY_PATH", "/opt/homebrew/lib/libgeos_c.dylib")
+# Only set library paths if explicitly provided via environment variables
+# On Linux, Django will auto-detect; on macOS, set GDAL_LIBRARY_PATH and GEOS_LIBRARY_PATH
+if env.get("GDAL_LIBRARY_PATH"):
+    GDAL_LIBRARY_PATH = env.get("GDAL_LIBRARY_PATH")
+if env.get("GEOS_LIBRARY_PATH"):
+    GEOS_LIBRARY_PATH = env.get("GEOS_LIBRARY_PATH")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get("SECRET_KEY", "Rotom")
@@ -64,7 +68,11 @@ WSGI_APPLICATION = "mixed_beverages.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.config(default="postgis://postgres:postgres@localhost:5432/mixed_beverages")}
+DATABASES = {
+    "default": dj_database_url.config(
+        default="postgis://postgres:postgres@localhost:5432/mixed_beverages"
+    )
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Internationalization
