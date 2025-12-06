@@ -16,8 +16,9 @@ from project_runpy import env
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(__file__)
 
-# GDAL configuration
+# GDAL/GEOS configuration
 GDAL_LIBRARY_PATH = env.get("GDAL_LIBRARY_PATH", "/opt/homebrew/lib/libgdal.dylib")
+GEOS_LIBRARY_PATH = env.get("GEOS_LIBRARY_PATH", "/opt/homebrew/lib/libgeos_c.dylib")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.get("SECRET_KEY", "Rotom")
@@ -63,7 +64,7 @@ WSGI_APPLICATION = "mixed_beverages.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {"default": dj_database_url.config(default="postgis:///mixed_beverages")}
+DATABASES = {"default": dj_database_url.config(default="postgis://postgres:postgres@localhost:5432/mixed_beverages")}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Internationalization
