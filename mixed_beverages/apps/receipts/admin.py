@@ -90,10 +90,12 @@ class ReceiptAdmin(admin.ModelAdmin):
         "location_link",
     )
 
+    @admin.display(
+        description="location"
+    )
     def location_link(self, obj):
         url = reverse("admin:receipts_location_change", args=(obj.location.pk,))
         return mark_safe(
             f'<a href="{url}">{obj.location}<br>{obj.location.address}</a>'
         )
 
-    location_link.short_description = "location"  # type: ignore
