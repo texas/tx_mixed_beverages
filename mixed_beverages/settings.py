@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 
 import dj_database_url
+from dotenv import load_dotenv
 from project_runpy import env
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(__file__)
@@ -68,11 +71,7 @@ WSGI_APPLICATION = "mixed_beverages.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default="postgis://postgres:postgres@localhost:5432/mixed_beverages"
-    )
-}
+DATABASES = {"default": dj_database_url.config(default="postgis:///mixed_beverages")}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Internationalization
