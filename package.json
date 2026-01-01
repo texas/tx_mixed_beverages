@@ -27,7 +27,7 @@
     "colorbrewer": "^1.5.2",
     "concurrently": "^7.0.0",
     "cookies-js": "^1.2.1",
-    "eslint": "^8.10.0",
+    "eslint": "^9.39.2",
     "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
     "leaflet-hash": "^0.2.1",
