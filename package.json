@@ -33,7 +33,7 @@
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.17.21",
-    "prettier": "^2.5.1",
+    "prettier": "^3.8.1",
     "rollup": "^2.68.0",
     "sass": "^1.49.9"
   },
