@@ -24,7 +24,7 @@ class BusinessAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     ordering = ("name",)
-    inlines = [ReceiptInline]
+    inlines = [ReceiptInline]  # noqa: RUF012
 
 
 @admin.register(models.Location)
@@ -36,7 +36,7 @@ class LocationAdmin(admin.ModelAdmin):
     # Detail
     ########
 
-    inlines = [
+    inlines = [  # noqa: RUF012
         ReceiptInline,
     ]
     save_on_top = True

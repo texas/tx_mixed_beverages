@@ -8,7 +8,7 @@ from ...models import Location, Receipt
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool]:
+def location_get(street_address, city, state, zip_code, name) -> tuple[Location, bool]:
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
@@ -16,7 +16,7 @@ def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool
         street_address=street_address,
         city=city,
         state=state,
-        zip=zip,
+        zip=zip_code,
         defaults={"name": name},
     )
 
@@ -24,16 +24,16 @@ def Location_get(street_address, city, state, zip, name) -> tuple[Location, bool
 def import_data_from_api(data: list[dict]) -> int:
     created_count = 0
     for row in data:
-        location, location_created = Location_get(
+        location, location_created = location_get(
             street_address=row["taxpayer_address"],
             city=row["location_city"],
             state=row["location_state"],
-            zip=row["location_zip"],
+            zip_code=row["location_zip"],
             name=row["location_name"],
         )
         if location_created:
             print(f"Created Location: {location.pk} - {location}")
-        receipt, created = obj_update_or_create(
+        _, created = obj_update_or_create(
             Receipt,
             tabc_permit=row["tabc_permit_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],

@@ -20,7 +20,7 @@ def date_fmt(date: str):
 
 
 @lru_cache(maxsize=512)
-def Location_get(street_address, city, state, zip, name):
+def location_get(street_address, city, state, zip_code, name):
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache
     """
@@ -28,7 +28,7 @@ def Location_get(street_address, city, state, zip, name):
         street_address=street_address,
         city=city,
         state=state,
-        zip=zip,
+        zip=zip_code,
         defaults={"name": name},
     )
     return location
@@ -49,14 +49,14 @@ class Command(BaseCommand):
             fh.seek(0)
             reader = csv_lib.DictReader(fh)
             for row in tqdm(reader, total=row_count):
-                location = Location_get(
+                location = location_get(
                     street_address=row["Location Address"],
                     city=row["Location City"],
                     state=row["Location State"],
-                    zip=row["Location Zip"],
+                    zip_code=row["Location Zip"],
                     name=row["Location Name"],
                 )
-                receipt, created = obj_update_or_create(
+                obj_update_or_create(
                     Receipt,
                     tabc_permit=row["TABC Permit Number"],
                     date=date_fmt(row["Obligation End Date"]),

@@ -8,7 +8,7 @@ class BaseTAMULocation(models.Model):
         ("00", "AddressPoint"),
         # 'Coordinates derived from local government-maintained address '
         # 'points, which are based on property parcel locations, not '
-        # 'interpolation over a street segment’s address range')
+        # 'interpolation over a street segment's address range')
         ("01", "GPS"),
         # 'Coordinates assigned by Global Positioning System (GPS)')
         ("02", "Parcel"),
@@ -17,7 +17,7 @@ class BaseTAMULocation(models.Model):
         ("03", "StreetSegmentInterpolation"),
         # 'Coordinates are match '
         #   'of house number and street, interpolated over the matching '
-        #   'street segment’s address range')
+        #   'street segment's address range')
         ("09", "AddressZipCentroid"),
         # 'Coordinates are address 5-digit ZIP code centroid')
         ("10", "POBoxZIPCentroid"),

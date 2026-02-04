@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from ...models import Location, Receipt
-from .slurp_api import Location_get, import_data_from_api
+from .slurp_api import location_get, import_data_from_api
 
 # https://data.texas.gov/resource/naix-2893.json?$limit=1
 data = [
@@ -36,7 +36,7 @@ data = [
 
 class SlurpApiTests(TestCase):
     def setUp(self):
-        Location_get.cache_clear()
+        location_get.cache_clear()
 
     def test_trivial_nothing_happens_with_no_data(self):
         created_count = import_data_from_api([])
