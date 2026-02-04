@@ -80,7 +80,7 @@ class Receipt(models.Model):
 
     taxpayer_name = models.CharField(max_length=100)
     # TODO figure out name/tax_numbner/tabc_permit cardinality
-    tax_number = models.CharField("taxpayer number", max_length=80)
+    tax_number = models.CharField("taxpayer number", max_length=80, db_index=True)
     tabc_permit = models.CharField(
         "TABC permit number", max_length=40, help_text="example: MB888888"
     )

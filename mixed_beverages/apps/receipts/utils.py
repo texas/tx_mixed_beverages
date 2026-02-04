@@ -11,7 +11,7 @@ def assign_businesses(show_progress=False):
     """
     Associates "Receipts" with businesses
 
-    The initial run over 2.4MM receipts will take 4 hours
+    The initial run over 3.67M receipts takes ~25 minutes
     """
     businesses_to_create = (
         Receipt.objects.filter(business=None)
@@ -19,7 +19,6 @@ def assign_businesses(show_progress=False):
         .order_by("tax_number")
         .annotate(Count("tax_number"))
     )
-
     if not businesses_to_create:
         return
 
