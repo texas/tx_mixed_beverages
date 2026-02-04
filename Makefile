@@ -68,7 +68,7 @@ data:
 slurp: ## Import downloaded CSVs
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
 
-# Takes 1h34m to run from scratch
+# Takes ~28m to run from scratch
 process: ## Generate stats
 	$(MANAGE) post_process
 

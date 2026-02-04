@@ -9,5 +9,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         show_progress = True  # TODO add a way to silence progress bar
         set_location_data(show_progress=show_progress)
-        print("assign_businesses")
+        print("associating all receipts with businesses")
         assign_businesses(show_progress=show_progress)

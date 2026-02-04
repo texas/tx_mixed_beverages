@@ -15,14 +15,14 @@ https://data.texas.gov/Government-and-Taxes/Mixed-Beverage-Gross-Receipts/naix-2
 To import the latest data from Texas:
 
 ```bash
-make import  # Downloads, sorts, imports, and processes data (~1.5 hours)
+make import  # Downloads, sorts, imports, and processes data (~50 minutes)
 ```
 
 Or run steps individually:
 ```bash
 make data     # Download and sort CSV (~15 minutes)
 make slurp    # Import into database (~5-10 minutes with bulk insert)
-make process  # Generate statistics (~1.5 hours)
+make process  # Generate statistics (~28 minutes)
 ```
 
 #### Data Deduplication
