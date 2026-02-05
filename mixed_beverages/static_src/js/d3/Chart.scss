@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .axis {
   font-size: 0.75em;
 
@@ -13,19 +15,19 @@
 svg {
   .bar-liquor {
     fill: #856f5f;
-    stroke: darken(#856f5f, 0.2);
+    stroke: color.scale(#856f5f, $lightness: -20%);
   }
   .bar-wine {
     fill: #813545;
-    stroke: darken(#813545, 0.1);
+    stroke: color.scale(#813545, $lightness: -10%);
   }
   .bar-beer {
     fill: #f28e1c;
-    stroke: darken(#f28e1c, 0.2);
+    stroke: color.scale(#f28e1c, $lightness: -20%);
   }
   .bar-cover {
     fill: #7b9a6d;
-    stroke: darken(#7b9a6d, 0.3);
+    stroke: color.scale(#7b9a6d, $lightness: -30%);
   }
   .bar-total {
     fill: none;
