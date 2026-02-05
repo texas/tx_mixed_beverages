@@ -2,8 +2,9 @@ import json
 import os
 
 from django.core.management.base import BaseCommand, CommandError
+from tqdm import tqdm
 
-from mixed_beverages.apps.receipts.models import Location, Receipt
+from mixed_beverages.apps.receipts.models import Location
 
 
 class Command(BaseCommand):
@@ -21,24 +22,22 @@ class Command(BaseCommand):
             raise CommandError(f"{infile} is not a file")
 
         with open(infile) as fh:
-            for line in fh:
+            total_lines = sum(1 for _ in fh)
+            fh.seek(0)
+
+            for line in tqdm(fh, total=total_lines, desc="Loading geo data"):
                 data = json.loads(line)
+                street_address = data["streetAddress"].split("\n")[0]
                 try:
-                    receipt = Receipt.objects.filter(
-                        address=data["streetAddress"],
+                    location = Location.objects.get(
+                        street_address=street_address,
                         city=data["city"],
                         state=data["state"],
                         zip=data["zip"],
-                    )[0]
-                except IndexError:
-                    print("No match")
-                    continue
-                try:
-                    location = receipt.location
+                    )
                 except Location.DoesNotExist:
-                    raise CommandError("run `make process` first") from None
-                if not location:
-                    raise CommandError("No location set, run `make process` first")
+                    self.stderr.write(f"No match for {street_address}")
+                    continue
                 if location.coordinate:
                     # don't overwrite existing coordinate data
                     continue
