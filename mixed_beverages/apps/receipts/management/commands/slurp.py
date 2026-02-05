@@ -8,6 +8,8 @@ from tqdm import tqdm
 
 from ...models import Location, Receipt
 
+BATCH_SIZE = 5000
+
 
 def date_fmt(date: str):
     """Convert m/d/y to Y-M-D"""
@@ -59,7 +61,6 @@ class Command(BaseCommand):
             int(subprocess.check_output(["wc", "-l", csv]).decode().split()[0]) - 1
         )
 
-        BATCH_SIZE = 5000
         receipts_batch = []
 
         with open(csv, encoding="windows-1252") as fh:
