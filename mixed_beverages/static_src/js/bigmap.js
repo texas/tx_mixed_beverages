@@ -99,7 +99,7 @@ function firstVisit(map) {
     <p>
       For more information, see <a href="/about/">about this site</a>.
     </p>
-    </div>`
+    </div>`,
     )
     .openOn(map)
 }

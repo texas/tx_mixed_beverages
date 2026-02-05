@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.venv/
+
+# Build outputs
+_site/
+mixed_beverages/static/
+mixed_beverages/static_root/
+*.bundle.js
+
+# Python
+*.py
+*.pyc
+__pycache__/
+
+# Django templates
+mixed_beverages/templates/
+
+# Other
+.git/
+.env
+*.log

@@ -74,7 +74,7 @@ export async function showLocationPopup(marker) {
   history.pushState(
     { id: marker.feature.id },
     "",
-    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`
+    `?id=${marker.feature.id}&name=${encodeURI(marker.feature.properties.name)}${location.hash}`,
   )
   if (window.gtag) {
     window.gtag("config", "UA-6535799-12", {

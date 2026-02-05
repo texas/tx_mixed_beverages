@@ -57,7 +57,7 @@ export default class {
           .text(
             `${Math.floor(targetMonth / 12)}-${((targetMonth % 12) + 1)
               .toString()
-              .padStart(2, "0")}`
+              .padStart(2, "0")}`,
           )
       })
       .change()
@@ -110,10 +110,10 @@ export default class {
         `<li>
           <span class="name">${markerData.name}</span>
           <span class="distance">(${distance(
-            center.distanceTo(markers[i].getLatLng()) / 1000
+            center.distanceTo(markers[i].getLatLng()) / 1000,
           )} km)</span>
           <span class="tax">${thousands(markerData.data.avg_total)}</span>
-        </li>`
+        </li>`,
       )
       $li.data("marker", markers[i])
       this.control.ui.top.append($li)

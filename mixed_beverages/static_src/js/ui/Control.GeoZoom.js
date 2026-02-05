@@ -18,7 +18,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
       `${zoomName}-in`,
       container,
       this._zoomIn,
-      this
+      this,
     )
     this._zoomOutButton = this._createButton(
       this.options.zoomOutText,
@@ -26,7 +26,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
       `${zoomName}-out`,
       container,
       this._zoomOut,
-      this
+      this,
     )
     if ("geolocation" in navigator) {
       this._locateButton = this._createButton(
@@ -35,7 +35,7 @@ L.Control.GeoZoom = L.Control.Zoom.extend({
         `${zoomName}-locate`,
         container,
         this._locate,
-        this
+        this,
       )
     }
 

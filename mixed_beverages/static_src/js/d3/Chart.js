@@ -168,7 +168,7 @@ export default class {
       .attr(
         // Shift to center w/ bar
         "transform",
-        `translate(${(barWidth >> 1) + this.margin.left} ${this.height - this.margin.bottom})`
+        `translate(${(barWidth >> 1) + this.margin.left} ${this.height - this.margin.bottom})`,
       )
       .call(this.xAxis())
     const yAxis = d3AxisLeft(this.yScale).tickSize(4, 0).tickFormat(d3Format("~s"))
