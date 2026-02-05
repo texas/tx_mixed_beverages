@@ -1,4 +1,3 @@
-/* global URLS: false */
 import L from "leaflet"
 import "leaflet.markercluster"
 import "leaflet-hash"
