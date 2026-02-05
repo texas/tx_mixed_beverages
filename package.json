@@ -27,7 +27,7 @@
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "colorbrewer": "^1.6.1",
-    "concurrently": "^7.6.0",
+    "concurrently": "^9.2.1",
     "cookies-js": "^1.2.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^9.1.0",
