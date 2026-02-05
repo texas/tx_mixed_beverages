@@ -36,6 +36,9 @@
       const URLS = {
         geojson: "{% url 'geo_list' %}",
       }
+      const CONFIG = {
+        stadiaApiKey: "{{ STADIA_API_KEY|default:'' }}",
+      }
     </script>
     {% endblock %}
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>

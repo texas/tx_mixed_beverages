@@ -33,6 +33,9 @@ DEBUG = env.get("DEBUG", False)
 
 ALLOWED_HOSTS = ["*"]  # Reverse proxy handles host matching for us
 
+# Map tiles configuration
+STADIA_API_KEY = env.get("STADIA_API_KEY", "")
+
 
 # Application definition
 
@@ -96,6 +99,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "mixed_beverages.context_processors.map_config",
             ],
             "debug": DEBUG,
         },

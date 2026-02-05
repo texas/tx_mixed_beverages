@@ -122,13 +122,21 @@ export async function render() {
   window.map = map // DEBUG
   new L.hash(map)
 
-  L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png", {
-    maxZoom: 18,
-    attribution: `Map tiles by <a href="https://stamen.com">Stamen Design</a>,
-                  under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
-                  Data by <a href="https://openstreetmap.org">OpenStreetMap</a>,
-                  under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
-                  <a href="/about/">About this site</a>.`,
+  const apiKey = window.CONFIG?.stadiaApiKey || ""
+  const tileUrl = apiKey
+    ? `https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png?api_key=${apiKey}`
+    : "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+  const attribution = apiKey
+    ? `Map tiles by <a href="https://stamen.com">Stamen Design</a>,
+       under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
+       Data by <a href="https://openstreetmap.org">OpenStreetMap</a>,
+       under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+       <a href="/about/">About this site</a>.`
+    : `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. <a href="/about/">About this site</a>.`
+
+  L.tileLayer(tileUrl, {
+    maxZoom: 19,
+    attribution,
   }).addTo(map)
 
   const res = await fetch(URLS.geojson)

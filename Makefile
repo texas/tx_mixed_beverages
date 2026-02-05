@@ -23,7 +23,7 @@ tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
 
 dev: ## Run the development server
-	$(MANAGE) runserver
+	npm run dev
 
 lint: ## Run lint check
 	uv run ruff check .
