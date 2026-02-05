@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from ...models import Location, Receipt
-from .slurp_api import location_get, import_data_from_api
+from .slurp_api import import_data_from_api, location_get
 
 # https://data.texas.gov/resource/naix-2893.json?$limit=1
 data = [
