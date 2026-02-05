@@ -24,8 +24,8 @@
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "colorbrewer": "^1.6.1",
     "concurrently": "^9.2.1",
     "cookies-js": "^1.2.1",
@@ -37,7 +37,7 @@
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.17.21",
     "prettier": "^3.4.2",
-    "rollup": "^3.29.5",
+    "rollup": "^4.57.1",
     "sass": "^1.97.3"
   },
   "prettier": {
