@@ -31,7 +31,7 @@
     "cookies-js": "^1.2.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "leaflet": "^1.9.4",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^1.5.3",
