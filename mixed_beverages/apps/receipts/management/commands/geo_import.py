@@ -42,11 +42,11 @@ class Command(BaseCommand):
                 # Handle both old and new Geocodio export formats
                 longitude = row.get("Geocodio Longitude") or row.get("Longitude")
                 latitude = row.get("Geocodio Latitude") or row.get("Latitude")
-                accuracy_score = row.get("Geocodio Accuracy Score") or row.get("Accuracy Score")
+                accuracy_score = row.get("Geocodio Accuracy Score") or row.get(
+                    "Accuracy Score"
+                )
 
                 if longitude and latitude:
-                    location.coordinate = Point(
-                        x=float(longitude), y=float(latitude)
-                    )
+                    location.coordinate = Point(x=float(longitude), y=float(latitude))
                     location.coordinate_quality = accuracy_score
                     location.save()

@@ -29,5 +29,4 @@ mixed_beverages/static/*
 _site
 .sass-cache/
 node_modules/
-package-lock.json
 static_root/
