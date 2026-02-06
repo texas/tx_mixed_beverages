@@ -39,8 +39,14 @@ class Command(BaseCommand):
                         location = Location.objects.get(pk=row["pk"])
                 except Exception:
                     continue
-                location.coordinate = Point(
-                    x=float(row["Longitude"]), y=float(row["Latitude"])
-                )
-                location.coordinate_quality = row["Accuracy Score"]
-                location.save()
+                # Handle both old and new Geocodio export formats
+                longitude = row.get("Geocodio Longitude") or row.get("Longitude")
+                latitude = row.get("Geocodio Latitude") or row.get("Latitude")
+                accuracy_score = row.get("Geocodio Accuracy Score") or row.get("Accuracy Score")
+
+                if longitude and latitude:
+                    location.coordinate = Point(
+                        x=float(longitude), y=float(latitude)
+                    )
+                    location.coordinate_quality = accuracy_score
+                    location.save()
