@@ -4,6 +4,7 @@ from functools import lru_cache
 
 import requests
 from django.core.management.base import BaseCommand
+from django.db.models import Max
 from obj_update import obj_update
 
 from ...models import Location, Receipt
@@ -78,12 +79,16 @@ class Command(BaseCommand):
 
         signal.signal(signal.SIGINT, on_sigint)
 
+        max_date = Receipt.objects.aggregate(max_date=Max("date"))["max_date"]
+        self.stdout.write(f"DB latest date: {max_date}")
+
         offset = 0
         while not shutdown:
             res = requests.get(
                 "https://data.texas.gov/resource/naix-2893.json",
                 # What the params do:
                 # https://dev.socrata.com/docs/queries/
+                headers={"User-Agent": "tx-mixed-beverages/1.0"},
                 params={
                     "$order": "obligation_end_date_yyyymmdd desc",
                     "$offset": offset,
