@@ -39,20 +39,31 @@ class SlurpApiTests(TestCase):
         location_get.cache_clear()
 
     def test_trivial_nothing_happens_with_no_data(self):
-        created_count = import_data_from_api([])
+        created_count, updated_count = import_data_from_api([])
         self.assertEqual(created_count, 0)
+        self.assertEqual(updated_count, 0)
 
     def test_import_creates_row(self):
-        created_count = import_data_from_api(data)
+        created_count, updated_count = import_data_from_api(data)
         self.assertEqual(created_count, 1)
+        self.assertEqual(updated_count, 0)
         self.assertEqual(Location.objects.count(), 1)
         self.assertEqual(Receipt.objects.count(), 1)
 
     def test_import_is_idempotent(self):
-        created_count = import_data_from_api(data)
-        self.assertEqual(created_count, 1)
+        import_data_from_api(data)
 
-        created_count = import_data_from_api(data)
+        created_count, updated_count = import_data_from_api(data)
         self.assertEqual(created_count, 0)
+        self.assertEqual(updated_count, 0)
         self.assertEqual(Location.objects.count(), 1)
         self.assertEqual(Receipt.objects.count(), 1)
+
+    def test_import_detects_update(self):
+        import_data_from_api(data)
+
+        changed = [{**data[0], "total_receipts": "999"}]
+        created_count, updated_count = import_data_from_api(changed)
+        self.assertEqual(created_count, 0)
+        self.assertEqual(updated_count, 1)
+        self.assertEqual(Receipt.objects.get().total, 999)

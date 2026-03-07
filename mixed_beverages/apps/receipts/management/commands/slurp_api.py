@@ -1,8 +1,9 @@
+from decimal import Decimal
 from functools import lru_cache
 
 import requests
 from django.core.management.base import BaseCommand
-from obj_update import obj_update_or_create
+from obj_update import obj_update
 
 from ...models import Location, Receipt
 
@@ -21,8 +22,9 @@ def location_get(street_address, city, state, zip_code, name) -> tuple[Location,
     )
 
 
-def import_data_from_api(data: list[dict]) -> int:
+def import_data_from_api(data: list[dict]) -> tuple[int, int]:
     created_count = 0
+    updated_count = 0
     for row in data:
         location, location_created = location_get(
             street_address=row["location_address"],
@@ -33,27 +35,30 @@ def import_data_from_api(data: list[dict]) -> int:
         )
         if location_created:
             print(f"Created Location: {location.pk} - {location}")
-        _, created = obj_update_or_create(
-            Receipt,
+        money = Decimal("0.01")
+        defaults = {
+            "taxpayer_name": row["taxpayer_name"],
+            "tax_number": row["taxpayer_number"],
+            "liquor": Decimal(row["liquor_receipts"]).quantize(money),
+            "wine": Decimal(row["wine_receipts"]).quantize(money),
+            "beer": Decimal(row["beer_receipts"]).quantize(money),
+            "cover": Decimal(row["cover_charge_receipts"]).quantize(money),
+            "total": Decimal(row["total_receipts"]).quantize(money),
+            "location_name": row["location_name"],
+            "location_number": row["location_number"],
+            "county_code": row["location_county"],
+            "location": location,
+        }
+        receipt, created = Receipt.objects.get_or_create(
             tabc_permit=row["tabc_permit_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],
-            defaults={
-                "taxpayer_name": row["taxpayer_name"],
-                "tax_number": row["taxpayer_number"],
-                "liquor": row["liquor_receipts"],
-                "wine": row["wine_receipts"],
-                "beer": row["beer_receipts"],
-                "cover": row["cover_charge_receipts"],
-                "total": row["total_receipts"],
-                "location_name": row["location_name"],
-                "location_number": row["location_number"],
-                "county_code": row["location_county"],
-                "location": location,
-            },
+            defaults=defaults,
         )
         if created:
             created_count += 1
-    return created_count
+        elif obj_update(receipt, defaults):
+            updated_count += 1
+    return created_count, updated_count
 
 
 class Command(BaseCommand):
@@ -80,9 +85,10 @@ class Command(BaseCommand):
                 f"Date range: {data[0]['obligation_end_date_yyyymmdd']} - "
                 f"{data[-1]['obligation_end_date_yyyymmdd']}"
             )
-            created_count = import_data_from_api(data)
-            print(f"Created   : {created_count}")
-            if created_count:
+            created_count, updated_count = import_data_from_api(data)
+            print(f"Created : {created_count}")
+            print(f"Updated : {updated_count}")
+            if created_count or updated_count:
                 offset += len(data)
             else:
                 break
