@@ -25,7 +25,7 @@ def import_data_from_api(data: list[dict]) -> int:
     created_count = 0
     for row in data:
         location, location_created = location_get(
-            street_address=row["taxpayer_address"],
+            street_address=row["location_address"],
             city=row["location_city"],
             state=row["location_state"],
             zip_code=row["location_zip"],
@@ -73,6 +73,8 @@ class Command(BaseCommand):
                 },
             )
             data = res.json()
+            if not data:
+                break
             print(f"Total rows: {len(data)}")
             print(
                 f"Date range: {data[0]['obligation_end_date_yyyymmdd']} - "
