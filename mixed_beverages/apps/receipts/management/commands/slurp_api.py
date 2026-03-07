@@ -1,3 +1,4 @@
+import signal
 from decimal import Decimal
 from functools import lru_cache
 
@@ -65,8 +66,20 @@ class Command(BaseCommand):
     help = "Import from Socrata API"
 
     def handle(self, *args, **options):
+        shutdown = False
+
+        def on_sigint(signum, frame):
+            nonlocal shutdown
+            if shutdown:
+                signal.signal(signal.SIGINT, signal.SIG_DFL)
+                raise KeyboardInterrupt
+            shutdown = True
+            self.stdout.write("\nStopping after current page (^C again to quit now)...")
+
+        signal.signal(signal.SIGINT, on_sigint)
+
         offset = 0
-        while True:
+        while not shutdown:
             res = requests.get(
                 "https://data.texas.gov/resource/naix-2893.json",
                 # What the params do:
