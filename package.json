@@ -24,7 +24,7 @@
   "private": true,
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "colorbrewer": "^1.6.2",
     "concurrently": "^9.2.1",
