@@ -11,6 +11,12 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 10
+    groups:
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "eslint-*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
