@@ -1,7 +1,50 @@
+from unittest.mock import MagicMock
+
 from django.test import TestCase
 
+from .management.commands.slurp import deduplicate_receipts
 from .management.commands.slurp_api import import_data_from_api
 from .models import Receipt
+
+
+def make_receipt(tabc_permit, tax_number, date, location_number):
+    r = MagicMock()
+    r.tabc_permit = tabc_permit
+    r.tax_number = tax_number
+    r.date = date
+    r.location_number = location_number
+    return r
+
+
+class DeduplicateReceiptsTest(TestCase):
+    def test_same_tax_number_keeps_lowest_location_number(self):
+        venue = make_receipt("TB015938", "111", "2007-10-31", "1")
+        event = make_receipt("TB015938", "111", "2007-10-31", "3")
+
+        result = deduplicate_receipts([venue, event])
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].location_number, "1")
+
+    def test_same_tax_number_keeps_lowest_location_number_regardless_of_order(self):
+        event = make_receipt("TB015938", "111", "2007-10-31", "3")
+        venue = make_receipt("TB015938", "111", "2007-10-31", "1")
+
+        result = deduplicate_receipts([event, venue])
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].location_number, "1")
+
+    def test_different_tax_numbers_keeps_both_ownership_change_records(self):
+        old_owner = make_receipt("MB200114651", "32062684942", "2026-01-31", "1")
+        new_owner = make_receipt("MB200114651", "32103027788", "2026-01-31", "1")
+
+        result = deduplicate_receipts([old_owner, new_owner])
+
+        self.assertEqual(len(result), 2)
+        tax_numbers = {r.tax_number for r in result}
+        self.assertEqual(tax_numbers, {"32062684942", "32103027788"})
+
 
 IMPERO_OLD = {
     "taxpayer_number": "32062684942",
