@@ -121,7 +121,7 @@ class Receipt(models.Model):
 
     class Meta:
         ordering = ("-date",)
-        unique_together = ("tabc_permit", "date")
+        unique_together = ("tabc_permit", "tax_number", "date")
 
     def __str__(self):
         return f"{self.location_name} {self.date} {self.total}"
