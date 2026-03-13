@@ -1,3 +1,4 @@
+import logging
 import signal
 from decimal import Decimal
 from functools import lru_cache
@@ -53,6 +54,7 @@ def import_data_from_api(data: list[dict]) -> tuple[int, int]:
         }
         receipt, created = Receipt.objects.get_or_create(
             tabc_permit=row["tabc_permit_number"],
+            tax_number=row["taxpayer_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],
             defaults=defaults,
         )
@@ -64,9 +66,11 @@ def import_data_from_api(data: list[dict]) -> tuple[int, int]:
 
 
 class Command(BaseCommand):
-    help = "Import from Socrata API"
+    help = "Import from Socrata API. Use -v 2 to log field-level changes on updates."
 
     def handle(self, *args, **options):
+        if options["verbosity"] >= 2:
+            logging.getLogger("obj_update").setLevel(logging.DEBUG)
         shutdown = False
 
         def on_sigint(signum, frame):
@@ -110,3 +114,6 @@ class Command(BaseCommand):
                 offset += len(data)
             else:
                 break
+        self.stdout.write(
+            self.style.SUCCESS("Done. Run 'make process' to update derived data.")
+        )
