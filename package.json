@@ -37,7 +37,7 @@
     "lodash": "^4.17.21",
     "prettier": "^3.4.2",
     "rollup": "^4.59.0",
-    "sass": "^1.97.3"
+    "sass": "^1.98.0"
   },
   "prettier": {
     "printWidth": 100,
