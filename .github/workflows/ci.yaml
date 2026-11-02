@@ -32,14 +32,14 @@ jobs:
     runs-on: ubuntu-latest
     services:
       db:
-        image: imresamu/postgis:16-3.6-alpine
+        image: imresamu/postgis:18-3.6-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: github_actions
         ports:
           - 5432:5432
-        options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: --mount type=tmpfs,destination=/var/lib/postgresql --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v6
       # https://github.com/astral-sh/setup-uv/releases
