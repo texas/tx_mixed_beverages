@@ -3,7 +3,7 @@ MANAGE=uv run python manage.py
 help: ## Shows this help
 	@echo "$$(grep -h '#\{2\}' $(MAKEFILE_LIST) | sed 's/: #\{2\} /	/' | column -t -s '	')"
 
-install: ## Install requirements
+install: ## Install the project for local dev
 	uv sync --upgrade --all-extras
 	npm install
 
@@ -25,9 +25,14 @@ tdd: ## Run tests with a watcher
 dev: ## Run the development server
 	npm run dev
 
-lint: ## Run lint check
-	uv run ruff check .
+lint: ## Check project linting rules
 	uv run ruff format --check .
+	uv run ruff check .
+	uv run mypy .
+
+delint: ## Fix fixable linting errors
+	uv run ruff format .
+	uv run ruff check . --fix
 
 resetmigrations:
 	find . -name "0001_initial.py" -delete
@@ -87,13 +92,6 @@ dump_geo:
 	$(MANAGE) dump_geo > data/geo_data.jsonl
 load_geo:
 	$(MANAGE) load_geo data/geo_data.jsonl
-
-
-docker/build:
-	docker build -t crccheck/mixed_beverages .
-
-docker/run:
-	docker run --rm -p 8080:8080 crccheck/mixed_beverages
 
 site: ## Create a static site version of the app
 	npm run build

@@ -36,7 +36,7 @@ def date_fmt(date: str):
         return None
 
 
-@lru_cache(maxsize=10000)
+@lru_cache(maxsize=10_000)
 def location_get(street_address, city, state, zip_code, name):
     """
     Wrapper around Location.objects.get_or_create just to use lru_cache

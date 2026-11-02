@@ -17,6 +17,9 @@ dependencies = [
     "python-dotenv>=1.2",
 ]
 
+[tool.uv]
+exclude-newer = "3 days"
+
 [dependency-groups]
 dev = [
     "factory-boy>=3.3",
@@ -39,6 +42,7 @@ extend-select = [
   "RET", # flakes8-return
   "RUF", # Ruff-specific rules
   "UP",  # pyupgrade
+  "PLC", # pylint conventions
 ]
 
 [tool.mypy]

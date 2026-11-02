@@ -39,7 +39,7 @@ class ReceiptFactory(factory.django.DjangoModelFactory):
     beer = FuzzyDecimal(low=0, high=1000, precision=2)
     wine = FuzzyDecimal(low=0, high=1000, precision=2)
     cover = FuzzyDecimal(low=0, high=1000, precision=2)
-    total = FuzzyDecimal(low=0, high=10000, precision=2)
+    total = FuzzyDecimal(low=0, high=10_000, precision=2)
     location_number = 1
     county_code = 255
 
