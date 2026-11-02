@@ -5,7 +5,7 @@ help: ## Shows this help
 
 install: ## Install the project for local dev
 	uv sync --upgrade --all-extras
-	npm install
+	bun install
 
 clean: ## Remove temporary files
 	rm -rf MANIFEST
@@ -23,7 +23,7 @@ tdd: ## Run tests with a watcher
 	nodemon --ext py -x sh -c "$(MANAGE) test --failfast --keepdb || true"
 
 dev: ## Run the development server
-	npm run dev
+	bun run dev
 
 lint: ## Check project linting rules
 	uv run ruff format --check .
@@ -94,7 +94,7 @@ load_geo:
 	$(MANAGE) load_geo data/geo_data.jsonl
 
 site: ## Create a static site version of the app
-	npm run build
+	bun run build
 	mkdir -p _site
 	cd _site && wget -r localhost:8000 --force-html -e robots=off -nH -nv --max-redirect 0 || true
 	$(MANAGE) site --overwrite

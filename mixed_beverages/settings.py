@@ -35,6 +35,9 @@ ALLOWED_HOSTS = ["*"]  # Reverse proxy handles host matching for us
 
 # Map tiles configuration
 STADIA_API_KEY = env.get("STADIA_API_KEY", "")
+# OpenStreetMap blocks tile requests without a Referer. Django's default
+# ("same-origin") strips it from cross-origin requests.
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 
 # Application definition
