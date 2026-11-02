@@ -4,10 +4,10 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css",
+    "build:css": "bun build mixed_beverages/static_src/js/app.css --outfile mixed_beverages/static/app.css",
     "build:js": "bun build mixed_beverages/static_src/js/app.js --outfile mixed_beverages/static/app.bundle.js --format esm",
     "build": "bun run build:css && bun run build:js",
-    "watch:css": "sass mixed_beverages/static_src/js/app.scss:mixed_beverages/static/app.css --embed-source-map --watch",
+    "watch:css": "bun build mixed_beverages/static_src/js/app.css --outfile mixed_beverages/static/app.css --sourcemap=inline --watch",
     "watch:js": "bun build mixed_beverages/static_src/js/app.js --outfile mixed_beverages/static/app.bundle.js --format esm --sourcemap=inline --watch",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -32,8 +32,7 @@
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.18.1",
-    "prettier": "^3.9.10",
-    "sass": "^1.107.1"
+    "prettier": "^3.9.10"
   },
   "prettier": {
     "printWidth": 100,

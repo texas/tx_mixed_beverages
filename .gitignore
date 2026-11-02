@@ -27,6 +27,5 @@ mixed_beverages/static/*
 
 # Randomly generated dirs
 _site
-.sass-cache/
 node_modules/
 static_root/
