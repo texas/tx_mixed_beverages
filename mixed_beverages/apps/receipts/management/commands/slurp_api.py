@@ -1,8 +1,12 @@
+import logging
+import signal
+from decimal import Decimal
 from functools import lru_cache
 
 import requests
 from django.core.management.base import BaseCommand
-from obj_update import obj_update_or_create
+from django.db.models import Max
+from obj_update import obj_update
 
 from ...models import Location, Receipt
 
@@ -21,11 +25,12 @@ def location_get(street_address, city, state, zip_code, name) -> tuple[Location,
     )
 
 
-def import_data_from_api(data: list[dict]) -> int:
+def import_data_from_api(data: list[dict]) -> tuple[int, int]:
     created_count = 0
+    updated_count = 0
     for row in data:
         location, location_created = location_get(
-            street_address=row["taxpayer_address"],
+            street_address=row["location_address"],
             city=row["location_city"],
             state=row["location_state"],
             zip_code=row["location_zip"],
@@ -33,39 +38,61 @@ def import_data_from_api(data: list[dict]) -> int:
         )
         if location_created:
             print(f"Created Location: {location.pk} - {location}")
-        _, created = obj_update_or_create(
-            Receipt,
+        money = Decimal("0.01")
+        defaults = {
+            "taxpayer_name": row["taxpayer_name"],
+            "tax_number": row["taxpayer_number"],
+            "liquor": Decimal(row["liquor_receipts"]).quantize(money),
+            "wine": Decimal(row["wine_receipts"]).quantize(money),
+            "beer": Decimal(row["beer_receipts"]).quantize(money),
+            "cover": Decimal(row["cover_charge_receipts"]).quantize(money),
+            "total": Decimal(row["total_receipts"]).quantize(money),
+            "location_name": row["location_name"],
+            "location_number": row["location_number"],
+            "county_code": row["location_county"],
+            "location": location,
+        }
+        receipt, created = Receipt.objects.get_or_create(
             tabc_permit=row["tabc_permit_number"],
+            tax_number=row["taxpayer_number"],
             date=row["obligation_end_date_yyyymmdd"].split("T")[0],
-            defaults={
-                "taxpayer_name": row["taxpayer_name"],
-                "tax_number": row["taxpayer_number"],
-                "liquor": row["liquor_receipts"],
-                "wine": row["wine_receipts"],
-                "beer": row["beer_receipts"],
-                "cover": row["cover_charge_receipts"],
-                "total": row["total_receipts"],
-                "location_name": row["location_name"],
-                "location_number": row["location_number"],
-                "county_code": row["location_county"],
-                "location": location,
-            },
+            defaults=defaults,
         )
         if created:
             created_count += 1
-    return created_count
+        elif obj_update(receipt, defaults):
+            updated_count += 1
+    return created_count, updated_count
 
 
 class Command(BaseCommand):
-    help = "Import from Socrata API"
+    help = "Import from Socrata API. Use -v 2 to log field-level changes on updates."
 
     def handle(self, *args, **options):
+        if options["verbosity"] >= 2:
+            logging.getLogger("obj_update").setLevel(logging.DEBUG)
+        shutdown = False
+
+        def on_sigint(signum, frame):
+            nonlocal shutdown
+            if shutdown:
+                signal.signal(signal.SIGINT, signal.SIG_DFL)
+                raise KeyboardInterrupt
+            shutdown = True
+            self.stdout.write("\nStopping after current page (^C again to quit now)...")
+
+        signal.signal(signal.SIGINT, on_sigint)
+
+        max_date = Receipt.objects.aggregate(max_date=Max("date"))["max_date"]
+        self.stdout.write(f"DB latest date: {max_date}")
+
         offset = 0
-        while True:
+        while not shutdown:
             res = requests.get(
                 "https://data.texas.gov/resource/naix-2893.json",
                 # What the params do:
                 # https://dev.socrata.com/docs/queries/
+                headers={"User-Agent": "tx-mixed-beverages/1.0"},
                 params={
                     "$order": "obligation_end_date_yyyymmdd desc",
                     "$offset": offset,
@@ -73,14 +100,20 @@ class Command(BaseCommand):
                 },
             )
             data = res.json()
+            if not data:
+                break
             print(f"Total rows: {len(data)}")
             print(
                 f"Date range: {data[0]['obligation_end_date_yyyymmdd']} - "
                 f"{data[-1]['obligation_end_date_yyyymmdd']}"
             )
-            created_count = import_data_from_api(data)
-            print(f"Created   : {created_count}")
-            if created_count:
+            created_count, updated_count = import_data_from_api(data)
+            print(f"Created : {created_count}")
+            print(f"Updated : {updated_count}")
+            if created_count or updated_count:
                 offset += len(data)
             else:
                 break
+        self.stdout.write(
+            self.style.SUCCESS("Done. Run 'make process' to update derived data.")
+        )

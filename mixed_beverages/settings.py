@@ -141,5 +141,10 @@ LOGGING = {
             "propagate": False,
         },
         "factory": {"level": "ERROR", "propagate": False},
+        "obj_update": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
     },
 }

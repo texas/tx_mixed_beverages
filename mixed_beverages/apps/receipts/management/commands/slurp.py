@@ -11,6 +11,21 @@ from ...models import Location, Receipt
 BATCH_SIZE = 5000
 
 
+def deduplicate_receipts(receipts: list) -> list:
+    """
+    Collapse duplicate rows: same (permit, tax_number, date) keeps the lowest
+    location_number (the permanent venue, not a one-off event name).
+    Rows with different tax_numbers for the same permit are ownership changes
+    and are kept as separate records.
+    """
+    seen: dict = {}
+    for receipt in receipts:
+        key = (receipt.tabc_permit, receipt.tax_number, receipt.date)
+        if key not in seen or receipt.location_number < seen[key].location_number:
+            seen[key] = receipt
+    return list(seen.values())
+
+
 def date_fmt(date: str):
     """Convert m/d/y to Y-M-D"""
     try:
@@ -94,23 +109,10 @@ class Command(BaseCommand):
                 )
 
                 if len(receipts_batch) >= BATCH_SIZE:
-                    # Deduplicate: keep venue (lowest location_number) for each (permit, date)
-                    seen = {}
-                    for receipt in receipts_batch:
-                        key = (receipt.tabc_permit, receipt.date)
-                        if key not in seen:
-                            seen[key] = receipt
-                        else:
-                            # Keep the one with lower location_number (the venue)
-                            if receipt.location_number < seen[key].location_number:
-                                seen[key] = receipt
-
-                    deduped_batch = list(seen.values())
-
                     Receipt.objects.bulk_create(
-                        deduped_batch,
+                        deduplicate_receipts(receipts_batch),
                         update_conflicts=True,
-                        unique_fields=["tabc_permit", "date"],
+                        unique_fields=["tabc_permit", "tax_number", "date"],
                         update_fields=[
                             "taxpayer_name",
                             "tax_number",
@@ -129,23 +131,10 @@ class Command(BaseCommand):
 
             # Insert final batch
             if receipts_batch:
-                # Deduplicate: keep venue (lowest location_number) for each (permit, date)
-                seen = {}
-                for receipt in receipts_batch:
-                    key = (receipt.tabc_permit, receipt.date)
-                    if key not in seen:
-                        seen[key] = receipt
-                    else:
-                        # Keep the one with lower location_number (the venue)
-                        if receipt.location_number < seen[key].location_number:
-                            seen[key] = receipt
-
-                deduped_batch = list(seen.values())
-
                 Receipt.objects.bulk_create(
-                    deduped_batch,
+                    deduplicate_receipts(receipts_batch),
                     update_conflicts=True,
-                    unique_fields=["tabc_permit", "date"],
+                    unique_fields=["tabc_permit", "tax_number", "date"],
                     update_fields=[
                         "taxpayer_name",
                         "tax_number",
