@@ -2,9 +2,9 @@ from unittest.mock import MagicMock
 
 from django.test import TestCase
 
-from .management.commands.slurp import deduplicate_receipts
-from .management.commands.slurp_api import import_data_from_api
-from .models import Receipt
+from ..management.commands.slurp import deduplicate_receipts
+from ..management.commands.slurp_api import import_data_from_api
+from ..models import Receipt
 
 
 def make_receipt(tabc_permit, tax_number, date, location_number):
