@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from django.test import TestCase
 
 from ..management.commands.slurp import deduplicate_receipts
-from ..management.commands.slurp_api import import_data_from_api
+from ..management.commands.slurp_api import import_data_from_api, location_get
 from ..models import Receipt
 
 
@@ -101,6 +101,10 @@ IMPERO_NEW = {
 
 
 class ImportDataFromApiTest(TestCase):
+    def setUp(self):
+        # location_get is lru_cached; cached rows vanish when a test rolls back
+        location_get.cache_clear()
+
     def test_same_permit_ownership_change_creates_two_receipts(self):
         import_data_from_api([IMPERO_OLD, IMPERO_NEW])
 
