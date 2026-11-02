@@ -10,6 +10,7 @@ from . import models
 class LocationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Location
+        skip_postgeneration_save = True
 
     street_address = factory.Faker("street_address")
     city = factory.Faker("city")
