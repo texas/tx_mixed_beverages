@@ -4,7 +4,7 @@ version = "0.0.0"
 description = "Texas Mixed Beverage Gross Receipts Tax data"
 authors = []
 license = {text = "Apache-2.0"}
-requires-python = ">=3.13"
+requires-python = ">=3.15"
 dependencies = [
     "Django>=6.1",
     "dj-database-url>=3.1",
