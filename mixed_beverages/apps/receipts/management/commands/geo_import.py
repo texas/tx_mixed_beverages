@@ -37,7 +37,12 @@ class Command(BaseCommand):
                         )
                     else:
                         location = Location.objects.get(pk=row["pk"])
-                except Exception:
+                except (
+                    Location.DoesNotExist,
+                    Location.MultipleObjectsReturned,
+                    KeyError,
+                    ValueError,
+                ):
                     continue
                 # Handle both old and new Geocodio export formats
                 longitude = row.get("Geocodio Longitude") or row.get("Longitude")

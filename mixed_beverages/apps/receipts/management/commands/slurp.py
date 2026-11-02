@@ -32,7 +32,7 @@ def date_fmt(date: str):
         month, day, year = date.split("/")
         return f"{year}-{month}-{day}"
 
-    except Exception:
+    except (ValueError, AttributeError):
         return None
 
 
