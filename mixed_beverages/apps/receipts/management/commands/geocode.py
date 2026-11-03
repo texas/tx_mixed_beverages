@@ -17,8 +17,8 @@ class Command(BaseCommand):
         parser.add_argument(
             "--limit",
             type=int,
-            default=None,
-            help="Only geocode up to this many locations",
+            default=100,
+            help="Only geocode up to this many locations (default: 100)",
         )
         parser.add_argument(
             "--dry-run",

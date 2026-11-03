@@ -20,8 +20,8 @@ class Command(BaseCommand):
         parser.add_argument(
             "--limit",
             type=int,
-            default=None,
-            help="Only re-geocode up to this many locations",
+            default=100,
+            help="Only re-geocode up to this many locations (default: 100)",
         )
         parser.add_argument(
             "--max-quality",
