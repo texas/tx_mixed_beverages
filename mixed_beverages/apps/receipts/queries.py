@@ -11,10 +11,10 @@ from collections.abc import Callable
 from decimal import Decimal
 from typing import Any
 
-from django.db.models import Count, QuerySet
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from django.db.models import Count, QuerySet
 
 from . import geocodio
 from .models import Location, Receipt
@@ -33,7 +33,7 @@ def _location_row(x: Location) -> dict[str, Any]:
         "pk": x.pk,
         "name": x.name,
         "address": x.address.replace("\n", ", "),
-        "avg_total": x.avg_total,  # type: ignore[attr-defined]
+        "avg_total": x.avg_total,
         "coordinate_quality": x.coordinate_quality,
         "lat": x.coordinate.y if x.coordinate else None,
         "lng": x.coordinate.x if x.coordinate else None,
@@ -95,7 +95,7 @@ def near(
     if worst_first:
         order = ["coordinate_quality", *order]
     return [
-        {**_location_row(x), "distance_km": round(x.distance.km, 2)}  # type: ignore[attr-defined]
+        {**_location_row(x), "distance_km": round(x.distance.km, 2)}
         for x in qs.order_by(*order)[:limit]
     ]
 

@@ -1,7 +1,7 @@
 import inspect
 import json
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -28,11 +28,15 @@ def _is_table(result: Any) -> bool:
 LOCATION_KEYS = ("pk", "name", "lat", "lng", "url")
 
 
+# Characters that would break a markdown table cell or link text
+ESCAPES = str.maketrans(
+    cast("dict[str, str | int | None]", {"|": r"\|", "[": r"\[", "]": r"\]"})
+)
+
+
 def _link(row: dict[str, Any]) -> str:
     """Markdown link: pk and name as text, the map url (with lat/lng) as target."""
-    text = f"{row['pk']} {row['name']}".translate(
-        str.maketrans({"|": r"\|", "[": r"\[", "]": r"\]"})
-    )
+    text = f"{row['pk']} {row['name']}".translate(ESCAPES)
     return f"[{text}]({row['url']})" if row["url"] else text
 
 
