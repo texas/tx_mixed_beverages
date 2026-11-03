@@ -43,6 +43,18 @@ The source data contains duplicate entries where the same TABC permit and date a
 
 This deduplication happens during the `slurp` command and respects the `unique_together = ("tabc_permit", "date")` constraint in the Receipt model.
 
+### Querying Data
+
+Canned read-only ORM queries print JSON, handy for scripts and agents:
+
+```bash
+./manage.py query                         # list queries and their parameters
+./manage.py query low_quality limit=5     # run one
+```
+
+Add a query by decorating a function with `@canned` in
+`mixed_beverages/apps/receipts/queries.py`.
+
 ## Setting up the project
 
 ### OSX
