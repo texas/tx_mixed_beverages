@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.cache import cache_control
@@ -6,7 +7,7 @@ from django.views.generic import TemplateView
 from .apps.lazy_geo import views
 
 ONE_DAY = 86400
-ONE_WEEK = ONE_DAY * 7
+ONE_WEEK = 0 if settings.DEBUG else ONE_DAY * 7
 
 
 urlpatterns = [
