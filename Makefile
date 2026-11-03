@@ -56,8 +56,8 @@ admin: ## Set up a local admin/admin account
 	  python manage.py shell
 
 .PHONY: data
-# As of 2026-02-04 the data is 715.72MB and takes 13m2s to download
-# Sorting takes 2 minutes
+# As of 2026-11-02 the data is 755.64MB and takes 8m43s to download
+# Sorting takes 28s
 data:
 	wget --continue --progress=bar:force \
 	  'https://data.texas.gov/api/views/naix-2893/rows.csv?accessType=DOWNLOAD&api_foundry=true' \
@@ -67,13 +67,11 @@ data:
 	 sort --buffer-size=2G --parallel=4) > data/Mixed_Beverage_Gross_Receipts_sorted.csv
 	rm data/Mixed_Beverage_Gross_Receipts.csv
 
-# TODO use the json api to do incremental updates
-# Sort because it's too large for csvsort. Takes 53s but saves 6 hours to import!
-# Takes 8m to run from scratch
+# Takes 5m9s to run from scratch
 slurp: ## Import downloaded CSVs
 	$(MANAGE) slurp data/Mixed_Beverage_Gross_Receipts_sorted.csv
 
-# Takes ~28m to run from scratch
+# Takes ~3m7s to run from scratch
 process: ## Generate stats
 	$(MANAGE) post_process
 
